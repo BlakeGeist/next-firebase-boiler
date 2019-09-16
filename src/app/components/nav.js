@@ -1,10 +1,17 @@
 import React from 'react'
 import Link from 'next/link'
 
-const links = [
-  { href: '/', label: 'Home' },
+const leftNav = [
   { href: '/about', label: 'About' },
-  { href: 'https://github.com/BlakeGeist/react-next-git-profile-example', label: 'GitHub', isExternal: true }
+  { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
+].map(link => {
+  link.key = `nav-link-${link.href}-${link.label}`
+  return link
+})
+
+const userNav = [
+  { href: '/sign-up', label: 'Sign Up' },
+  { href: '/login', label: 'login' }
 ].map(link => {
   link.key = `nav-link-${link.href}-${link.label}`
   return link
@@ -22,7 +29,15 @@ const Nav = () => {
     <>
     <nav>
       <ul>
-        {links.map(({ key, href, label, isExternal }) => (
+        <li><a href="/" className="navItem">Home</a></li>
+        {leftNav.map(({ key, href, label, isExternal }) => (
+          <li key={key}>
+            <LinkItem href={href} label={label} isExternal={isExternal} />
+          </li>
+        ))}
+      </ul>
+      <ul className="user-nav">
+        {userNav.map(({ key, href, label, isExternal }) => (
           <li key={key}>
             <LinkItem href={href} label={label} isExternal={isExternal} />
           </li>
@@ -46,10 +61,22 @@ const Nav = () => {
       ul {
         display: flex;
         padding: 0;
+        flex: 1 1 auto;
+      }
+      .user-nav{
+        flex: 0 1 150px;
+      }
+      .user-nav li {
+        display: flex;
+        justify-content: flex-end;
       }
       li {
         display: flex;
         flex: 0 1 75px;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
       }
     `}</style>
     </>

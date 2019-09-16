@@ -9,8 +9,8 @@ class MyApp extends App {
     return (
       <Provider store={reduxStore}>
         <Component {...pageProps} />
-          <style jsx global>{`
-          `}</style>
+        <style jsx global>{`
+        `}</style>
       </Provider>
     )
   }
