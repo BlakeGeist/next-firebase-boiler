@@ -25,8 +25,5 @@ class Index extends React.Component {
       )
   }
 }
-const mapDispatchToProps = {  }
-export default connect(
-  null,
-  mapDispatchToProps
-)(Index)
+
+export default connect(state => state)(Index);

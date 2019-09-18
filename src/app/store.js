@@ -9,7 +9,9 @@ const exampleInitialState = {
   userName: '',
   profiles: [],
   rawProfiles: [],
-  hasSearched: false  
+  hasSearched: false,
+  user: {},
+  messages: []
 }
 
 export const actionTypes = {

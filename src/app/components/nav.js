@@ -1,12 +1,16 @@
 import React from 'react'
 import Link from 'next/link'
+import { connect } from 'react-redux';
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import clientCredentials from '../credentials/client'
 
 const leftNav = [
   { href: '/about', label: 'About' },
   { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
 ].map(link => {
   link.key = `nav-link-${link.href}-${link.label}`
-  return link
+  return link;
 })
 
 const userNav = [
@@ -17,7 +21,8 @@ const userNav = [
   return link
 })
 
-const Nav = () => {
+const Nav = ({ user, dispatch }) => {
+
   function LinkItem(props){
     if(props.isExternal){
       return <a href={props.href} className="navItem" target="_blank">{props.label}</a>
@@ -25,11 +30,26 @@ const Nav = () => {
       return <Link href={props.href}><a className="navItem">{props.label}</a></Link>
     }
   }
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    if (!firebase.apps.length) {
+      firebase.initializeApp(clientCredentials)
+    };
+    firebase.auth().signOut()
+    //dispatch({ type: 'SET_ITEM', name: 'user', payload: null });
+    fetch('/api/logout', {
+      method: 'POST',
+      credentials: 'same-origin'
+    })
+  };
+
+
   return (
     <>
     <nav>
       <ul>
-        <li><a href="/" className="navItem">Home</a></li>
+        <li><Link href="/"><a className="navItem">Home</a></Link></li>
         {leftNav.map(({ key, href, label, isExternal }) => (
           <li key={key}>
             <LinkItem href={href} label={label} isExternal={isExternal} />
@@ -37,11 +57,14 @@ const Nav = () => {
         ))}
       </ul>
       <ul className="user-nav">
-        {userNav.map(({ key, href, label, isExternal }) => (
-          <li key={key}>
-            <LinkItem href={href} label={label} isExternal={isExternal} />
-          </li>
-        ))}
+        <li><Link href="/sign-up"><a className="navItem">Sign Up</a></Link></li>
+        <li>
+          {user && user.email ? (
+            <div>{user.email}: <button onClick={handleLogout}>Logout</button></div>
+          ) : (
+            <Link href="/login"><a className="navItem">Login</a></Link>
+          )}
+        </li>
       </ul>
     </nav>
     <style global jsx>{`
@@ -83,4 +106,4 @@ const Nav = () => {
   )
 }
 
-export default Nav
+export default connect(state => state)(Nav);
