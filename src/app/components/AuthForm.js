@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 const AuthForm = ({email, password, handleChange, handleEmailPassAuth}) => {
   return (

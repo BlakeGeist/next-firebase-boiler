@@ -16,7 +16,8 @@ const SignUpBase = ({setState, state}) => {
     }
     tempObj[event.target.name] = event.target.value;
     setState(tempObj)
-  }
+  };
+
   const handleEmailPassAuth = (e) => {
     e.preventDefault();
     const {email, password} = state;
@@ -24,10 +25,12 @@ const SignUpBase = ({setState, state}) => {
       var errorCode = error.code;
       var errorMessage = error.message;
     });
-  }
+  };
+
   if (!firebase.apps.length) {
     firebase.initializeApp(clientCredentials)
   };
+
   const onAuthStateChange = (user) => {
     if(user && user.email){
       Router.push('/dashboard')
@@ -38,7 +41,7 @@ const SignUpBase = ({setState, state}) => {
     const unsubscribe = firebase.auth().onAuthStateChanged(onAuthStateChange);
     return () => unsubscribe();
   });
-  
+
   return (
     <Layout pageMod="about">
       <h1>Sign Up page</h1>
@@ -63,6 +66,7 @@ const SignUpBase = ({setState, state}) => {
       `}</style>
     </Layout>
   )
+  
 }
 
 const SignUp = compose(

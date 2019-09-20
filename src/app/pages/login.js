@@ -9,13 +9,15 @@ import AuthForm from '../components/AuthForm';
 
 const LoginBase = ({setState, state}) => {
   const { email, password } = state;
+
   const handleChange = (event) => {
     let tempObj = {
       ...state
     }
     tempObj[event.target.name] = event.target.value;
     setState(tempObj)
-  }
+  };
+
   const handleEmailPassAuth = (e) => {
     e.preventDefault();
     const {email, password} = state;
@@ -23,19 +25,23 @@ const LoginBase = ({setState, state}) => {
       var errorCode = error.code;
       var errorMessage = error.message;
     });
-  }
+  };
+
   if (!firebase.apps.length) {
     firebase.initializeApp(clientCredentials)
   };
+
   const onAuthStateChange = (user) => {
     if(user && user.email){
       Router.push('/dashboard')
     }
   };
+
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged(onAuthStateChange);
     return () => unsubscribe();
   });
+
   return (
     <Layout pageMod="about">
       <h1>Login page</h1>
@@ -60,6 +66,7 @@ const LoginBase = ({setState, state}) => {
       `}</style>
     </Layout>
   )
+
 }
 
 const Login = compose(
