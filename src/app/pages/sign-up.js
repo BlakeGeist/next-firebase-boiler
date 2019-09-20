@@ -1,79 +1,72 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import 'firebase/firestore'
-import clientCredentials from '../credentials/client'
-import { connect } from 'react-redux'
+import clientCredentials from '../../functions/credentials/client'
 import Layout from '../layouts/Layout';
 import Router from 'next/router';
+import { compose, withState } from 'recompose';
+import AuthForm from '../components/AuthForm';
 
-class SignUp extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      email: '',
-      password: '',
-      value: ''
+const SignUpBase = ({setState, state}) => {
+  const { email, password } = state;
+
+  const handleChange = (event) => {
+    let tempObj = {
+      ...state
     }
-    this.handleEmailPassAuth = this.handleEmailPassAuth.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleGAuth = this.handleGAuth.bind(this)
+    tempObj[event.target.name] = event.target.value;
+    setState(tempObj)
   }
-  componentDidMount () {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(clientCredentials)
-    };
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        Router.push('/dashboard')
-      }
-    })
-  }
-  handleChange (event) {
-    let tempOb = {};
-    tempOb[event.target.name] = event.target.value
-    this.setState({ ...tempOb, tempOb })
-  }
-
-  handleEmailPassAuth (e) {
+  const handleEmailPassAuth = (e) => {
     e.preventDefault();
-    const { email, password } = this.state;
+    const {email, password} = state;
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
     });
   }
+  if (!firebase.apps.length) {
+    firebase.initializeApp(clientCredentials)
+  };
+  const onAuthStateChange = (user) => {
+    if(user && user.email){
+      Router.push('/dashboard')
+    }
+  };
 
-  handleGAuth () {
-    firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-  }
-
-  render () {
-    return (
-      <>
-        <Layout pageMod="about">
-          <h1>SignUp page</h1>
-          <p>SignUp page content</p>
-          <div className="login-form-wrapper">
-            <div className="login-form">
-              <form onSubmit={this.handleEmailPassAuth}>
-                <div><input type="email" placeholder="Email" value={this.state.email} name="email" onChange={this.handleChange} required /></div>
-                <div><input type="password" placeholder="Password" value={this.state.password} name="password" onChange={this.handleChange} required /></div>
-                <div><input type="submit" /></div>
-              </form>
-              <button onClick={this.handleGAuth}>Sign Up with Google</button>
-            </div>
-          </div>
-        </Layout>
-        <style jsx>{`
-            .login-form-wrapper{
-              display: flex;
-              justify-content: center;
-              padding: 50px;
-            }
-        `}</style>
-      </>
-    )
-  }
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged(onAuthStateChange);
+    return () => unsubscribe();
+  });
+  
+  return (
+    <Layout pageMod="about">
+      <h1>Sign Up page</h1>
+      <p>Sign Up page content</p>
+      <div className="login-form-wrapper">
+        <div className="login-form">
+          <AuthForm
+            email={email}
+            password={password}
+            handleEmailPassAuth={handleEmailPassAuth}
+            handleChange={handleChange}
+            />
+          <button>Sign Up with Google</button>
+        </div>
+      </div>
+      <style jsx>{`
+        .login-form-wrapper{
+          display: flex;
+          justify-content: center;
+          padding: 50px;
+        }
+      `}</style>
+    </Layout>
+  )
 }
-export default SignUp
+
+const SignUp = compose(
+  withState('state', 'setState', {email: '', password: ''})
+)(SignUpBase);
+
+export default SignUp;

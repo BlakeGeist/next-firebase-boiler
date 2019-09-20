@@ -14,11 +14,10 @@ const handle = nextApp.getRequestHandler();
 
 const firebase = admin.initializeApp(
   {
-    credential: admin.credential.cert(require('./server'))
+    credential: admin.credential.cert(require('./credentials/server'))
   },
   'server'
 )
-
 
 const server = express()
 

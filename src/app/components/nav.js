@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { connect } from 'react-redux';
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import clientCredentials from '../credentials/client'
+import clientCredentials from '../../functions/credentials/client'
 import Router from 'next/router';
 
 const leftNav = [
