@@ -6,7 +6,6 @@ import 'isomorphic-unfetch'
 import clientCredentials from '../credentials/client'
 import Layout from '../layouts/Layout';
 import { connect } from 'react-redux';
-import Messages from '../components/Messages';
 import Router from 'next/router';
 
 class Login extends Component {
@@ -15,91 +14,34 @@ class Login extends Component {
     return { isServer };
   }
 
-  _isMounted = false;
   constructor (props) {
     super(props)
     this.state = {
-
+      email: '',
+      password: '',
+      value: ''
     }
-    this.addDbListener = this.addDbListener.bind(this)
-    this.removeDbListener = this.removeDbListener.bind(this)
+    this.handleEmailPassAuth = this.handleEmailPassAuth.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleRemoveMessage = this.handleRemoveMessage.bind(this)
   }
 
   componentDidMount () {
-    const {dispatch} = this.props
-    this._isMounted = true;
     if (!firebase.apps.length) {
       firebase.initializeApp(clientCredentials)
     };
-
-    if (this.props.user) this.addDbListener()
-
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        return user
-          .getIdToken()
-          .then(token => {
-            dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
-            // eslint-disable-next-line no-undef
-            return fetch('/api/login', {
-              method: 'POST',
-              // eslint-disable-next-line no-undef
-              headers: new Headers({ 'Content-Type': 'application/json' }),
-              credentials: 'same-origin',
-              body: JSON.stringify({ token })
-            })
-          })
-          .then(res => {
-            var db = firebase.firestore()
-            let unsubscribe = db.collection('messages').onSnapshot(
-              querySnapshot => {
-                var messages = {}
-                querySnapshot.forEach(function (doc) {
-                  messages[doc.id] = doc.data()
-                })
-                //if (messages && this._isMounted) dispatch({ type: 'SET_ITEM', name: 'messages', payload: messages });
-              },
-              error => {
-                console.error(error)
-              }
-            )
-            this.setState({ unsubscribe })
-            //Router.push({
-              //pathname: '/dashboard'
-            //})
-          })
-      } else {
-        dispatch({ type: 'SET_ITEM', name: 'user', payload: null });
-        // eslint-disable-next-line no-undef
-        fetch('/api/logout', {
-          method: 'POST',
-          credentials: 'same-origin'
-        }).then(() => this.removeDbListener())
-
+        Router.push('/dashboard')
       }
     })
   }
 
-  componentWillUnmount() {
-     this._isMounted = false;
-   }
-
-   addDbListener () {
-
-   }
-
-  removeDbListener () {
-    // firebase.database().ref('messages').off()
-    if (this.state.unsubscribe) {
-      this.state.unsubscribe()
-    }
-  }
-
   handleChange (event) {
-    this.setState({ value: event.target.value })
+    let tempOb = {};
+    tempOb[event.target.name] = event.target.value
+    this.setState({ ...tempOb, tempOb })
   }
 
   handleSubmit (event) {
@@ -113,15 +55,10 @@ class Login extends Component {
         text: this.state.value
       })
       //safe
-    this.setState({ value: '' })
   }
 
   handleLogin () {
     firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider())
-  }
-
-  handleLogout () {
-    firebase.auth().signOut()
   }
 
   handleRemoveMessage (event) {
@@ -129,35 +66,55 @@ class Login extends Component {
     db.collection('messages').doc(event.target.value.toString()).delete()
   }
 
+  handleEmailPassAuth (e) {
+    e.preventDefault();
+    const { email, password } = this.state;
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+    });
+  }
+
   render () {
     const { user, value, messages } = this.props;
     return (
       <Layout>
-        {user && user.email ? (
-          <div>
-            {user.email}
-            <button onClick={this.handleLogout}>Logout</button>
-          </div>
-        ) : (
-          <button onClick={this.handleLogin}>Sign Up with Google</button>
-        )}
-        {user && user.email && (
-          <div>
-            <form onSubmit={this.handleSubmit}>
-              <input
-                type={'text'}
-                onChange={this.handleChange}
-                placeholder={'add message...'}
-                value={value}
-                required
-              />
-            <input
-                type={'submit'}
-              />
+        <div className="login-form-wrapper">
+          <div className="login-form">
+
+            <form onSubmit={this.handleEmailPassAuth}>
+              <div><input type="email" placeholder="Email" value={this.state.email} name="email" onChange={this.handleChange} required /></div>
+              <div><input type="password" placeholder="Password" value={this.state.password} name="password" onChange={this.handleChange} required /></div>
+              <div><input type="submit" /></div>
             </form>
-            <Messages />
+
+            <button onClick={this.handleLogin}>Login Up with Google</button>
+            {user && user.email && (
+              <div>
+                <form onSubmit={this.handleSubmit}>
+                  <input
+                    type={'text'}
+                    onChange={this.handleChange}
+                    placeholder={'add message...'}
+                    value={value}
+                    required
+                    name="value"
+                  />
+                <input
+                    type={'submit'}
+                  />
+                </form>
+              </div>
+            )}
           </div>
-        )}
+        </div>
+        <style jsx>{`
+            .login-form-wrapper{
+              display: flex;
+              justify-content: center;
+              padding: 50px;
+            }
+        `}</style>
       </Layout>
     )
   }

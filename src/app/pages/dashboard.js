@@ -4,24 +4,29 @@ import Layout from '../layouts/Layout';
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import clientCredentials from '../credentials/client'
+import Messages from '../components/Messages';
+import Router from 'next/router';
+
 
 class Dashbaord extends React.Component {
-  static async getInitialProps({ reduxStore, req, query }) {
+  static async getInitialProps({ reduxStore, req, query, res }) {
+    const { user } = reduxStore.getState();
+
+    if(res && !user.email){
+      res.redirect('/login')
+    } else if(!user.email){
+      Router.push('/login')
+    }
     if (!firebase.apps.length) {
       firebase.initializeApp(clientCredentials)
     };
     const isServer = !!req
-    const user = req && req.session ? req.session.decodedToken : null;
-
     const messagesCollection = firebase.firestore().collection("messages")
     await messagesCollection.get()
       .then((snap) =>{
         const messages = snap.docs.map(d => d.data());
         if(messages){
           reduxStore.dispatch({ type: 'SET_ITEM', name: 'messages', payload: messages });
-        }
-        if(user){
-          //reduxStore.dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
         }
       })
       .catch((err) => {
@@ -30,17 +35,17 @@ class Dashbaord extends React.Component {
     return { isServer };
   }
 
-  componentDidMount () {
-  }
-
-  componentWillUnmount () {
-    clearInterval(this.timer)
-  }
-
   render () {
+    const {user} = this.props;
     return (
-      <Layout>
+      <Layout isAuthedRequired={true}>
         <h1>Dashbaord page</h1>
+        <h2>User Info</h2>
+        <div>
+          <p>Email: {user.email}</p>
+        </div>
+        <h2>Messages</h2>
+        <Messages />
       </Layout>
       )
   }
