@@ -9,7 +9,7 @@ import Router from 'next/router';
 
 const Dashbaord = ({ user }) => {
   return (
-    <Layout isAuthedRequired={true}>
+    <Layout pageMod="dashboard" isAuthedRequired={true}>
       <h1>Dashbaord page</h1>
       <h2>User Info</h2>
       <div>

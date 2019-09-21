@@ -3,12 +3,10 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { connect } from 'react-redux'
 import Router from 'next/router';
+import css from '../App.css';
 
 const Layout = ({ children, pageMod, isAuthedRequired }) => {
-  let containerClass = 'container';
-  if(pageMod){
-    containerClass += ' mod-' + pageMod + '-page';
-  }
+  const containerClass = ((pageMod) ? 'container ' + pageMod + '-page' : 'container');
 
   return (
     <>
@@ -44,8 +42,6 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
       `}</style>
     </>
   )
-
 }
-
 
 export default connect(state => state)(Layout);

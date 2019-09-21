@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Layout from '../layouts/Layout';
-import '../App.css';
 
 const Index = () => {
   return (

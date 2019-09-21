@@ -8,6 +8,7 @@ import { compose, withState } from 'recompose';
 import AuthForm from '../components/AuthForm';
 
 const LoginBase = ({setState, state}) => {
+  
   const { email, password } = state;
 
   const handleChange = (event) => {
@@ -66,7 +67,6 @@ const LoginBase = ({setState, state}) => {
       `}</style>
     </Layout>
   )
-
 }
 
 const Login = compose(

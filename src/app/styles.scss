@@ -1,0 +1,25 @@
+.container {
+  display: none;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+#__next{
+  display: flex;
+  flex-direction: column;
+}
+body{
+  background-color: #f1f1f1;
+}
+main {
+  flex: 1 1 100%;
+}
+main .container {
+  height: 100%;
+  background-color: #fff;
+}
+.container {
+  max-width: 1150px;
+  margin: 0 auto;
+}

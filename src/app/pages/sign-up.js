@@ -7,7 +7,7 @@ import Router from 'next/router';
 import { compose, withState } from 'recompose';
 import AuthForm from '../components/AuthForm';
 
-const SignUpBase = ({setState, state}) => {
+const SignUpBase = ({setState, state}) => {  
   const { email, password } = state;
 
   const handleChange = (event) => {
@@ -66,7 +66,6 @@ const SignUpBase = ({setState, state}) => {
       `}</style>
     </Layout>
   )
-  
 }
 
 const SignUp = compose(
