@@ -10,7 +10,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const LoginBase = ({ setState, state }) => {
 
-  const { email, password, isLoading } = state;
+  const { email, password, isLoading, errorMessage } = state;
 
   const handleChange = (event) => {
     let tempObj = {
@@ -35,6 +35,11 @@ const LoginBase = ({ setState, state }) => {
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
+      updateState('isLoading', false)
+      if(errorCode === 'auth/user-not-found'){
+        errorMessage = 'User not found please register'
+      }
+      updateState('errorMessage', errorMessage)
     });
   };
 
@@ -60,6 +65,7 @@ const LoginBase = ({ setState, state }) => {
       <div className="login-form-wrapper">
         <div className="login-form">
           <AuthForm
+            errorMessage={errorMessage}
             email={email}
             password={password}
             handleEmailPassAuth={handleEmailPassAuth}
@@ -82,7 +88,7 @@ const LoginBase = ({ setState, state }) => {
 }
 
 const Login = compose(
-  withState('state', 'setState', {email: '', password: '', isLoading: false})
+  withState('state', 'setState', {email: '', password: '', isLoading: false, errorMessage: ''})
 )(LoginBase);
 
 export default Login;

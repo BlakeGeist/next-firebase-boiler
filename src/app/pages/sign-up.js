@@ -10,7 +10,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 
 const SignUpBase = ({ setState, state }) => {
 
-  const { email, password, isLoading } = state;
+  const { email, password, isLoading, errorMessage } = state;
 
   const handleChange = (event) => {
     let tempObj = {
@@ -30,11 +30,17 @@ const SignUpBase = ({ setState, state }) => {
 
   const handleEmailPassAuth = (e) => {
     e.preventDefault();
-    updateState('isLoading', true)    
+    updateState('isLoading', true)
+    updateState('errorMessage', '');
+
     const {email, password} = state;
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
+      if(errorCode === 'auth/email-already-in-use'){
+        errorMessage = 'email already in use, please sign in or use another email'
+      }
+      updateState('errorMessage', errorMessage);
     });
   };
 
@@ -60,6 +66,7 @@ const SignUpBase = ({ setState, state }) => {
       <div className="login-form-wrapper">
         <div className="login-form">
           <AuthForm
+            errorMessage={errorMessage}
             email={email}
             password={password}
             handleEmailPassAuth={handleEmailPassAuth}
@@ -81,7 +88,7 @@ const SignUpBase = ({ setState, state }) => {
 }
 
 const SignUp = compose(
-  withState('state', 'setState', {email: '', password: '', isLoading: false})
+  withState('state', 'setState', {email: '', password: '', isLoading: false, errorMessage: ''})
 )(SignUpBase);
 
 export default SignUp;

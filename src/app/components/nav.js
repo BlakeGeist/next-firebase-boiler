@@ -10,6 +10,7 @@ import Router from 'next/router';
 const Nav = ({ user, dispatch }) => {
 
   const leftNav = [
+    { href: '/', label: 'Home' },    
     { href: '/about', label: 'About' },
     { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
   ].map(link => {
@@ -29,7 +30,7 @@ const Nav = ({ user, dispatch }) => {
     e.preventDefault();
     firebase.auth().signOut()
     .then(()=>{
-      dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });      
+      dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });
       Router.push('/login')
     })
     fetch('/api/logout', {
@@ -80,7 +81,6 @@ const Nav = ({ user, dispatch }) => {
     <>
     <nav>
       <ul>
-        <li><Link href="/"><a className="navItem">Home</a></Link></li>
         {leftNav.map(({ key, href, label, isExternal }) => (
           <li key={key}>
             <LinkItem href={href} label={label} isExternal={isExternal} />
