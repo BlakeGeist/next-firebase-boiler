@@ -10,6 +10,7 @@ const Nav = ({ user, dispatch }) => {
 
   const leftNav = [
     { href: '/', label: 'Home' },
+    { href: '/sets', label: 'Sets'},
     { href: '/about', label: 'About' },
     { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
   ].map(link => {

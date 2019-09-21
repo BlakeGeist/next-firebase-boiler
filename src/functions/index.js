@@ -19,8 +19,8 @@ const firebase = admin.initializeApp(
   'server'
 )
 
-const server = express()
-
+const server = express();
+server.use(cors());
 server.use(bodyParser.json())
 server.use(
   session({

@@ -8,11 +8,9 @@ const scryfall = new ScryfallClient()
 
 const Index = ({ card }) => {
   return (
-    <Layout>
-      <h1>Index page</h1>
-      <p>Index page content</p>
+    <Layout pageMod='index'>
       {card &&
-        <Card card={card} />
+        <Card />
       }
     </Layout>
   )

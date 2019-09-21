@@ -8,19 +8,19 @@ const ScryfallClient = require('scryfall-client')
 const scryfall = new ScryfallClient()
 
 const Index = ({ card }) => {
-  console.log(card)
   return (
     <Layout pageMod="card">
-      <Card card={card} />
+      <Card  />
     </Layout>
   )
 }
 
-Index.getInitialProps = async function(context) {
-  const { slug } = context.query;
-  let response = await axios.get('https://api.scryfall.com/cards/multiverse/'+slug);
+Index.getInitialProps = async ({ reduxStore, req, query, res }) => {
+  const { slug } = query;
+  let response = await axios.get('https://api.scryfall.com/cards/'+slug);
   const card = response.data;
-  return { card }
+  reduxStore.dispatch({ type: 'SET_ITEM', name: 'card', payload: card });
+  return {  }
 };
 
 export default Index

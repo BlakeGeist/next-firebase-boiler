@@ -17,8 +17,12 @@ const firebase = admin.initializeApp(
   'server'
 )
 
+var cors = require('cors');
+
 app.prepare().then(() => {
   const server = express()
+
+  server.use(cors());
 
   server.use(bodyParser.json())
   server.use(
