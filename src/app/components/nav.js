@@ -6,11 +6,10 @@ import 'firebase/auth'
 import clientCredentials from '../../functions/credentials/client'
 import Router from 'next/router';
 
-
 const Nav = ({ user, dispatch }) => {
 
   const leftNav = [
-    { href: '/', label: 'Home' },    
+    { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
   ].map(link => {

@@ -11,7 +11,8 @@ const exampleInitialState = {
   rawProfiles: [],
   hasSearched: false,
   user: {},
-  messages: []
+  messages: [],
+  card: {}
 }
 
 export const actionTypes = {
@@ -45,44 +46,11 @@ export const reducer = (state = exampleInitialState, action) => {
   }
 
   switch (action.type) {
-    case actionTypes.TICK:
-      return Object.assign({}, state, {
-        lastUpdate: action.ts,
-        light: !!action.light
-      })
-    case actionTypes.INCREMENT:
-      return Object.assign({}, state, {
-        count: state.count + 1
-      })
-    case actionTypes.DECREMENT:
-      return Object.assign({}, state, {
-        count: state.count - 1
-      })
-    case actionTypes.RESET:
-      return Object.assign({}, state, {
-        count: exampleInitialState.count
-      })
     case actionTypes.SET_ITEM: {
       return Object.assign({}, state, {
         [action.name]: action.payload
       })
     }
-    case actionTypes.ADD_PROFILE: {
-      const profileDoesNotExist = state.profiles.filter(
-        (x) => { return x.id === action.profileData.id; }
-      ).length < 1;
-      const theProfiles = [...state.profiles, action.profileData];
-      return updateProfiles(profileDoesNotExist, theProfiles, state);
-    }
-    case actionTypes.REMOVE_PROFILE: {
-      const profiles = removeProfileByIndex(action.index);
-      return {
-        ...state,
-        profiles,
-        rawProfiles: profiles
-      }
-    }
-
     default:
       return state
   }
