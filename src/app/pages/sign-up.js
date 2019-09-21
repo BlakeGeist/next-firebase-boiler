@@ -6,9 +6,11 @@ import Layout from '../layouts/Layout';
 import Router from 'next/router';
 import { compose, withState } from 'recompose';
 import AuthForm from '../components/AuthForm';
+import LoadingSpinner from '../components/LoadingSpinner';
 
-const SignUpBase = ({setState, state}) => {  
-  const { email, password } = state;
+const SignUpBase = ({ setState, state }) => {
+
+  const { email, password, isLoading } = state;
 
   const handleChange = (event) => {
     let tempObj = {
@@ -18,8 +20,17 @@ const SignUpBase = ({setState, state}) => {
     setState(tempObj)
   };
 
+  function updateState(item, payload) {
+    let tempObj = {
+      ...state
+    }
+    tempObj[item] = payload;
+    setState(tempObj)
+  }
+
   const handleEmailPassAuth = (e) => {
     e.preventDefault();
+    updateState('isLoading', true)    
     const {email, password} = state;
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
       var errorCode = error.code;
@@ -56,6 +67,7 @@ const SignUpBase = ({setState, state}) => {
             />
           <button>Sign Up with Google</button>
         </div>
+        <LoadingSpinner isLoading={isLoading} />
       </div>
       <style jsx>{`
         .login-form-wrapper{
@@ -69,7 +81,7 @@ const SignUpBase = ({setState, state}) => {
 }
 
 const SignUp = compose(
-  withState('state', 'setState', {email: '', password: ''})
+  withState('state', 'setState', {email: '', password: '', isLoading: false})
 )(SignUpBase);
 
 export default SignUp;
