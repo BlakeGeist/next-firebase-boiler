@@ -29,6 +29,7 @@ const Nav = ({ user, dispatch }) => {
     e.preventDefault();
     firebase.auth().signOut()
     .then(()=>{
+      dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });      
       Router.push('/login')
     })
     fetch('/api/logout', {
