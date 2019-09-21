@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 const Card = ({ card }) => {
   return (
@@ -6,7 +7,9 @@ const Card = ({ card }) => {
       <h2>Random MTG Card</h2>
       {card.name}
       <div>
-        <img src={card.image_uris.normal} width="260px" height="362px;" />
+        <Link href="/c/[id]" as={`/c/${card.multiverse_ids}`}>
+          <a><img src={card.image_uris.normal} width="260px" height="362px;" /></a>
+        </Link>
       </div>
       <p>Prices: ${card.prices.usd}</p>
       <style jsx>{`

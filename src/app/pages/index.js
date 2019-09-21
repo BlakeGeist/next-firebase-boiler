@@ -7,7 +7,6 @@ const ScryfallClient = require('scryfall-client')
 const scryfall = new ScryfallClient()
 
 const Index = ({ card }) => {
-  console.log(card)
   return (
     <Layout>
       <h1>Index page</h1>
