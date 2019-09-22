@@ -8,10 +8,11 @@ const Sets = ({ sets }) => {
   const renderSet = (set, i) => {
     return (
       <tr key={i}>
-        <td>{set.name}</td>
+        <th><img src={set.icon_svg_uri} width="24px" /></th>
         <td>
-          <Link href="/s/[setId]" as={`/s/${set.code}`}><a>here</a></Link>
+          <Link href="/s/[setId]" as={`/s/${set.code}`}><a>{set.name}</a></Link>
         </td>
+        <td>{set.card_count}</td>
       </tr>
     )
   }
@@ -23,8 +24,9 @@ const Sets = ({ sets }) => {
       <table>
         <tbody>
           <tr>
+            <th>Icon</th>
             <th>Set Name</th>
-            <th>Link</th>
+            <th>Card Count</th>
           </tr>
           {sets &&
             sets.map((set, i) => renderSet(set, i))

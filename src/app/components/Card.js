@@ -5,52 +5,68 @@ import axios from 'axios'
 import fetchJsonp from 'fetch-jsonp'
 import { compose, withState } from 'recompose';
 import Router from 'next/router';
+import EbaySearchTable from './EbaySearchTable';
 
-const CardBase = ({ card, ebaySearchResuslts, setEbaySearchResuslts, dispatch }) => {
+const CardBase = ({ card, completedAvgPriceAfterOutliers, setCompletedAvgPriceAfterOutliers, completedAvgPrice, setCompletedAvgPrice, ebaySearchResuslts, setEbaySearchResuslts, dispatch, ebayActiveSearchResuslts, setEbayActiveSearchResuslts, avgPrice, avgPriceAfterOutliers, setAvgPrice, setAvgPriceAfterOutliers }) => {
+
 
   const handleFetchEbayInfo = () => {
     const appName = 'BlakeGei-standard-PRD-ee6e394ea-800e1243';
-    const anmountToFetch = 100;
-    fetchJsonp('https://svcs.ebay.com/services/search/FindingService/v1?SECURITY-APPNAME=' + appName + '&OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.0.0&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD&keywords=' + card.name + '&categoryId=38292&paginationInput.entriesPerPage=' + anmountToFetch + '&GLOBAL-ID=EBAY-US&siteid=0')
+    const anmountToFetch = 1000;
+
+
+    fetchJsonp('https://svcs.ebay.com/services/search/FindingService/v1?SECURITY-APPNAME=' + appName + '&OPERATION-NAME=findItemsByKeywords&SERVICE-VERSION=1.0.0&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD&keywords=' + card.name + '&sortOrder=PricePlusShippingLowest&categoryId=38292&paginationInput.entriesPerPage=' + anmountToFetch + '&GLOBAL-ID=EBAY-US&siteid=0')
       .then(function(response) {
         return response.json()
-      }).then(function(json) {
+      }).then(async (json) => {
+        const results = json.findItemsByKeywordsResponse[0].searchResult[0].item;
 
-        const results = json.findCompletedItemsResponse[0].searchResult[0].item;
-        setEbaySearchResuslts(results)
+        setEbayActiveSearchResuslts(results)
 
         let prices = [];
         results.forEach((result) => {
-          console.log(result)
           const price = parseFloat(result.sellingStatus[0].currentPrice[0].__value__);
           prices.push(price)
         })
-        const filteredArray = filterOutliers(prices);
-        const averageOfArray = getAverage(filteredArray);
-        const roundedAverageOfArray = roundMoney(averageOfArray);
 
-        console.log(filteredArray)
-        console.log(averageOfArray);
-        console.log(roundedAverageOfArray);
+        const averageOfArray = roundMoney(getAverage(prices));
+        const filteredArray = filterOutliers(prices);
+        const averageOfArrayAfterOutliersAreRemoved = getAverage(filteredArray);
+        const roundedAverageOfArray = roundMoney(averageOfArrayAfterOutliersAreRemoved);
+
+
+        setAvgPriceAfterOutliers(roundedAverageOfArray)
+        setAvgPrice(averageOfArray)
 
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
-  }
 
-  const renderEbaySearchResult = (result, i) => {
-    const date = result.listingInfo[0].endTime;
-    let myDate;
-    if(date){
-      myDate = new Date(date);
-    }
-    return (
-      <tr key={i}>
-        <td><a href={result.viewItemURL[0]}>Link</a></td>
-        <td>${result.sellingStatus[0].currentPrice[0].__value__}</td>
-        <td>{myDate.toDateString()}</td>
-      </tr>
-    )
+    fetchJsonp('https://svcs.ebay.com/services/search/FindingService/v1?SECURITY-APPNAME=' + appName + '&OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.0.0&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD&keywords=' + card.name + '&categoryId=38292&paginationInput.entriesPerPage=' + anmountToFetch + '&GLOBAL-ID=EBAY-US&siteid=0')
+      .then(function(response) {
+        return response.json()
+      }).then(function(json) {
+        const results = json.findCompletedItemsResponse[0].searchResult[0].item;
+
+        setEbaySearchResuslts(results)
+
+        let prices = [];
+        results.forEach((result) => {
+          const price = parseFloat(result.sellingStatus[0].currentPrice[0].__value__);
+          prices.push(price)
+        })
+        const averageOfArray = roundMoney(getAverage(prices));
+        const filteredArray = filterOutliers(prices);
+        const averageOfArrayAfterOutliersAreRemoved = getAverage(filteredArray);
+        const roundedAverageOfArray = roundMoney(averageOfArray);
+
+        setCompletedAvgPrice(roundedAverageOfArray)
+        setCompletedAvgPriceAfterOutliers(averageOfArray)
+
+      }).catch(function(ex) {
+        console.log('parsing failed', ex)
+      })
+
   }
 
   const hanldeFetchNewRandomCard = async (e) => {
@@ -61,7 +77,6 @@ const CardBase = ({ card, ebaySearchResuslts, setEbaySearchResuslts, dispatch })
       Router.push(('/c/' + card.id))
     })
   }
-
 
   function filterOutliers(someArray) {
     if(someArray.length < 4)
@@ -94,6 +109,22 @@ const CardBase = ({ card, ebaySearchResuslts, setEbaySearchResuslts, dispatch })
     return Math.ceil(float * 100) / 100;
   }
 
+  function firstNumber(string){
+    if(string.match(/\d+/)){
+      if (string.match(/\d+/)[0] > 4) {
+        return 1
+      } else {
+        return string.match(/\d+/)[0]
+      }
+    } else {
+      return 1
+    }
+  }
+
+  function priceByQTY(number, price){
+    return '$' + roundMoney(price / number);
+  }
+
   return (
     <div className="card-container">
       <div className="card">
@@ -104,25 +135,19 @@ const CardBase = ({ card, ebaySearchResuslts, setEbaySearchResuslts, dispatch })
             <a><img src={card.image_uris.normal} width="260px" height="362px;" /></a>
           </Link>
         </div>
-        <p>Prices: ${card.prices.usd}</p>
+        <p>Price: ${card.prices.usd} | Foil Price: ${card.prices.usd_foil}</p>
         <p>
           Set: <Link href="/s/[setId]" as={`/s/${card.set}`}><a>{card.set_name}</a></Link>
         </p>
         <p><button onClick={handleFetchEbayInfo}>Ebay Info</button></p>
-        {ebaySearchResuslts &&
-          <div>
-            <table>
-              <tbody>
-                <tr>
-                  <th>Ebay Link</th>
-                  <th>Sell Price</th>
-                  <th>Sell Date</th>
-                </tr>
-                {ebaySearchResuslts.map((result, i) => renderEbaySearchResult(result, i))}
-              </tbody>
-            </table>
-          </div>
-        }
+        <EbaySearchTable
+          results={ebayActiveSearchResuslts}
+          title="Active"
+          />
+        <EbaySearchTable
+          results={ebaySearchResuslts}
+          title="Completed"
+          />
       </div>
       <style global jsx>{`
         .card-container {
@@ -132,13 +157,49 @@ const CardBase = ({ card, ebaySearchResuslts, setEbaySearchResuslts, dispatch })
         .card{
           text-align: center;
         }
+        .mod-foil{
+          background-color: #f1f1f1;
+        }
+        table{
+          text-align: left;
+        }
+        .mod-sells-today {
+          background-color: gold;
+        }
       `}</style>
     </div>
   )
 };
 
 const Card = compose(
-  withState('ebaySearchResuslts', 'setEbaySearchResuslts', [])
+  withState('ebaySearchResuslts', 'setEbaySearchResuslts', []),
+  withState('ebayActiveSearchResuslts', 'setEbayActiveSearchResuslts', []),
+  withState('avgPrice', 'setAvgPrice', ''),
+  withState('avgPriceAfterOutliers', 'setAvgPriceAfterOutliers', ''),
+  withState('completedAvgPrice', 'setCompletedAvgPrice', ''),
+  withState('completedAvgPriceAfterOutliers', 'setCompletedAvgPriceAfterOutliers', '')
 )(CardBase);
 
 export default connect(state => state)(Card);
+
+
+
+
+//https://svcs.ebay.com/services/search/FindingService/v1?
+   //OPERATION-NAME=findItemsByKeywords&
+   //SERVICE-VERSION=1.0.0&
+   //SECURITY-APPNAME=YourAppID&
+   //RESPONSE-DATA-FORMAT=XML&
+   //REST-PAYLOAD&
+   //buyerPostalCode=95060&
+   //sortOrder=Distance&
+   //outputSelector=SellerInfo&
+   //itemFilter(0).name=MaxPrice&
+   //itemFilter(0).value=2500.00&
+   //itemFilter(0).paramName=Currency&
+   //itemFilter(0).paramValue=USD&
+   //itemFilter(1).name=MinPrice&
+   //itemFilter(1).value=2000.00&
+   //itemFilter(1).paramName=Currency&
+   //itemFilter(1).paramValue=USD&
+   //keywords=%22pre-CBS%22
