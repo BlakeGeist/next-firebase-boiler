@@ -6,22 +6,57 @@ import fetchJsonp from 'fetch-jsonp'
 import { compose, withState } from 'recompose';
 import Router from 'next/router';
 import EbaySearchTable from './EbaySearchTable';
+import buildEbayApiCall from '../helpers/buildEbayApiCall';
+const { filterOutliers,  getAverage, roundMoney, firstNumber, priceByQTY } = require("../helpers/quickHelpers");
+
+console.log(filterOutliers)
 
 const CardBase = ({ card, completedAvgPriceAfterOutliers, setCompletedAvgPriceAfterOutliers, completedAvgPrice, setCompletedAvgPrice, ebaySearchResuslts, setEbaySearchResuslts, dispatch, ebayActiveSearchResuslts, setEbayActiveSearchResuslts, avgPrice, avgPriceAfterOutliers, setAvgPrice, setAvgPriceAfterOutliers }) => {
 
-
   const handleFetchEbayInfo = () => {
-    const appName = 'BlakeGei-standard-PRD-ee6e394ea-800e1243';
-    const anmountToFetch = 1000;
+    fetchActiveListingsData();
+    fetchCompletedListingData();
+  }
 
+  const hanldeFetchNewRandomCard = async (e) => {
+    const ScryfallClient = require('scryfall-client')
+    const scryfall = new ScryfallClient()
+    e.preventDefault();
+    await scryfall.get('cards/random').then(function (card) {
+      Router.push(('/c/' + card.id))
+    })
+  }
 
-    fetchJsonp('https://svcs.ebay.com/services/search/FindingService/v1?SECURITY-APPNAME=' + appName + '&OPERATION-NAME=findItemsByKeywords&SERVICE-VERSION=1.0.0&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD&keywords=' + card.name + '&sortOrder=PricePlusShippingLowest&categoryId=38292&paginationInput.entriesPerPage=' + anmountToFetch + '&GLOBAL-ID=EBAY-US&siteid=0')
+  function fetchActiveListingsData(){
+    const options =  {
+      'OPERATION-NAME': 'findItemsByKeywords',
+      'keywords': card.name
+    }
+    let apiCall = buildEbayApiCall(options)
+    runFetchJsonp(apiCall)
+  }
+
+  function fetchCompletedListingData(){
+    const options =  {
+      'OPERATION-NAME': 'findCompletedItems',
+      'keywords': card.name
+    }
+    let apiCall = buildEbayApiCall(options)
+    runFetchJsonp(apiCall)
+  }
+
+  function runFetchJsonp(apiCall){
+    fetchJsonp(apiCall)
       .then(function(response) {
         return response.json()
-      }).then(async (json) => {
-        const results = json.findItemsByKeywordsResponse[0].searchResult[0].item;
-
-        setEbayActiveSearchResuslts(results)
+      }).then((json) => {
+        console.log(json)
+        let results = []
+        if(json.findCompletedItemsResponse) {
+          results = json.findCompletedItemsResponse[0].searchResult[0].item;
+        } else {
+          results = json.findItemsByKeywordsResponse[0].searchResult[0].item;
+        }
 
         let prices = [];
         results.forEach((result) => {
@@ -34,95 +69,18 @@ const CardBase = ({ card, completedAvgPriceAfterOutliers, setCompletedAvgPriceAf
         const averageOfArrayAfterOutliersAreRemoved = getAverage(filteredArray);
         const roundedAverageOfArray = roundMoney(averageOfArrayAfterOutliersAreRemoved);
 
-
-        setAvgPriceAfterOutliers(roundedAverageOfArray)
-        setAvgPrice(averageOfArray)
-
+        if(json.findCompletedItemsResponse) {
+          setEbaySearchResuslts(results)
+          setAvgPriceAfterOutliers(roundedAverageOfArray)
+          setAvgPrice(averageOfArray)
+        } else {
+          setEbayActiveSearchResuslts(results)
+          setAvgPriceAfterOutliers(roundedAverageOfArray)
+          setAvgPrice(averageOfArray)
+        }
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
-
-    fetchJsonp('https://svcs.ebay.com/services/search/FindingService/v1?SECURITY-APPNAME=' + appName + '&OPERATION-NAME=findCompletedItems&SERVICE-VERSION=1.0.0&RESPONSE-DATA-FORMAT=JSON&REST-PAYLOAD&keywords=' + card.name + '&categoryId=38292&paginationInput.entriesPerPage=' + anmountToFetch + '&GLOBAL-ID=EBAY-US&siteid=0')
-      .then(function(response) {
-        return response.json()
-      }).then(function(json) {
-        const results = json.findCompletedItemsResponse[0].searchResult[0].item;
-
-        setEbaySearchResuslts(results)
-
-        let prices = [];
-        results.forEach((result) => {
-          const price = parseFloat(result.sellingStatus[0].currentPrice[0].__value__);
-          prices.push(price)
-        })
-        const averageOfArray = roundMoney(getAverage(prices));
-        const filteredArray = filterOutliers(prices);
-        const averageOfArrayAfterOutliersAreRemoved = getAverage(filteredArray);
-        const roundedAverageOfArray = roundMoney(averageOfArray);
-
-        setCompletedAvgPrice(roundedAverageOfArray)
-        setCompletedAvgPriceAfterOutliers(averageOfArray)
-
-      }).catch(function(ex) {
-        console.log('parsing failed', ex)
-      })
-
-  }
-
-  const hanldeFetchNewRandomCard = async (e) => {
-    const ScryfallClient = require('scryfall-client')
-    const scryfall = new ScryfallClient()
-    e.preventDefault();
-    await scryfall.get('cards/random').then(function (card) {
-      Router.push(('/c/' + card.id))
-    })
-  }
-
-  function filterOutliers(someArray) {
-    if(someArray.length < 4)
-      return someArray;
-    let values, q1, q3, iqr, maxValue, minValue;
-    values = someArray.slice().sort( (a, b) => a - b);//copy array fast and sort
-    if((values.length / 4) % 1 === 0){//find quartiles
-      q1 = 1/2 * (values[(values.length / 4)] + values[(values.length / 4) + 1]);
-      q3 = 1/2 * (values[(values.length * (3 / 4))] + values[(values.length * (3 / 4)) + 1]);
-    } else {
-      q1 = values[Math.floor(values.length / 4 + 1)];
-      q3 = values[Math.ceil(values.length * (3 / 4) + 1)];
-    }
-    iqr = q3 - q1;
-    maxValue = q3 + iqr * 1.5;
-    minValue = q1 - iqr * 1.5;
-    return values.filter((x) => (x >= minValue) && (x <= maxValue));
-  }
-
-  function getAverage(someArray){
-    let total = 0;
-    someArray.forEach((int) => {
-      total += int;
-    });
-    let average = total / someArray.length;
-    return average;
-  }
-
-  function roundMoney(float){
-    return Math.ceil(float * 100) / 100;
-  }
-
-  function firstNumber(string){
-    if(string.match(/\d+/)){
-      if (string.match(/\d+/)[0] > 4) {
-        return 1
-      } else {
-        return string.match(/\d+/)[0]
-      }
-    } else {
-      return 1
-    }
-  }
-
-  function priceByQTY(number, price){
-    return '$' + roundMoney(price / number);
   }
 
   return (
@@ -143,10 +101,14 @@ const CardBase = ({ card, completedAvgPriceAfterOutliers, setCompletedAvgPriceAf
         <EbaySearchTable
           results={ebayActiveSearchResuslts}
           title="Active"
+          avgPrice={avgPrice}
+          avgPriceAfterOutliers={avgPriceAfterOutliers}
           />
         <EbaySearchTable
           results={ebaySearchResuslts}
           title="Completed"
+          avgPrice={completedAvgPrice}
+          avgPriceAfterOutliers={completedAvgPriceAfterOutliers}
           />
       </div>
       <style global jsx>{`

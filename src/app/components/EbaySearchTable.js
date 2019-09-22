@@ -1,6 +1,6 @@
 import React from 'react'
 
-const EbaySearchTable = ({ title, results }) => {
+const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers }) => {
 
   const renderEbaySearchResult = (result, i) => {
     const date = result.listingInfo[0].endTime;
@@ -68,6 +68,8 @@ const EbaySearchTable = ({ title, results }) => {
             </th>
           </tr>
           <tr>
+          <td>{avgPrice}</td>
+          <td>{avgPriceAfterOutliers}</td>
           </tr>
         </tbody>
       </table>
@@ -83,7 +85,6 @@ const EbaySearchTable = ({ title, results }) => {
             <th>Price per QTY</th>
           </tr>
           {results.map((result, i) => renderEbaySearchResult(result, i))}
-
         </tbody>
       </table>
     </div>
