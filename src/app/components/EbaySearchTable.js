@@ -43,7 +43,8 @@ const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgF
     let pagesArray = [];
 
     for(let i = 0; i < results.paginationOutput.totalPages; i++) {
-      pagesArray.push(<a href="" onClick={paginationClick} data-paginate={i+1} key={i}>{i+1}</a>)
+      let isActive = (results.paginationOutput.pageNumber[0] === (i+1).toString() ? 'isActive' : '')
+      pagesArray.push(<a className={isActive} href="" onClick={paginationClick} data-paginate={i+1} key={i}>{i+1}</a>)
     }
     return pagesArray
   }
@@ -70,6 +71,9 @@ const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgF
                   display: flex;
                   justify-content: center;
                   align-items: center;
+                }
+                .pagination-container a.isActive {
+                  background-color: yellow;
                 }
               `}</style>
           </div>
