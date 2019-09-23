@@ -48,7 +48,7 @@ const LoginBase = ({ setState, state }) => {
   };
 
   const onAuthStateChange = (user) => {
-    if(user && user.email){
+    if(user && user.uid){
       Router.push('/dashboard')
     }
   };
@@ -57,6 +57,11 @@ const LoginBase = ({ setState, state }) => {
     const unsubscribe = firebase.auth().onAuthStateChanged(onAuthStateChange);
     return () => unsubscribe();
   });
+
+  const handleEbayLogin = () => {
+
+    window.location ='https://auth.ebay.com/oauth2/authorize?client_id=BlakeGei-standard-PRD-ee6e394ea-800e1243&response_type=code&redirect_uri=Blake_Geist-BlakeGei-standa-oysusnr&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances'
+  }
 
   return (
     <Layout pageMod="about">
@@ -71,7 +76,8 @@ const LoginBase = ({ setState, state }) => {
             handleEmailPassAuth={handleEmailPassAuth}
             handleChange={handleChange}
             />
-          <button>Sign Up with Google</button>
+          <div><button>Sign In with Google</button></div>
+          <div><button onClick={handleEbayLogin}>Sign In With Ebay</button></div>
         </div>
         <LoadingSpinner isLoading={isLoading} />
       </div>

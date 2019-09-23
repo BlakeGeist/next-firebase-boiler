@@ -9,9 +9,19 @@ import EbaySearchTable from './EbaySearchTable';
 import buildEbayApiCall from '../helpers/buildEbayApiCall';
 const { filterOutliers,  getAverage, roundMoney, firstNumber, priceByQTY } = require("../helpers/quickHelpers");
 
-console.log(filterOutliers)
-
-const CardBase = ({ card, completedAvgPriceAfterOutliers, setCompletedAvgPriceAfterOutliers, completedAvgPrice, setCompletedAvgPrice, ebaySearchResuslts, setEbaySearchResuslts, dispatch, ebayActiveSearchResuslts, setEbayActiveSearchResuslts, avgPrice, avgPriceAfterOutliers, setAvgPrice, setAvgPriceAfterOutliers }) => {
+const CardBase = ({
+  card,
+  dispatch,
+  completedAvgFoilPrice, setCompltedAvgFoilPrice,
+  avgFoilPriceAfterOutliers, avgAvgFoilPriceAfterOutliers,
+  avgFoilPrice, setAvgFoilPrice,
+  completedAvgPriceAfterOutliers, setCompletedAvgPriceAfterOutliers,
+  completedAvgPrice, setCompletedAvgPrice,
+  ebaySearchResuslts, setEbaySearchResuslts,
+  ebayActiveSearchResuslts, setEbayActiveSearchResuslts,
+  avgPrice, setAvgPrice,
+  avgPriceAfterOutliers, setAvgPriceAfterOutliers
+ }) => {
 
   const handleFetchEbayInfo = () => {
     fetchActiveListingsData();
@@ -27,19 +37,25 @@ const CardBase = ({ card, completedAvgPriceAfterOutliers, setCompletedAvgPriceAf
     })
   }
 
-  function fetchActiveListingsData(){
-    const options =  {
+  function fetchActiveListingsData(page){
+    let options =  {
       'OPERATION-NAME': 'findItemsByKeywords',
-      'keywords': card.name
+      'keywords': card.name + ' mtg'
+    }
+    if(page){
+      options['paginationInput.pageNumber'] = page;
     }
     let apiCall = buildEbayApiCall(options)
     runFetchJsonp(apiCall)
   }
 
-  function fetchCompletedListingData(){
-    const options =  {
+  function fetchCompletedListingData(page){
+    let options =  {
       'OPERATION-NAME': 'findCompletedItems',
-      'keywords': card.name
+      'keywords': card.name + ' mtg'
+    }
+    if(page){
+      options['paginationInput.pageNumber'] = page;
     }
     let apiCall = buildEbayApiCall(options)
     runFetchJsonp(apiCall)
@@ -50,38 +66,82 @@ const CardBase = ({ card, completedAvgPriceAfterOutliers, setCompletedAvgPriceAf
       .then(function(response) {
         return response.json()
       }).then((json) => {
+
         console.log(json)
-        let results = []
+
+        let results = [];
+        let theResults = [];
+        let nonFoils = [];
+        let foils = [];
+        let prices = [];
+        let foilPrices = [];
+
         if(json.findCompletedItemsResponse) {
           results = json.findCompletedItemsResponse[0].searchResult[0].item;
         } else {
           results = json.findItemsByKeywordsResponse[0].searchResult[0].item;
         }
 
-        let prices = [];
+
         results.forEach((result) => {
+          const resultTitle = result.title[0].toLowerCase();
           const price = parseFloat(result.sellingStatus[0].currentPrice[0].__value__);
-          prices.push(price)
+          const pricePerItem = roundMoney(price / firstNumber(resultTitle));
+
+          if(resultTitle.includes('foil') || resultTitle.includes('promo')) {
+            foils.push(result)
+            foilPrices.push(pricePerItem)
+          } else {
+            nonFoils.push(result)
+            prices.push(pricePerItem)
+          }
         })
 
+
+
+        theResults = theResults.concat(foils)
+        theResults = theResults.concat(nonFoils)
         const averageOfArray = roundMoney(getAverage(prices));
+        const averageOfFoilArray = roundMoney(getAverage(foilPrices));
         const filteredArray = filterOutliers(prices);
         const averageOfArrayAfterOutliersAreRemoved = getAverage(filteredArray);
         const roundedAverageOfArray = roundMoney(averageOfArrayAfterOutliersAreRemoved);
 
-        if(json.findCompletedItemsResponse) {
-          setEbaySearchResuslts(results)
-          setAvgPriceAfterOutliers(roundedAverageOfArray)
-          setAvgPrice(averageOfArray)
-        } else {
-          setEbayActiveSearchResuslts(results)
-          setAvgPriceAfterOutliers(roundedAverageOfArray)
-          setAvgPrice(averageOfArray)
+
+        let theResultsObj = {
+          data: theResults
         }
+
+
+        if(json.findCompletedItemsResponse) {
+          theResultsObj.paginationOutput = json.findCompletedItemsResponse[0].paginationOutput[0]
+          setEbaySearchResuslts(theResultsObj)
+          setCompletedAvgPrice(averageOfArray)
+          setCompletedAvgPriceAfterOutliers(roundedAverageOfArray)
+          setCompltedAvgFoilPrice(averageOfFoilArray)
+        } else {
+          theResultsObj.paginationOutput = json.findItemsByKeywordsResponse[0].paginationOutput[0]
+          setEbayActiveSearchResuslts(theResultsObj)
+          setAvgPrice(averageOfArray)
+          setAvgPriceAfterOutliers(roundedAverageOfArray)
+          setAvgFoilPrice(averageOfFoilArray)
+        }
+        console.log(theResultsObj)
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
   }
+
+  let cleanedSetName = card.set_name.replace(/ /g, '+');
+  cleanedSetName = cleanedSetName.replace(/,/g, '');
+
+  let cleanedCardName = card.name.replace(/ /g, '+');
+  cleanedCardName = cleanedCardName.replace(/,/g, '');
+
+  const baseGoldFlishLink = "https://www.mtggoldfish.com/price/";
+
+
+  let goldFishLink = baseGoldFlishLink + cleanedSetName  + '/' + cleanedCardName + '#paper'
 
   return (
     <div className="card-container">
@@ -97,18 +157,26 @@ const CardBase = ({ card, completedAvgPriceAfterOutliers, setCompletedAvgPriceAf
         <p>
           Set: <Link href="/s/[setId]" as={`/s/${card.set}`}><a>{card.set_name}</a></Link>
         </p>
+        <p>
+          <a href={"https://shop.tcgplayer.com/magic/product/show?ProductName=" + encodeURI(card.name)} target="_blank">TCG Player</a> |
+          <a href={goldFishLink} target="_blank">Goldfish</a>
+      </p>
         <p><button onClick={handleFetchEbayInfo}>Ebay Info</button></p>
         <EbaySearchTable
           results={ebayActiveSearchResuslts}
           title="Active"
           avgPrice={avgPrice}
           avgPriceAfterOutliers={avgPriceAfterOutliers}
+          avgFoilPrice={avgFoilPrice}
+          updateDataByPage={fetchActiveListingsData}
           />
         <EbaySearchTable
           results={ebaySearchResuslts}
           title="Completed"
           avgPrice={completedAvgPrice}
           avgPriceAfterOutliers={completedAvgPriceAfterOutliers}
+          avgFoilPrice={completedAvgFoilPrice}
+          updateDataByPage={fetchCompletedListingData}
           />
       </div>
       <style global jsx>{`
@@ -128,18 +196,25 @@ const CardBase = ({ card, completedAvgPriceAfterOutliers, setCompletedAvgPriceAf
         .mod-sells-today {
           background-color: gold;
         }
+        .highlight{
+          border: 1px solid green;
+        }
       `}</style>
     </div>
   )
 };
 
 const Card = compose(
-  withState('ebaySearchResuslts', 'setEbaySearchResuslts', []),
-  withState('ebayActiveSearchResuslts', 'setEbayActiveSearchResuslts', []),
+  withState('ebaySearchResuslts', 'setEbaySearchResuslts', { data: []}),
+  withState('ebayActiveSearchResuslts', 'setEbayActiveSearchResuslts', { data: []}),
   withState('avgPrice', 'setAvgPrice', ''),
   withState('avgPriceAfterOutliers', 'setAvgPriceAfterOutliers', ''),
+  withState('avgFoilPrice', 'setAvgFoilPrice', ''),
+  withState('avgFoilPriceAfterOutliers', 'avgAvgFoilPriceAfterOutliers', ''),
   withState('completedAvgPrice', 'setCompletedAvgPrice', ''),
-  withState('completedAvgPriceAfterOutliers', 'setCompletedAvgPriceAfterOutliers', '')
+  withState('completedAvgPriceAfterOutliers', 'setCompletedAvgPriceAfterOutliers', ''),
+  withState('completedAvgFoilPrice', 'setCompltedAvgFoilPrice', ''),
+  withState('ebayResponseObj', 'setebayResponseObj', {})
 )(CardBase);
 
 export default connect(state => state)(Card);

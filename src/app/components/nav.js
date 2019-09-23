@@ -88,7 +88,7 @@ const Nav = ({ user, dispatch }) => {
         ))}
       </ul>
       <ul className="user-nav">
-        {user && user.email ? (
+        {user && user.uid ? (
           <>
             <li>
               <Link href="/dashboard"><a className="navItem">Dashboard</a></Link>

@@ -49,7 +49,7 @@ const SignUpBase = ({ setState, state }) => {
   };
 
   const onAuthStateChange = (user) => {
-    if(user && user.email){
+    if(user && user.uid){
       Router.push('/dashboard')
     }
   };

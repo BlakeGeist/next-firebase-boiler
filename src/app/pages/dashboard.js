@@ -23,9 +23,9 @@ const Dashbaord = ({ user }) => {
 
 Dashbaord.getInitialProps = async ({reduxStore, req, query, res}) => {
   const { user } = reduxStore.getState();
-  if(res && !user.email){
+  if(res && !user.uid){
     res.redirect('/login')
-  } else if(!user.email){
+  } else if(!user.uid){
     Router.push('/login')
   }
   if (!firebase.apps.length) {

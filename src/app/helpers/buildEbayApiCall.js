@@ -7,9 +7,10 @@ module.exports = function (options) {
     'SERVICE-VERSION': '1.0.0',
     'RESPONSE-DATA-FORMAT': 'JSON&REST-PAYLOAD',
     'keywords': '',
-    'sortOrder': 'PricePlusShippingLowest',
+    'sortOrder': 'EndTimeSoonest',
     'categoryId': '38292',
     'paginationInput.entriesPerPage': '100',
+    'paginationInput.pageNumber': '1',
     'GLOBAL-ID': 'EBAY-US',
     'siteid': '0'
   }
@@ -29,3 +30,6 @@ module.exports = function (options) {
 
   return builtApiCall
 }
+
+
+//https://developer.ebay.com/DevZone/finding/CallRef/types/SortOrderType.html
