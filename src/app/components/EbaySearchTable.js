@@ -1,7 +1,7 @@
 import React from 'react'
 const { filterOutliers,  getAverage, roundMoney, firstNumber, priceByQTY } = require("../helpers/quickHelpers");
 
-const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgFoilPrice, updateDataByPage }) => {
+const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgFoilPrice, updateDataByPage, updateSort, sortOrder }) => {
 
   const renderEbaySearchResult = (result, i) => {
     const date = result.listingInfo[0].endTime;

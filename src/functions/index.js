@@ -12,6 +12,7 @@ var dir = __dirname
 const nextApp = next({ dev: false, dir, conf: { distDir: 'public' } });
 const handle = nextApp.getRequestHandler();
 const axios = require('axios');
+const qs = require('qs');
 
 const firebase2 = require('firebase');
 
@@ -80,43 +81,77 @@ server.get('/api/oauthEbay', async (req, res) => {
 
   var headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Authorization': 'Basic Qmxha2VHZWktc3RhbmRhcmQtUFJELWVlNmUzOTRlYS04MDBlMTI0MzpQUkQtYmZmM2ZlNDRmMGVhLTA5YWUtNDcwZi05MjIyLTZlMmM='
+    'Accept': 'application/json',
+    'Cache-Control': 'no-cache',
+    'authorization': 'Basic Qmxha2VHZWktc3RhbmRhcmQtUFJELWVlNmUzOTRlYS04MDBlMTI0MzpQUkQtYmZmM2ZlNDRmMGVhLTA5YWUtNDcwZi05MjIyLTZlMmM=',
+    'scope': 'https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances'
   }
 
   const decodedURIToken = decodeURI(token)
   const encodedToken = encodeURI(decodedURIToken);
-  await axios({
-    method: 'post',
-    url: 'https://api.ebay.com/identity/v1/oauth2/token?redirect_uri=Blake_Geist-BlakeGei-standa-oysusnr&code='+encodedToken,
-    headers: headers
-  })
-    .then((response) =>{
 
-      const setKeys = Object.keys(response)
 
-      setKeys.forEach((response)=>{
-        console.log(response)
-      })
-
-      console.log(response.data)
-      console.log(response.request)
-
-      console.log('ebay response')
+  axios({
+  		method: 'POST',
+  		url: 'https://api.ebay.com/identity/v1/oauth2/token',
+  		headers: {
+  			'Content-Type': 'application/x-www-form-urlencoded',
+  			'Accept': 'application/json',
+  			'Cache-Control': 'no-cache',
+  			'Authorization': 'Basic Qmxha2VHZWktc3RhbmRhcmQtUFJELWVlNmUzOTRlYS04MDBlMTI0MzpQUkQtYmZmM2ZlNDRmMGVhLTA5YWUtNDcwZi05MjIyLTZlMmM='
+  		},
+  		data: qs.stringify({
+  			'grant_type': 'authorization_code',
+  			'redirect_uri': 'Blake_Geist-BlakeGei-standa-oysusnr',
+  			'code': token
+  		})
+  	})
+  	.then((response) => {
       console.log(response)
+      console.log(response.data)
+      console.log(response.data.access_token)
+      console.log('omg fucking work')
+
+        axios({
+        		method: 'POST',
+        		url: 'https://api.ebay.com/wsapi',
+        		headers: {
+        			'Content-Type': 'application/x-www-form-urlencoded',
+        			'Accept': 'application/json',
+        			'Cache-Control': 'no-cache',
+              'Authorization': 'IAF ' + response.data.access_token,
+              'SOAPAction': 'GetUser'              
+        		},
+            data: qs.stringify({
+        			'callname': 'GetUser',
+              'version': '1085',
+              'siteid': 0,
+              'IAF-TOKEN': response.data.access_token
+        		})
+        	})
+          .then((response) => {
+            console.log(response)
+            console.log(response.data)
+            console.log(response.data.access_token)
+            console.log('omg fucking work')
+          })
+          .catch((error) => {
+            console.log(error)
+            console.log(error.response)
+            console.log(error.response.data)
+            console.log('omg fucking work')
+
+          })
     })
-    .catch(function(error) {
-      console.log('ebay error')
+  	.catch((error) => {
       console.log(error)
       console.log(error.response)
-      const setKeys = Object.keys(error.response)
-
-      setKeys.forEach((response)=>{
-        console.log(response)
-      })
-
-      console.log(error.data)
+      console.log(error.response.data)
+      console.log('omg fucking work')
 
     })
+
+
 
   //token = token.substr(token.indexOf("t^") + 2);
 

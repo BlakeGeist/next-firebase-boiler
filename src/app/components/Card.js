@@ -20,13 +20,13 @@ const CardBase = ({
   ebaySearchResuslts, setEbaySearchResuslts,
   ebayActiveSearchResuslts, setEbayActiveSearchResuslts,
   avgPrice, setAvgPrice,
-  avgPriceAfterOutliers, setAvgPriceAfterOutliers
+  avgPriceAfterOutliers, setAvgPriceAfterOutliers,
+  sortOrder, setSortOrder,
+  completedSortOrder, setCompletedSortOrder,
+  activeEbaySearchListingType, setActiveEbaySearchListingType,
+  completedEbaySearchListingType, setCompletedEbaySearchListingType
  }) => {
 
-  const handleFetchEbayInfo = () => {
-    fetchActiveListingsData();
-    fetchCompletedListingData();
-  }
 
   const hanldeFetchNewRandomCard = async (e) => {
     const ScryfallClient = require('scryfall-client')
@@ -37,14 +37,22 @@ const CardBase = ({
     })
   }
 
-  function fetchActiveListingsData(page){
+  function fetchActiveListingsData(page, e){
     let options =  {
       'OPERATION-NAME': 'findItemsByKeywords',
-      'keywords': card.name + ' mtg'
+      'keywords': encodeURI(card.name + ' mtg'),
+      'sortOrder': sortOrder
     }
+
+    if(activeEbaySearchListingType.length > 0) {
+      options['itemFilter.name'] = 'ListingType'
+      options['itemFilter.value'] = activeEbaySearchListingType
+    }
+
     if(page){
       options['paginationInput.pageNumber'] = page;
     }
+
     let apiCall = buildEbayApiCall(options)
     runFetchJsonp(apiCall)
   }
@@ -52,8 +60,16 @@ const CardBase = ({
   function fetchCompletedListingData(page){
     let options =  {
       'OPERATION-NAME': 'findCompletedItems',
-      'keywords': card.name + ' mtg'
+      'keywords': encodeURI(card.name + ' mtg'),
+      'sortOrder': completedSortOrder
     }
+
+    if(completedEbaySearchListingType.length > 0) {
+      alert('here')
+      options['itemFilter.name'] = 'ListingType'
+      options['itemFilter.value'] = completedEbaySearchListingType
+    }
+
     if(page){
       options['paginationInput.pageNumber'] = page;
     }
@@ -97,13 +113,13 @@ const CardBase = ({
           }
         })
 
-
-
         theResults = theResults.concat(foils)
         theResults = theResults.concat(nonFoils)
         const averageOfArray = roundMoney(getAverage(prices));
-        const averageOfFoilArray = roundMoney(getAverage(foilPrices));
+        const averageOfFoilArray = roundMoney(getAverage(filterOutliers(foilPrices)));
+
         const filteredArray = filterOutliers(prices);
+
         const averageOfArrayAfterOutliersAreRemoved = getAverage(filteredArray);
         const roundedAverageOfArray = roundMoney(averageOfArrayAfterOutliersAreRemoved);
 
@@ -111,7 +127,6 @@ const CardBase = ({
         let theResultsObj = {
           data: theResults
         }
-
 
         if(json.findCompletedItemsResponse) {
           theResultsObj.paginationOutput = json.findCompletedItemsResponse[0].paginationOutput[0]
@@ -126,7 +141,6 @@ const CardBase = ({
           setAvgPriceAfterOutliers(roundedAverageOfArray)
           setAvgFoilPrice(averageOfFoilArray)
         }
-        console.log(theResultsObj)
       }).catch(function(ex) {
         console.log('parsing failed', ex)
       })
@@ -140,8 +154,23 @@ const CardBase = ({
 
   const baseGoldFlishLink = "https://www.mtggoldfish.com/price/";
 
-
   let goldFishLink = baseGoldFlishLink + cleanedSetName  + '/' + cleanedCardName + '#paper'
+
+  const filterByAuctionType = (e) => {
+    setActiveEbaySearchListingType(e.target.value)
+  }
+
+  const filterCompletedByAuctionType = (e) => {
+    setCompletedEbaySearchListingType(e.target.value)
+  }
+
+  const updateSortOrder = (e) => {
+    setSortOrder(e.target.value)
+  }
+
+  const updateCompletedSortOrder = (e) => {
+    setCompletedSortOrder(e.target.value)
+  }
 
   return (
     <div className="card-container">
@@ -158,10 +187,38 @@ const CardBase = ({
           Set: <Link href="/s/[setId]" as={`/s/${card.set}`}><a>{card.set_name}</a></Link>
         </p>
         <p>
-          <a href={"https://shop.tcgplayer.com/magic/product/show?ProductName=" + encodeURI(card.name)} target="_blank">TCG Player</a> |
-          <a href={goldFishLink} target="_blank">Goldfish</a>
+          <a href={"https://shop.tcgplayer.com/magic/product/show?ProductName=" + encodeURI(card.name)} target="_blank">TCG Player</a> | <a href={goldFishLink} target="_blank">Goldfish</a>
       </p>
-        <p><button onClick={handleFetchEbayInfo}>Ebay Info</button></p>
+
+      <p><button onClick={(e) => fetchActiveListingsData(1, e)}>Ebay Info</button></p>
+
+        {sortOrder &&
+          <div>
+
+            <p>Sort Order</p>
+
+            <select onChange={filterByAuctionType}>
+              <option>Filter By Auction Type</option>
+              <option value="Auction">Auction</option>
+              <option value="FixedPrice">FixedPrice</option>
+              <option value="StoreInventory">StoreInventory</option>
+              <option value="AuctionWithBIN">AuctionWithBIN</option>
+            </select>
+
+            <select onChange={updateSortOrder}>
+              <option>Select Sort Order</option>
+              <option value="EndTimeSoonest">EndTimeSoonest</option>
+              <option value="BestMatch">BestMatch</option>
+              <option value="CurrentPriceHighest">CurrentPriceHighest</option>
+              <option value="PricePlusShippingHighest">PricePlusShippingHighest</option>
+              <option value="PricePlusShippingLowest">PricePlusShippingLowest</option>
+              <option value="StartTimeNewest">StartTimeNewest</option>
+              <option value="WatchCountDecreaseSort">WatchCountDecreaseSort</option>
+            </select>
+
+          </div>
+        }
+
         <EbaySearchTable
           results={ebayActiveSearchResuslts}
           title="Active"
@@ -170,6 +227,36 @@ const CardBase = ({
           avgFoilPrice={avgFoilPrice}
           updateDataByPage={fetchActiveListingsData}
           />
+
+
+        <p><button onClick={(e) => fetchCompletedListingData(1, e)}>Ebay Info</button></p>
+
+        {sortOrder &&
+          <div>
+
+            <p>Sort Order</p>
+
+            <select onChange={filterCompletedByAuctionType}>
+              <option>Filter By Auction Type</option>
+              <option value="Auction">Auction</option>
+              <option value="FixedPrice">FixedPrice</option>
+              <option value="StoreInventory">StoreInventory</option>
+              <option value="AuctionWithBIN">AuctionWithBIN</option>
+            </select>
+
+            <select onChange={updateCompletedSortOrder}>
+              <option value="EndTimeSoonest">EndTimeSoonest</option>
+              <option value="BestMatch">BestMatch</option>
+              <option value="CurrentPriceHighest">CurrentPriceHighest</option>
+              <option value="PricePlusShippingHighest">PricePlusShippingHighest</option>
+              <option value="PricePlusShippingLowest">PricePlusShippingLowest</option>
+              <option value="StartTimeNewest">StartTimeNewest</option>
+              <option value="WatchCountDecreaseSort">WatchCountDecreaseSort</option>
+            </select>
+
+          </div>
+        }
+
         <EbaySearchTable
           results={ebaySearchResuslts}
           title="Completed"
@@ -188,7 +275,7 @@ const CardBase = ({
           text-align: center;
         }
         .mod-foil{
-          background-color: #f1f1f1;
+          background-color: #ccc;
         }
         table{
           text-align: left;
@@ -214,12 +301,14 @@ const Card = compose(
   withState('completedAvgPrice', 'setCompletedAvgPrice', ''),
   withState('completedAvgPriceAfterOutliers', 'setCompletedAvgPriceAfterOutliers', ''),
   withState('completedAvgFoilPrice', 'setCompltedAvgFoilPrice', ''),
-  withState('ebayResponseObj', 'setebayResponseObj', {})
+  withState('ebayResponseObj', 'setebayResponseObj', {}),
+  withState('sortOrder', 'setSortOrder', 'EndTimeSoonest'),
+  withState('completedSortOrder', 'setCompletedSortOrder', 'EndTimeSoonest'),
+  withState('activeEbaySearchListingType', 'setActiveEbaySearchListingType', ''),
+  withState('completedEbaySearchListingType', 'setCompletedEbaySearchListingType', '')
 )(CardBase);
 
 export default connect(state => state)(Card);
-
-
 
 
 //https://svcs.ebay.com/services/search/FindingService/v1?

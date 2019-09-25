@@ -81,7 +81,7 @@ app.prepare().then(() => {
     const encodedToken = encodeURI(decodedURIToken);
     axios({
       method: 'post',
-      url: 'https://api.ebay.com/identity/v1/oauth2/token?grant_type=authorization_code&redirect_uri=Blake_Geist-BlakeGei-standa-oysusnr&code='+encodedToken,
+      url: 'https://api.ebay.com/identity/v1/oauth2/token?grant_type=authorization_code&redirect_uri=Blake_Geist-BlakeGei-standa-oysusnr&code='+decodedURIToken,
       headers: headers
     })
       .then((response) =>{
