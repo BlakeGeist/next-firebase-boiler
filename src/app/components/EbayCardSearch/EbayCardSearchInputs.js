@@ -38,22 +38,23 @@ const EbayCardSearchInputs = ({ fetchEbayData, updateFilter, updateSortOrder, up
     }
   ]
 
-  const RenderSelects = () =>{
+  const RenderSelects = ({ selects }) =>{
     return (
       <>
         {selects.map((select, i) => {
-          return <RenderSelect key={i} selectOption={select} />
+          return <RenderSelect key={i} selectOptions={select} />
         })}
       </>
     )
   }
 
-  const RenderSelect = ({ selectOption }) => {
+  const RenderSelect = ({ selectOptions }) => {
+    const { label, onChange, values } = selectOptions;
     return (
       <div className="ebay-search-inputs-input">
-        <div><label>{selectOption.label}</label></div>
-        <select onChange={selectOption.onChange}>
-          {selectOption.values.map((selectItem, i) => {
+        <div><label>{label}</label></div>
+        <select onChange={onChange}>
+          {values.map((selectItem, i) => {
             return <option key={i} value={selectItem.value}>{selectItem.label}</option>
           })}
         </select>
@@ -64,7 +65,7 @@ const EbayCardSearchInputs = ({ fetchEbayData, updateFilter, updateSortOrder, up
   return (
     <div className="ebay-seach-inputs-wrapper">
       <div className="ebay-seach-inputs">
-        <RenderSelects />
+        <RenderSelects selects={selects} />
         <div className="ebay-search-inputs-input">
           <div>Submit</div>
           <button onClick={(e) => fetchEbayData(1, e)}>Ebay Info</button>
