@@ -1,5 +1,3 @@
-import React from 'react'
-
 const EbayCardSearchInputs = ({ fetchEbayData, updateFilter, updateSortOrder, updateQTY }) => {
 
   const selects = [
@@ -53,7 +51,7 @@ const EbayCardSearchInputs = ({ fetchEbayData, updateFilter, updateSortOrder, up
     return (
       <div className="ebay-search-inputs-input">
         <div><label>{label}</label></div>
-        <select onChange={onChange}>
+        <select onChange={e => onChange(e)}>
           {values.map((selectItem, i) => {
             return <option key={i} value={selectItem.value}>{selectItem.label}</option>
           })}
@@ -65,7 +63,36 @@ const EbayCardSearchInputs = ({ fetchEbayData, updateFilter, updateSortOrder, up
   return (
     <div className="ebay-seach-inputs-wrapper">
       <div className="ebay-seach-inputs">
-        <RenderSelects selects={selects} />
+        <div className="ebay-search-inputs-input">
+          <div><label>Filter</label></div>
+          <select onChange={updateFilter}>
+            <option value="">None</option>
+            <option value="Auction">Auction</option>
+            <option value="FixedPrice">FixedPrice</option>
+            <option value="StoreInventory">StoreInventory</option>
+            <option value="AuctionWithBIN">AuctionWithBIN</option>
+          </select>
+        </div>
+        <div className="ebay-search-inputs-input">
+          <div><label>Sort By</label></div>
+          <select onChange={updateSortOrder}>
+            <option value="EndTimeSoonest">EndTimeSoonest</option>
+            <option value="BestMatch">BestMatch</option>
+            <option value="CurrentPriceHighest">CurrentPriceHighest</option>
+            <option value="PricePlusShippingHighest">PricePlusShippingHighest</option>
+            <option value="PricePlusShippingLowest">PricePlusShippingLowest</option>
+            <option value="StartTimeNewest">StartTimeNewest</option>
+            <option value="WatchCountDecreaseSort">WatchCountDecreaseSort</option>
+          </select>
+        </div>
+        <div className="ebay-search-inputs-input">
+          <div>QTY</div>
+          <select onChange={updateQTY}>
+            <option value="100">100</option>
+            <option value="50">50</option>
+            <option value="25">25</option>
+          </select>
+        </div>
         <div className="ebay-search-inputs-input">
           <div>Submit</div>
           <button onClick={(e) => fetchEbayData(1, e)}>Ebay Info</button>

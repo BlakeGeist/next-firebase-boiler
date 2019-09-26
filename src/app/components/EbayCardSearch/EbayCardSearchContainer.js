@@ -91,7 +91,6 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
   }
 
   const updateFilter = (e) => {
-    console.log(e.target.value)
     updateState('filter',  e.target.value)
   }
 
