@@ -2,9 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import Layout from '../layouts/Layout';
 import Card from '../components/Card';
-
-const ScryfallClient = require('scryfall-client')
-const scryfall = new ScryfallClient()
+import axios from 'axios';
 
 const Index = ({ card }) => {
   return (
@@ -17,9 +15,8 @@ const Index = ({ card }) => {
 }
 
 Index.getInitialProps = async ({ reduxStore, req, query, res }) => {
-  await scryfall.get('cards/random').then(function (card) {
-    reduxStore.dispatch({ type: 'SET_ITEM', name: 'card', payload: card });
-  })
+  let card = await axios.get('https://api.scryfall.com/cards/random');
+  reduxStore.dispatch({ type: 'SET_ITEM', name: 'card', payload: card.data });
 }
 
 export default connect(state => state)(Index);

@@ -1,7 +1,7 @@
 import React from 'react'
-const { filterOutliers,  getAverage, roundMoney, firstNumber, priceByQTY } = require("../helpers/quickHelpers");
+const { filterOutliers,  getAverage, roundMoney, firstNumber, priceByQTY } = require("../../helpers/quickHelpers");
 
-const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgFoilPrice, updateDataByPage, updateSort, sortOrder }) => {
+const EbaySearchTable = ({ title, results, updateDataByPage, updateSort, sortOrder }) => {
 
   const renderEbaySearchResult = (result, i) => {
     const date = result.listingInfo[0].endTime;
@@ -17,17 +17,17 @@ const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgF
     const cow = parseFloat(price)
     let highlight = '';
     if(foilMod.length > 0){
-      highlight = (avgFoilPrice > fish) ? 'highlight' : '';
+      highlight = (results.avgFoilPrice > fish) ? 'highlight' : '';
     } else {
-      highlight = (avgPrice > fish) ? 'highlight' : '';
+      highlight = (results.avgPrice > fish) ? 'highlight' : '';
     }
     return (
-      <tr key={i} className={`${foilMod} ${sellsToday}`}>
-        <td>{i+1}</td>
-        <td><a href={result.viewItemURL[0]} target="_blank">{resultTitle}</a></td>
+      <tr key={i} className={`ebay-listing ${foilMod} ${sellsToday}`}>
+        <td className="ebay-listing-index">{i+1}</td>
+        <td className="ebay-listing-title"><a href={result.viewItemURL[0]} target="_blank">{resultTitle}</a></td>
         <td>${price}</td>
         <td>{result.listingInfo[0].listingType}</td>
-        <td>{myDate.toDateString()}</td>
+        <td className="ebay-listing-date">{myDate.toDateString()}</td>
         <td>{firstNumber(resultTitle)}</td>
         <td className={highlight}>{priceByQTY(firstNumber(resultTitle), price)}</td>
       </tr>
@@ -55,9 +55,7 @@ const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgF
       <div>
         {results && results.paginationOutput &&
           <div>
-            <div>Page Number: {results.paginationOutput.pageNumber}</div>
-            <div>Total Pages: {results.paginationOutput.totalPages}</div>
-            <div>Total Entries: {results.paginationOutput.totalEntries}</div>
+            <div>Total Listings: {results.paginationOutput.totalEntries}</div>
             <div className="pagination-container"><Pageination /></div>
             <style global jsx>{`
                 .pagination-container{
@@ -75,6 +73,24 @@ const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgF
                 .pagination-container a.isActive {
                   background-color: yellow;
                 }
+                .ebay-listing:hover{
+                  background-color: #70fd7b;
+                }
+                  .ebay-listing td{
+                    padding: 0 5px;
+                  }
+                  .ebay-listing-index{
+                    text-align: center;
+                  }
+                  .ebay-listing-date{
+                    min-width: 130px;
+                  }
+                  .ebay-listing-title{
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                  }
               `}</style>
           </div>
         }
@@ -83,13 +99,11 @@ const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgF
         <tbody>
           <tr>
             <th>avgPrice</th>
-            <th>avgPriceAfterOutliers</th>
             <th>avgFoilPrice</th>
           </tr>
           <tr>
-            <td>{avgPrice}</td>
-            <td>{avgPriceAfterOutliers}</td>
-            <td>{avgFoilPrice}</td>
+            <td>{results.avgPrice}</td>
+            <td>{results.avgFoilPrice}</td>
           </tr>
         </tbody>
       </table>
@@ -104,7 +118,7 @@ const EbaySearchTable = ({ title, results, avgPrice, avgPriceAfterOutliers, avgF
             <th>QTY</th>
             <th>Price per QTY</th>
           </tr>
-          {results.data.map((result, i) => renderEbaySearchResult(result, i))}
+          {results.data && results.data.map((result, i) => renderEbaySearchResult(result, i))}
         </tbody>
       </table>
     </div>

@@ -5,20 +5,20 @@ const FileStore = require('session-file-store')(session)
 const next = require('next')
 const admin = require('firebase-admin')
 const axios = require('axios');
+const buildEbayApiCall = require('./helpers/buildEbayApiCall');
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
-const firebase = admin.initializeApp(
-  {
+//wtf does server do here?
+const firebaseAdmin = admin.initializeApp({
     credential: admin.credential.cert(require('../functions/credentials/server'))
-  },
-  'server'
-)
+  }, 'server' )
 
-const firebase2 = require('firebase');
+
+const firebase = require('firebase');
 
 var cors = require('cors');
 
@@ -41,7 +41,7 @@ app.prepare().then(() => {
   )
 
   server.use((req, res, next) => {
-    req.firebaseServer = firebase
+    req.firebaseServer = firebaseAdmin
     next()
   })
 
@@ -65,12 +65,27 @@ app.prepare().then(() => {
     res.json({ status: true })
   })
 
+  server.get('/api/getEbaySearchData', (req, res) => {
+    axios({
+      url: 'https://svcs.ebay.com/services/search/FindingService/v1',
+      params: req.query
+    }).then(function(response) {
+      return response
+    }).then((json) => {
+      const data = json.data[Object.keys(json.data)[0]][0];
+      res.json(data)
+    }).catch(function(ex) {
+      console.log('parsing failed', ex)
+    })
+  });
+
   server.get('/api/oauthEbay',  (req, res) => {
+
     let token = req.query.code;
     console.log(token)
     console.log('findme blake')
-    if (!firebase2.apps.length) {
-      firebase2.initializeApp(require('../functions/credentials/client'))
+    if (!firebase.apps.length) {
+      firebase.initializeApp(require('../functions/credentials/client'))
     };
 
     var headers = {
@@ -99,7 +114,7 @@ app.prepare().then(() => {
       .then(function(customToken) {
         // Send token back to client
         req.session.decodedToken = customToken
-        firebase2.auth().signInWithCustomToken(customToken)
+        firebase.auth().signInWithCustomToken(customToken)
         .then((data)=>{
           req.session.decodedToken = data.user
           res.redirect('/')

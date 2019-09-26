@@ -1,7 +1,6 @@
 const next = require('next');
 const express = require('express');
 const compression = require('compression');
-const helmet = require('helmet');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const functions = require('firebase-functions');
@@ -67,6 +66,20 @@ server.post('/api/logout', (req, res) => {
   res.json({ status: true })
 })
 
+server.get('/api/getEbaySearchData', (req, res) => {
+  axios({
+    url: 'https://svcs.ebay.com/services/search/FindingService/v1',
+    params: req.query
+  }).then(function(response) {
+    return response
+  }).then((json) => {
+    const data = json.data[Object.keys(json.data)[0]][0];
+    res.json(data)
+  }).catch(function(ex) {
+    console.log('parsing failed', ex)
+  })
+});
+
 server.get('/api/oauthEbay', async (req, res) => {
   let token = req.query.code
   if (!firebase2.apps.length) {
@@ -120,7 +133,7 @@ server.get('/api/oauthEbay', async (req, res) => {
         			'Accept': 'application/json',
         			'Cache-Control': 'no-cache',
               'Authorization': 'IAF ' + response.data.access_token,
-              'SOAPAction': 'GetUser'              
+              'SOAPAction': 'GetUser'
         		},
             data: qs.stringify({
         			'callname': 'GetUser',
@@ -148,10 +161,7 @@ server.get('/api/oauthEbay', async (req, res) => {
       console.log(error.response)
       console.log(error.response.data)
       console.log('omg fucking work')
-
     })
-
-
 
   //token = token.substr(token.indexOf("t^") + 2);
 

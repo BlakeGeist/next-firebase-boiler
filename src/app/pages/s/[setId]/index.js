@@ -1,6 +1,5 @@
 import React from 'react'
 import Layout from '../../../layouts/Layout';
-import { useRouter } from 'next/router'
 import axios from 'axios';
 import Link from 'next/link'
 
@@ -29,7 +28,6 @@ const Index = ({ set, cards }) => {
   }
 
   const renderCard = (card, i ) => {
-
     return (
       <div className="cards-card" key={i}>
         <div>
