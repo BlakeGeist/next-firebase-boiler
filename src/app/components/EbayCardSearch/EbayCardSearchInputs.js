@@ -51,13 +51,16 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchP
   }
 
   const RenderSelect = ({ selectOptions }) => {
-    const { label, onChange, values } = selectOptions;
+    const { label, values } = selectOptions;
     return (
       <div className="ebay-search-inputs-input">
         <div><label>{label}</label></div>
         <Select
           options={values}
           onChange={e => updateStateItemFromInput(selectOptions.value, e)}
+          menuPlacement="auto"
+          menuPosition="fixed"
+          isClearable
           />
       </div>
     )
@@ -80,6 +83,9 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchP
           <div><label>Search</label></div>
           <input className="mod-input" type="text" onChange={e => updateStateItemFromInput('searchPhrase', e)} value={searchPhrase} />
         </div>
+
+        {/*  <RenderSelects selects={selects} /> */}
+
         <div className="ebay-search-inputs-input" style={{width: '150px'}}>
           <div><label>Filters</label></div>
           <Select
@@ -130,15 +136,6 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchP
               text-align: left;
             }
             .mod-input{
-              min-height: 32px;
-              border-radius: 3px;
-              border-style: solid;
-              border: 1px solid;
-              -webkit-align-items: center;
-              -webkit-box-align: center;
-              -ms-flex-align: center;
-              -webkit-align-items: center;
-              -webkit-box-align: center;
               padding: 0 10px;
               font-size: 16px;
               -ms-flex-align: center;
