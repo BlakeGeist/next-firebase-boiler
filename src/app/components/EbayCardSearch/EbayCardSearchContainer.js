@@ -10,6 +10,10 @@ const { filterOutliers,  getAverage, roundMoney, firstNumber, priceByQTY } = req
 
 const EbayCardSearchContainerBase = ({ title, card, operationName, state, setState }) => {
 
+  React.useEffect(() => {
+    updateState('searchPhrase',  card.name);
+  }, []);
+
   function cleanEbayData(data){
     let results = [];
     let theResults = [];
@@ -36,7 +40,7 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
     let theResultsObj = {
       data: theResults,
       avgPrice: roundMoney(getAverage(prices)),
-      avgFoilPrice: roundMoney(getAverage(foilPrices))
+      avgFoilPrice: roundMoney(getAverage(foilPrices)) || "N/A"
     }
 
     theResultsObj.paginationOutput = data.paginationOutput[0]
@@ -53,16 +57,25 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
       'paginationInput.entriesPerPage': state.qty,
       'GLOBAL-ID': 'EBAY-US',
       'siteid': '0',
-      'keywords': card.name,
+      'keywords': state.searchPhrase,
       'sortOrder': state.sortOrder,
       'categoryId': '38292',
       'paginationInput.pageNumber': page,
     }
 
-    if(state.filter){
-      params['itemFilter.name'] = 'ListingType'
-      params['itemFilter.value'] = state.filter
+    let filters = [];
+    if(state.filter != ""){
+      filters.push({name: 'ListingType', value: state.filter})
     }
+
+    if(operationName=="findCompletedItems"){
+      filters.push({name: 'SoldItemsOnly', value: true})
+    }
+
+    filters.forEach((filter, i)=>{
+      params['itemFilter.name('+i+')'] = filter.name
+      params['itemFilter.value('+i+')'] = filter.value
+    })
 
     axios({
       method: 'GET',
@@ -87,15 +100,19 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
   }
 
   const updateSortOrder = (e) => {
-    updateState('sortOrder', e.target.value)
+    updateState('sortOrder', e.value)
   }
 
   const updateFilter = (e) => {
-    updateState('filter',  e.target.value)
+    updateState('filter',  e.value)
   }
 
   const updateQTY = (e) => {
-    updateState('qty',  e.target.value)
+    updateState('qty',  e.value)
+  }
+
+  const handleSearchUpdate = (e) => {
+    updateState('searchPhrase', e.target.value)
   }
 
   return (
@@ -105,6 +122,9 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
         updateSortOrder={updateSortOrder}
         updateFilter={updateFilter}
         updateQTY={updateQTY}
+        card={card}
+        handleSearchUpdate={handleSearchUpdate}
+        searchPhrase={state.searchPhrase}
         />
       <EbaySearchTable
         results={state.ebaySearchResults}
@@ -120,8 +140,8 @@ const EbayCardSearchContainer = compose(
     ebaySearchResults: {},
     sortOrder: 'EndTimeSoonest',
     filter: '',
-    qty: 100
-
+    qty: 100,
+    searchPhrase: ''
   })
 )(EbayCardSearchContainerBase);
 

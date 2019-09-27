@@ -1,4 +1,8 @@
-const EbayCardSearchInputs = ({ fetchEbayData, updateFilter, updateSortOrder, updateQTY }) => {
+import React from 'react'
+import Select from 'react-select'
+
+
+const EbayCardSearchInputs = ({ fetchEbayData, updateFilter, updateSortOrder, updateQTY, handleSearchUpdate, card, searchPhrase }) => {
 
   const selects = [
     {
@@ -51,18 +55,25 @@ const EbayCardSearchInputs = ({ fetchEbayData, updateFilter, updateSortOrder, up
     return (
       <div className="ebay-search-inputs-input">
         <div><label>{label}</label></div>
-        <select onChange={e => onChange(e)}>
-          {values.map((selectItem, i) => {
-            return <option key={i} value={selectItem.value}>{selectItem.label}</option>
-          })}
-        </select>
+        <Select
+          options={values}
+          onChange={e => onChange(e)}
+          />
       </div>
     )
   }
-
+  //<select onChange={e => onChange(e)}>
+    //{values.map((selectItem, i) => {
+      //return <option key={i} value={selectItem.value}>{selectItem.label}</option>
+    //})}
+  //</select>
   return (
     <div className="ebay-seach-inputs-wrapper">
       <div className="ebay-seach-inputs">
+        <div className="ebay-search-inputs-input">
+          <div><label>Search</label></div>
+          <input type="text" onChange={handleSearchUpdate} value={searchPhrase} />
+        </div>
         <div className="ebay-search-inputs-input">
           <div><label>Filter</label></div>
           <select onChange={updateFilter}>

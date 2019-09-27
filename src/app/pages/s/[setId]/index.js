@@ -2,11 +2,12 @@ import React from 'react'
 import Layout from '../../../layouts/Layout';
 import axios from 'axios';
 import Link from 'next/link'
+import { connect } from 'react-redux'
+import clientCredentials from '../../../../functions/credentials/client'
+const { addCardToUsersCollection } = require("../../../helpers/cardCollectionHelpers");
 
-const Index = ({ set, cards }) => {
-
+const Index = ({ user, set, cards }) => {
   const setKeys = Object.keys(set)
-
   const renderSetKeyAndValue = (key, i) => {
     return (
       <tr key={i}>
@@ -30,6 +31,11 @@ const Index = ({ set, cards }) => {
   const renderCard = (card, i ) => {
     return (
       <div className="cards-card" key={i}>
+        {user && user.email &&
+          <div>
+            <button onClick={e => addCardToUsersCollection(user, card)}>Add</button>
+          </div>
+        }
         <div>
           <div>{card.name}</div>
           {card.prices.usd ? (
@@ -112,4 +118,4 @@ Index.getInitialProps = async ({ reduxStore, req, query, res }) => {
   return { set, cards }
 };
 
-export default Index
+export default connect(state => state)(Index);

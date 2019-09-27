@@ -49,7 +49,7 @@ app.prepare().then(() => {
     if (!req.body) return res.sendStatus(400)
 
     const token = req.body.token
-    firebase
+    firebaseAdmin
       .auth()
       .verifyIdToken(token)
       .then(decodedToken => {
@@ -80,7 +80,6 @@ app.prepare().then(() => {
   });
 
   server.get('/api/oauthEbay',  (req, res) => {
-
     let token = req.query.code;
     console.log(token)
     console.log('findme blake')

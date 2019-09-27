@@ -13,7 +13,6 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
 
 MyApp.getInitialProps = async ({Component, ctx}) => {
   const user = ctx.req && ctx.req.session ? ctx.req.session.decodedToken : null;
-
   (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'user', payload: user }) : '';
   const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
   return {pageProps};

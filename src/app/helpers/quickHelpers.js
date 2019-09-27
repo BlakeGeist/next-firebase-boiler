@@ -18,8 +18,8 @@ const filterOutliers = (someArray) => {
 
 const getAverage = (someArray) => {
   let total = 0;
-  someArray.forEach((int) => {
-    total += int;
+  someArray.forEach((float) => {
+    total += parseFloat(float);
   });
   let average = total / someArray.length;
   return average;
@@ -27,6 +27,14 @@ const getAverage = (someArray) => {
 
 const roundMoney = (float) => {
   return Math.ceil(float * 100) / 100;
+}
+
+const moneyRoundOfArray = (someArray) => {
+  let total = 0;
+  someArray.forEach(number => {
+    total += parseFloat(number)
+  })
+  return roundMoney(total);
 }
 
 const firstNumber = (string) => {
@@ -50,5 +58,6 @@ module.exports = {
   getAverage,
   roundMoney,
   firstNumber,
-  priceByQTY
+  priceByQTY,
+  moneyRoundOfArray
 }
