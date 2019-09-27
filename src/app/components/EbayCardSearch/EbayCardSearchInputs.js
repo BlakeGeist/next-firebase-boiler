@@ -78,7 +78,7 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchP
       <form className="ebay-seach-inputs" onSubmit={e => handleFetchEbayData(e)}>
         <div className="ebay-search-inputs-input">
           <div><label>Search</label></div>
-          <input className="mod-search-phrase" type="text" onChange={e => updateStateItemFromInput('searchPhrase', e)} value={searchPhrase} />
+          <input className="mod-input" type="text" onChange={e => updateStateItemFromInput('searchPhrase', e)} value={searchPhrase} />
         </div>
         <div className="ebay-search-inputs-input" style={{width: '150px'}}>
           <div><label>Filters</label></div>
@@ -111,8 +111,8 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchP
             />
         </div>
         <div className="ebay-search-inputs-input">
-          <div>Submit</div>
-          <input type="submit" value="Search Ebay"/>
+          <div><label><br/></label></div>
+          <input className="mod-input" style={{cursor: 'pointer'}} type="submit" value="Search Ebay"/>
         </div>
       </form>
       <style global jsx>{`
@@ -129,7 +129,7 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchP
               padding: 0 5px;
               text-align: left;
             }
-            .mod-search-phrase{
+            .mod-input{
               min-height: 32px;
               border-radius: 3px;
               border-style: solid;
@@ -175,7 +175,6 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchP
               -webkit-transition: all 100ms;
               transition: all 100ms;
               box-sizing: border-box;
-              min-width: 250px;
             }
       `}</style>
     </div>

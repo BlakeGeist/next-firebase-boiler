@@ -6,8 +6,6 @@ import axios from 'axios';
 
 import EbayCardSearchContainer from './EbayCardSearch/EbayCardSearchContainer';
 
-const { filterOutliers,  getAverage, roundMoney, firstNumber, priceByQTY } = require("../helpers/quickHelpers");
-
 const Card = ({ card, randoCard }) => {
 
   const hanldeFetchNewRandomCard = async (e) => {
