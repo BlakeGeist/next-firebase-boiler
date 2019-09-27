@@ -17,10 +17,13 @@ const firebaseAdmin = admin.initializeApp({
     credential: admin.credential.cert(require('../functions/credentials/server'))
   }, 'server' )
 
-
 const firebase = require('firebase');
 
+const initedFirebase = firebase.initializeApp(require('../functions/credentials/client'))
+
 var cors = require('cors');
+
+
 
 app.prepare().then(() => {
   const server = express()
@@ -64,6 +67,28 @@ app.prepare().then(() => {
     req.session.decodedToken = null
     res.json({ status: true })
   })
+
+  server.get('/api/usersCardCollection/add', (req, res) => {
+    const cardCollections = firebase.firestore().collection("userCardCollections")
+
+    if(req.session && req.session.decodedToken) {
+      const uid = req.session.decodedToken.uid;
+      const usersCardCollections = cardCollections.doc(uid);
+
+      usersCardCollections.collection('cards').doc(req.query.id).set(req.query)
+        .then(function() {
+          console.log("Card successfully added!");
+          res.json({ status: 200, data: req.query.id + ' card was added' })
+        })
+        .catch(function(error) {
+          console.error("Error removing document: ", error);
+        });
+
+    } else {
+      res.json({ mesage: 'NO USER FOUND' })
+    }
+  })
+
 
   server.get('/api/getEbaySearchData', (req, res) => {
     axios({
