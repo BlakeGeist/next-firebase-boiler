@@ -44,7 +44,7 @@ const EbaySearchTable = ({ title, results, updateDataByPage, updateSort, sortOrd
 
     for(let i = 0; i < results.paginationOutput.totalPages; i++) {
       let isActive = (results.paginationOutput.pageNumber[0] === (i+1).toString() ? 'isActive' : '')
-      pagesArray.push(<a className={isActive} href="" onClick={paginationClick} data-paginate={i+1} key={i}>{i+1}</a>)
+      pagesArray.push(<a className={isActive} href="" onClick={e => paginationClick(e)} data-paginate={i+1} key={i}>{i+1}</a>)
     }
     return pagesArray
   }
@@ -61,6 +61,7 @@ const EbaySearchTable = ({ title, results, updateDataByPage, updateSort, sortOrd
                 .pagination-container{
                   display: flex;
                   justify-content: center;
+                  flex-wrap: wrap;
                 }
                 .pagination-container a {
                   border: 1px solid #ccc;

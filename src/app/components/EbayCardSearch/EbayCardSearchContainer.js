@@ -99,32 +99,22 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
     setState(tempObj)
   }
 
-  const updateSortOrder = (e) => {
-    updateState('sortOrder', e.value)
-  }
-
-  const updateFilter = (e) => {
-    updateState('filter',  e.value)
-  }
-
-  const updateQTY = (e) => {
-    updateState('qty',  e.value)
-  }
-
-  const handleSearchUpdate = (e) => {
-    updateState('searchPhrase', e.target.value)
+  const updateStateItemFromInput = (stateItem, e) => {
+    if(e && e.value){
+      updateState(stateItem, e.value)
+    } else if (e && e.target && e.target.value) {
+      updateState(stateItem, e.target.value)
+    } else {
+      updateState(stateItem, '')
+    }
   }
 
   return (
     <div className="ebay-seach">
       <EbayCardSearchInputs
         fetchEbayData={fetchEbayData}
-        updateSortOrder={updateSortOrder}
-        updateFilter={updateFilter}
-        updateQTY={updateQTY}
-        card={card}
-        handleSearchUpdate={handleSearchUpdate}
         searchPhrase={state.searchPhrase}
+        updateStateItemFromInput={updateStateItemFromInput}
         />
       <EbaySearchTable
         results={state.ebaySearchResults}

@@ -54,7 +54,7 @@ const Card = ({ card, randoCard }) => {
           operationName="findItemsByKeywords"
           title="Active"
           />
-        <hr />
+        <hr style={{ margin: "50px 0"}}/>
         <EbayCardSearchContainer
           operationName="findCompletedItems"
           title="Completed"
