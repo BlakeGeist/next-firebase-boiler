@@ -103,7 +103,7 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchP
             defaultValue={{ label: "EndTimeSoonest", value: 'EndTimeSoonest' }}
             menuPlacement="auto"
             menuPosition="fixed"
-            onChange={e => updateStateItemFromInput('sortBy', e)}
+            onChange={e => updateStateItemFromInput('sortOrder', e)}
             />
         </div>
         <div className="ebay-search-inputs-input" style={{width: '150px'}}>

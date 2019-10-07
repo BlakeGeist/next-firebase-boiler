@@ -12,7 +12,8 @@ const exampleInitialState = {
   hasSearched: false,
   user: {},
   messages: [],
-  card: {}
+  card: {},
+  isLoading: false
 }
 
 export const actionTypes = {

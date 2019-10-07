@@ -11,7 +11,7 @@ const { filterOutliers,  getAverage, roundMoney, firstNumber, priceByQTY } = req
 const EbayCardSearchContainerBase = ({ title, card, operationName, state, setState }) => {
 
   React.useEffect(() => {
-    updateState('searchPhrase',  card.name);
+    updateState('searchPhrase',  '"'+card.name+'"');
   }, []);
 
   function cleanEbayData(data){

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { connect } from 'react-redux'
 import Layout from '../layouts/Layout';
 import firebase from 'firebase/app'
@@ -13,27 +13,16 @@ const { moneyRoundOfArray, roundMoney } = require("../helpers/quickHelpers");
 const { deleteCardFromUsersCollection } = require("../helpers/cardCollectionHelpers");
 
 
-const DashbaordBase = ({ user, userCardCollectionObject, setUserCardCollectionObject, cardCollection }) => {
+const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject, cardCollection }) => {
 
-  React.useEffect(() => {
-    setUserCardCollectionObject(cardCollection)
-  }, []);
+  [userCardCollectionObject, setUserCardCollectionObject] = useState(cardCollection)
 
-  const TheCollectionValue = () => {
-    const pricesOfCardsInCollection = userCardCollectionObject.map(card => card.prices.usd || card.prices.usd_foil);
-    const rondedToMoneyTotalPriceOfCardsInCollection = moneyRoundOfArray(pricesOfCardsInCollection);
-    return (
-      <>{rondedToMoneyTotalPriceOfCardsInCollection}</>
-    )
-  }
-
-  const TheBenchmarkCollectionValue = () => {
-    const pricesOfCardsInCollection = userCardCollectionObject.map(card => card.benchMarkPrice);
-    const rondedToMoneyTotalPriceOfCardsInCollection = moneyRoundOfArray(pricesOfCardsInCollection);
-    return (
-      <>{rondedToMoneyTotalPriceOfCardsInCollection}</>
-    )
-  }
+  const pricesOfCardsInCollection = userCardCollectionObject.map(card => (card.prices.usd || card.prices.usd_foil) * card.qty);
+  const rondedToMoneyTotalPriceOfCardsInCollection = moneyRoundOfArray(pricesOfCardsInCollection);
+  const benchmarkPricesOfCardsInCollection = userCardCollectionObject.map(card => card.benchMarkPrice * card.qty);
+  const rondedToMoneyTotalPriceOfCardMarkssInCollection = moneyRoundOfArray(benchmarkPricesOfCardsInCollection);
+  const changeOfPricesOfCardsInCollectionVsBenchmarkPricesOfCardsInCollection = roundMoney(rondedToMoneyTotalPriceOfCardsInCollection - rondedToMoneyTotalPriceOfCardMarkssInCollection)
+  const precentageChangeOfPricesOfCardsInCollectionVsBenchmarkPricesOfCardsInCollection =  Math.floor(((rondedToMoneyTotalPriceOfCardsInCollection - rondedToMoneyTotalPriceOfCardMarkssInCollection) / rondedToMoneyTotalPriceOfCardMarkssInCollection) * 100);
 
   const handleRemoveCardFromUsersCollection = async (card) => {
     await deleteCardFromUsersCollection(user, card)
@@ -44,26 +33,30 @@ const DashbaordBase = ({ user, userCardCollectionObject, setUserCardCollectionOb
   const renderCard = (card, i ) => {
 
     const CardInfo = () => {
-
-      const ChangeSinceBenchmark = () => {
-        const currentPrice = parseFloat(card.prices.usd || card.prices.usd_foil);
-        const benchMarkPrice = parseFloat(card.benchMarkPrice);
-        return roundMoney(currentPrice - benchMarkPrice);
-      }
-
-      const PercentageChangeSinceBenchmark = () => {
-        const currentPrice = parseFloat(card.prices.usd || card.prices.usd_foil);
-        const benchMarkPrice = parseFloat(card.benchMarkPrice);
-        return Math.floor(((currentPrice - benchMarkPrice) / benchMarkPrice) * 100);
-      }
+      const currentPrice = parseFloat(card.prices.usd || card.prices.usd_foil);
+      const benchMarkPrice = card.benchMarkPrice / 100;
+      const changeSinceBenchmark = roundMoney(currentPrice - benchMarkPrice);
+      const percentageChangeSinceBenchmark = Math.floor(((currentPrice - benchMarkPrice) / benchMarkPrice) * 100);
 
       return (
         <div>
           <div>{card.name}</div>
-          <div>Current Price {card.prices.usd || card.prices.usd_foil}</div>
-          <div>Benchmark Price {card.benchMarkPrice}</div>
-          <div>Banmark Diff <ChangeSinceBenchmark /> | %<PercentageChangeSinceBenchmark /></div>
+          <div>{card.qty}</div>
+          <div>Current Price ${card.prices.usd || card.prices.usd_foil}</div>
+          <div>Benchmark Price ${card.benchMarkPrice / 100}</div>
+          <div>Banmark Diff ${changeSinceBenchmark} | %{percentageChangeSinceBenchmark}</div>
         </div>
+      )
+    }
+
+    const CardCall = (card) => {
+      const cardFace = card.card.card_faces[0];
+      return (
+        <Link href="/c/[id]" as={`/c/${card.card.id}`}>
+          <a>
+            <div><img src={cardFace.image_uris.normal} width="260px" height="362px;" /></div>
+          </a>
+        </Link>
       )
     }
 
@@ -71,9 +64,7 @@ const DashbaordBase = ({ user, userCardCollectionObject, setUserCardCollectionOb
       <div className="cards-card" key={i}>
         <div>
           <button onClick={e => handleRemoveCardFromUsersCollection(card)}>Delete</button>
-
           <CardInfo />
-
           {card.image_uris ?
             (
               <Link href="/c/[id]" as={`/c/${card.id}`}>
@@ -99,9 +90,35 @@ const DashbaordBase = ({ user, userCardCollectionObject, setUserCardCollectionOb
       <div>
         <p>Email: {user.email}</p>
       </div>
-      <h2>Collection</h2>
-      <h3>Collection info</h3>
-      <div>Collection: Value: <TheCollectionValue /> | Collecton benchMarkPrice <TheBenchmarkCollectionValue /></div>
+      <h2>Collection info</h2>
+
+      <table>
+        <tbody>
+          <tr>
+            <td>Total Unique Cards In Collection</td>
+            <td>{userCardCollectionObject.length}</td>
+          </tr>
+          <tr>
+            <td>Collection Value</td>
+            <td>${rondedToMoneyTotalPriceOfCardsInCollection}</td>
+          </tr>
+          <tr>
+            <td>Collection Benchmark Price</td>
+            <td>${rondedToMoneyTotalPriceOfCardMarkssInCollection / 100}</td>
+          </tr>
+          <tr>
+            <td>Collection Value Change</td>
+            <td>${changeOfPricesOfCardsInCollectionVsBenchmarkPricesOfCardsInCollection / 100}</td>
+          </tr>
+          <tr>
+            <td>Collection Precentage Change</td>
+            <td>%{precentageChangeOfPricesOfCardsInCollectionVsBenchmarkPricesOfCardsInCollection}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <hr />
+
       <div className="cards">
         {userCardCollectionObject.map((card, i) => renderCard(card, i))}
       </div>
@@ -117,12 +134,7 @@ const DashbaordBase = ({ user, userCardCollectionObject, setUserCardCollectionOb
   )
 }
 
-const Dashbaord = compose(
-  withState('userCardCollectionObject', 'setUserCardCollectionObject', []),
-  withState('collectionValue', 'setCollectionValue', '')
-)(DashbaordBase);
-
-Dashbaord.getInitialProps = async ({reduxStore, req, query, res}) => {
+Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
   const { user } = reduxStore.getState();
   if (!firebase.apps.length) {
     firebase.initializeApp(clientCredentials)
@@ -159,7 +171,6 @@ Dashbaord.getInitialProps = async ({reduxStore, req, query, res}) => {
   }).catch((err)=>{
     console.log(err)
   })
-
 
   let cardCollection = [];
 

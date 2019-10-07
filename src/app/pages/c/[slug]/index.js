@@ -4,8 +4,30 @@ import axios from 'axios';
 import Card from '../../../components/Card';
 
 const Index = ({ card }) => {
+
+  if(!card){
+    card = {}
+  }
+
+  const setKeys = Object.keys(card)
+  const renderSetKeyAndValue = (key, i) => {
+    return (
+      <tr key={i}>
+        <td>{key}</td>
+        <td>{card[key].toString()}</td>
+      </tr>
+    )
+  };
+
   return (
     <Layout pageMod="card">
+      <table>
+        <tbody>
+          {setKeys &&
+            setKeys.map((key, i) => renderSetKeyAndValue(key, i))
+          }
+        </tbody>
+      </table>
       <Card />
     </Layout>
   )

@@ -6,6 +6,10 @@ import { connect } from 'react-redux'
 import clientCredentials from '../../../../functions/credentials/client'
 const { addCardToUsersCollection } = require("../../../helpers/cardCollectionHelpers");
 import { compose, withState } from 'recompose';
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+import _ from 'lodash';
+import SetCard from '../../../components/SetCard';
 
 const Index = ({ user, set, cards }) => {
   const setKeys = Object.keys(set)
@@ -37,7 +41,7 @@ const Index = ({ user, set, cards }) => {
         url: '/api/usersCardCollection/add',
         params: {
           id: card.id,
-          qty: 1,
+          qty: e.target.amount.value,
           benchMarkPrice: benchMarkPrice
         }
       }).then((res)=> {
@@ -45,21 +49,14 @@ const Index = ({ user, set, cards }) => {
       }).catch((err)=>{
         console.log(err)
       })
-
-
     }
     return (
       <div className="cards-card" key={i}>
-        {user && user.email &&
-          <form onSubmit={handleAddCardToUsersCollection}>
-            <input type="number" value="1" /> |
-            <input type="submit" value="Add" />
-          </form>
-        }
         <div>
+          <SetCard card={card}/>
           <div>{card.name}</div>
           {card.prices.usd ? (
-            <div>${card.prices.usd}</div>
+            <div>${card.prices.usd / 100}</div>
           ) : (
             <div>${card.prices.usd_foil}</div>
           )}
@@ -120,15 +117,25 @@ Index.getInitialProps = async ({ reduxStore, req, query, res }) => {
   let response = await axios.get('https://api.scryfall.com/sets/'+setId);
   const set = response.data;
   const apiCall = 'https://api.scryfall.com/cards/search?order=usd&q=s:'+set.code;
-  let cards = [];
   let page = 1;
   response = await axios.get(apiCall);
-  cards = cards.concat(response.data.data)
-  while(response.data.has_more) {
-    page++;
-    response = await axios.get(apiCall + '&page='+page);
-    cards = cards.concat(response.data.data);
-  }
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(clientCredentials)
+  };
+  const cardCollections = firebase.firestore().collection("cards").where('set', '==', setId)
+
+  let cards;
+
+  await cardCollections.get()
+    .then((snap) =>{
+      cards = snap.docs.map(d => d.data());
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+  cards = _.orderBy(cards, ['prices.usd', 'prices.usd_foil'], 'desc')
 
   return { set, cards }
 };

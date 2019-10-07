@@ -1,9 +1,10 @@
 import React from 'react'
+import { connect } from 'react-redux';
 
 const LoadingSpinner = ({ isLoading }) => {
   return (
     isLoading &&
-      <div className="spinner-wrapper">
+      <div className="loader-wrapper">
         <div className="loader"></div>
         <style jsx>{`
           .loader {
@@ -14,10 +15,18 @@ const LoadingSpinner = ({ isLoading }) => {
             height: 120px;
             animation: spin 2s linear infinite;
           }
-
-          .spinner-wrapper{
+          .loader-wrapper{
             position: absolute;
             margin: auto;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
 
           @keyframes spin {
@@ -29,4 +38,4 @@ const LoadingSpinner = ({ isLoading }) => {
   )
 }
 
-export default LoadingSpinner;
+export default connect(state => state)(LoadingSpinner);

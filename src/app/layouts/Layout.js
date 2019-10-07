@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import { connect } from 'react-redux'
 import Router from 'next/router';
 import css from '../App.css';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const Layout = ({ children, pageMod, isAuthedRequired }) => {
   const containerClass = ((pageMod) ? 'container ' + pageMod + '-page' : 'container');
@@ -12,9 +13,10 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
     <>
       <Header />
       <main className="body">
-        <div className={containerClass}>
+        <div className={containerClass} style={{padding: '10px 15px'}}>
           { children }
         </div>
+        <LoadingSpinner />
       </main>
       <Footer />
       <style global jsx>{`
@@ -27,6 +29,7 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
           }
           body{
             background-color: #f1f1f1;
+            padding: 10px 15px
           }
           main {
             flex: 1 1 100%;
