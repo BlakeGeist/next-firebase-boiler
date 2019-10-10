@@ -32,7 +32,52 @@ const deleteCardFromUsersCollection = (user, card) => {
     });
 }
 
+const getUsersCardCollection = async (user) => {
+  const usersCardCollectionData = cardCollections.doc(user.uid)
+  let usersCardCollectionDataIds;
+  await usersCardCollectionData.collection('cards').get()
+    .then((snap) =>{
+      usersCardCollectionDataIds = snap.docs.map(d => d.data());
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+  const usersCardCollctionIds = usersCardCollectionDataIds.map(d => d.id);
+
+  let usersCardCollection = [];
+
+  let proms = [];
+
+  const cardCollectionFirebase = firebase.firestore().collection('cards');
+  usersCardCollctionIds.forEach(cardId => {
+    proms.push(
+    cardCollectionFirebase.doc(cardId).get()
+      .then(doc => {
+        usersCardCollection.push(doc.data())
+      })
+      .catch(err => console.log(err))
+    )
+  })
+
+  await Promise.all(proms)
+
+  let cardCollection = [];
+
+  if(usersCardCollection){
+    for(let i=0; i<usersCardCollection.length; i++) {
+      cardCollection.push({
+       ...usersCardCollection[i],
+       ...(usersCardCollectionDataIds.find((itmInner) => itmInner.id === usersCardCollection[i].id))}
+      );
+    }
+  }
+
+  return usersCardCollection;
+}
+
 module.exports = {
   addCardToUsersCollection,
-  deleteCardFromUsersCollection
+  deleteCardFromUsersCollection,
+  getUsersCardCollection
 }

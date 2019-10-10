@@ -8,12 +8,6 @@ import EbayCardSearchContainer from './EbayCardSearch/EbayCardSearchContainer';
 
 const Card = ({ card, randoCard }) => {
 
-  const hanldeFetchNewRandomCard = async (e) => {
-    e.preventDefault();
-    let card = await axios.get('https://api.scryfall.com/cards/random');
-    Router.push(('/c/' + card.data.id))
-  }
-
   const MTGGoldFishLink = () => {
     let cleanedSetName = card.set_name.replace(/ /g, '+');
     let cleanedCardName = card.name.replace(/ /g, '+');
@@ -36,37 +30,47 @@ const Card = ({ card, randoCard }) => {
   return (
     <div className="card-container">
       <div className="card">
-        <h2><a onClick={hanldeFetchNewRandomCard} href="" >Random MTG Card</a></h2>
-        {card.name}
-        <div>
+        <div className="card-image">
           <Link href="/c/[id]" as={`/c/${card.id}`}>
             <a><img src={card.image_uris.normal} width="260px" height="362px;" /></a>
           </Link>
         </div>
-        <p>Price: ${card.prices.usd} | Foil Price: ${card.prices.usd_foil}</p>
-        <p>
-          Set: <Link href="/s/[setId]" as={`/s/${card.set}`}><a>{card.set_name}</a></Link>
-        </p>
-        <p><TCGPlayerLink /> | <MTGGoldFishLink /></p>
-        <EbayCardSearchContainer
-          operationName="findItemsByKeywords"
-          title="Active"
-          />
-        <hr style={{ margin: "50px 0"}}/>
-        <EbayCardSearchContainer
-          operationName="findCompletedItems"
-          title="Completed"
-          />
+        <div className="card-info-container">
+          <div className="card-info">
+            <h1>{card.name}</h1>
+            <p>Price: ${card.prices.usd} | Foil Price: ${card.prices.usd_foil}</p>
+            <p>
+              Set: <Link href="/s/[setId]" as={`/s/${card.set}`}><a>{card.set_name}</a></Link>
+            </p>
+            <p><TCGPlayerLink /> | <MTGGoldFishLink /></p>
+          </div>
+        </div>
       </div>
+      <EbayCardSearchContainer
+        operationName="findItemsByKeywords"
+        title="Active"
+        />
+      <hr style={{ margin: "50px 0"}}/>
+      <EbayCardSearchContainer
+        operationName="findCompletedItems"
+        title="Completed"
+        />
       <style global jsx>{`
         .card-container {
-          display: flex;
-          justify-content: center;
-          padding: 0 15px;
+          padding: 15px;
         }
         .card{
-          text-align: center;
+          display: flex;
+          justify-content: center;
+          padding: 15px;
         }
+          .card-info-container {
+            display: flex;
+            align-items: center;
+          }
+          .card-info {
+            padding: 0 15px;
+          }
         .mod-foil{
           background-color: #ccc;
         }

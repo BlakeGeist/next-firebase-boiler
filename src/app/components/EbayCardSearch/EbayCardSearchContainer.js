@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { compose, withState } from 'recompose';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -8,11 +8,8 @@ import EbaySearchTable from './EbaySearchTable'
 
 const { filterOutliers,  getAverage, roundMoney, firstNumber, priceByQTY } = require("../../helpers/quickHelpers");
 
-const EbayCardSearchContainerBase = ({ title, card, operationName, state, setState }) => {
-
-  React.useEffect(() => {
-    updateState('searchPhrase',  '"'+card.name+'"');
-  }, []);
+const EbayCardSearchContainerBase = ({ title, card, operationName, state, setState, searchPhrase, setSearchPhrase }) => {
+  [searchPhrase, setSearchPhrase] = useState('"'+card.name+'"')
 
   function cleanEbayData(data){
     let results = [];
@@ -57,7 +54,7 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
       'paginationInput.entriesPerPage': state.qty,
       'GLOBAL-ID': 'EBAY-US',
       'siteid': '0',
-      'keywords': state.searchPhrase,
+      'keywords': searchPhrase,
       'sortOrder': state.sortOrder,
       'categoryId': '38292',
       'paginationInput.pageNumber': page,
@@ -113,8 +110,8 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
     <div className="ebay-seach">
       <EbayCardSearchInputs
         fetchEbayData={fetchEbayData}
-        searchPhrase={state.searchPhrase}
-        updateStateItemFromInput={updateStateItemFromInput}
+        searchPhrase={searchPhrase}
+        setSearchPhrase={setSearchPhrase}
         />
       <EbaySearchTable
         results={state.ebaySearchResults}
@@ -130,8 +127,7 @@ const EbayCardSearchContainer = compose(
     ebaySearchResults: {},
     sortOrder: 'EndTimeSoonest',
     filter: '',
-    qty: 100,
-    searchPhrase: ''
+    qty: 100
   })
 )(EbayCardSearchContainerBase);
 

@@ -5,6 +5,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import clientCredentials from '../../functions/credentials/client'
 import Router from 'next/router';
+import axios from 'axios';
 
 const Nav = ({ user, dispatch }) => {
 
@@ -37,6 +38,12 @@ const Nav = ({ user, dispatch }) => {
       method: 'POST',
       credentials: 'same-origin'
     })
+  }
+
+  const hanldeFetchNewRandomCard = async (e) => {
+    e.preventDefault();
+    let card = await axios.get('https://api.scryfall.com/cards/random');
+    Router.push(('/c/' + card.data.id))
   }
 
   const LinkItem = ({ isExternal, href, label }) => {
@@ -86,6 +93,9 @@ const Nav = ({ user, dispatch }) => {
             <LinkItem href={href} label={label} isExternal={isExternal} />
           </li>
         ))}
+      </ul>
+      <ul>
+        <li><a onClick={hanldeFetchNewRandomCard} href="" >Random MTG Card</a></li>
       </ul>
       <ul className="user-nav">
         {user && user.uid ? (

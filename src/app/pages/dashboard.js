@@ -83,12 +83,17 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
     )
   }
 
+  const handleEbayLogin = (e) => {
+    e.preventDefault()
+    window.location ='https://auth.ebay.com/oauth2/authorize?client_id=BlakeGei-standard-PRD-ee6e394ea-800e1243&response_type=code&redirect_uri=Blake_Geist-BlakeGei-standa-oysusnr&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances'
+  }
+
   return (
     <Layout pageMod="dashboard" isAuthedRequired={true}>
       <h1>Dashbaord page</h1>
       <h2>User Info</h2>
       <div>
-        <p>Email: {user.email}</p>
+        <p>Email: {user.email} | <a onClick={handleEbayLogin} href="">Link Ebay</a></p>
       </div>
       <h2>Collection info</h2>
 
@@ -154,23 +159,22 @@ Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
 
   const usersCardCollctionIds = usersCardCollectionDataIds.map(d => d.id);
 
-  let identifiers = [];
+  let usersCardCollection = [];
 
-  usersCardCollctionIds.forEach((id)=>{
-    const dis = {
-      id: id
-    }
-    identifiers.push(dis)
+  let proms = [];
+
+  const cardCollectionFirebase = firebase.firestore().collection('cards');
+  usersCardCollctionIds.forEach(cardId => {
+    proms.push(
+    cardCollectionFirebase.doc(cardId).get()
+      .then(doc => {
+        usersCardCollection.push(doc.data())
+      })
+      .catch(err => console.log(err))
+    )
   })
 
-  let usersCardCollection;
-  await axios.post('https://api.scryfall.com/cards/collection', {
-    identifiers: identifiers
-  }).then((res)=>{
-    usersCardCollection = res.data.data
-  }).catch((err)=>{
-    console.log(err)
-  })
+  await Promise.all(proms)
 
   let cardCollection = [];
 

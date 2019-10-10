@@ -2,7 +2,7 @@ import React from 'react'
 import Select from 'react-select'
 
 
-const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchPhrase }) => {
+const EbayCardSearchInputs = ({ setSearchPhrase, fetchEbayData, searchPhrase }) => {
 
   const selects = [
     {
@@ -76,12 +76,19 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, fetchEbayData, searchP
     fetchEbayData(1)
   }
 
+  const handleSearchPhraseChange = (e) => {
+    console.log(e.target.value)
+    setSearchPhrase(e.target.value)
+  }
+
+  console.log(searchPhrase)
+
   return (
     <div className="ebay-seach-inputs-wrapper">
       <form className="ebay-seach-inputs" onSubmit={e => handleFetchEbayData(e)}>
         <div className="ebay-search-inputs-input">
           <div><label>Search</label></div>
-          <input className="mod-input" type="text" onChange={e => updateStateItemFromInput('searchPhrase', e)} value={searchPhrase} />
+          <input className="mod-input" type="text" onChange={e => handleSearchPhraseChange(e)} value={searchPhrase} />
         </div>
 
         {/*  <RenderSelects selects={selects} /> */}

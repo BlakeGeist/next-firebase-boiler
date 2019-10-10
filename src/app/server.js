@@ -89,7 +89,6 @@ app.prepare().then(() => {
     }
   })
 
-
   server.get('/api/getEbaySearchData', (req, res) => {
     axios({
       url: 'https://svcs.ebay.com/services/search/FindingService/v1',
@@ -131,6 +130,27 @@ app.prepare().then(() => {
         console.log('ebay error')
         console.log(error)
       })
+
+
+    if(req.session && req.session.decodedToken) {
+      const uid = req.session.decodedToken.uid;
+
+      var user = firebase.auth().currentUser;
+
+      user.updateProfile({
+        displayName: "Jane Q. User",
+        photoURL: "https://example.com/jane-q-user/profile.jpg"
+      }).then(function() {
+        res.redirect('/')
+      }).catch(function(error) {
+        // An error happened.
+      });
+
+    } else {
+      res.json({ mesage: 'NO USER FOUND' })
+    }
+
+    return
 
     firebase
       .auth()
@@ -237,6 +257,11 @@ app.prepare().then(() => {
     res.status(200).send(cards)
   })
 
+  server.get('/api/userSCardCollection', async (req, res) => {
+    let cardIds = req.query.cardIds;
+    console.log(cardIds)
+    res.status(200).send(cardIds)
+  })
 
   server.get('*', (req, res) => {
     return handle(req, res)

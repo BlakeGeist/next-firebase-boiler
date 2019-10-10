@@ -11,7 +11,7 @@ import 'firebase/firestore'
 import _ from 'lodash';
 import SetCard from '../../../components/SetCard';
 
-const Index = ({ user, set, cards }) => {
+const Index = ({ user, set, cards, usersCardCollction }) => {
   const setKeys = Object.keys(set)
   const renderSetKeyAndValue = (key, i) => {
     return (
@@ -50,10 +50,18 @@ const Index = ({ user, set, cards }) => {
         console.log(err)
       })
     }
+
+    let hasCardFlag = '';
+    if(_.find(usersCardCollction, {id: card.id})) {
+      hasCardFlag = 'hasCard'
+    }
+
     return (
-      <div className="cards-card" key={i}>
+      <div className={`cards-card ${hasCardFlag}`} key={i}>
         <div>
-          <SetCard card={card}/>
+          {user.uid &&
+            <SetCard card={card}/>
+          }
           <div>{card.name}</div>
           {card.prices.usd ? (
             <div>${card.prices.usd / 100}</div>
@@ -106,6 +114,9 @@ const Index = ({ user, set, cards }) => {
           }
             .cards-card{
               padding: 15px 0;
+            }
+            .cards-card.hasCard{
+              border: 1px solid;
             }
         `}</style>
     </Layout>

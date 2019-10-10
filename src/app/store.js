@@ -13,7 +13,8 @@ const exampleInitialState = {
   user: {},
   messages: [],
   card: {},
-  isLoading: false
+  isLoading: false,
+  usersCardCollction: []
 }
 
 export const actionTypes = {

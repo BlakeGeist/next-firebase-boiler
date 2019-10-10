@@ -87,24 +87,6 @@ server.get('/api/oauthEbay', async (req, res) => {
     firebase2.initializeApp(require('./credentials/client'))
   };
 
-  console.log(token)
-  console.log('findme blake')
-  if (!firebase2.apps.length) {
-    firebase2.initializeApp(require('../functions/credentials/client'))
-  };
-
-  var headers = {
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Accept': 'application/json',
-    'Cache-Control': 'no-cache',
-    'authorization': 'Basic Qmxha2VHZWktc3RhbmRhcmQtUFJELWVlNmUzOTRlYS04MDBlMTI0MzpQUkQtYmZmM2ZlNDRmMGVhLTA5YWUtNDcwZi05MjIyLTZlMmM=',
-    'scope': 'https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances'
-  }
-
-  const decodedURIToken = decodeURI(token)
-  const encodedToken = encodeURI(decodedURIToken);
-
-
   axios({
   		method: 'POST',
   		url: 'https://api.ebay.com/identity/v1/oauth2/token',
@@ -124,47 +106,42 @@ server.get('/api/oauthEbay', async (req, res) => {
       console.log(response)
       console.log(response.data)
       console.log(response.data.access_token)
-      console.log('omg fucking work')
-
-        axios({
-        		method: 'POST',
-        		url: 'https://api.ebay.com/wsapi',
-        		headers: {
-        			'Content-Type': 'application/x-www-form-urlencoded',
-        			'Accept': 'application/json',
-        			'Cache-Control': 'no-cache',
-              'Authorization': 'IAF ' + response.data.access_token,
-              'SOAPAction': 'GetUser'
-        		},
-            data: qs.stringify({
-        			'callname': 'GetUser',
-              'version': '1085',
-              'siteid': 0,
-              'IAF-TOKEN': response.data.access_token
-        		})
-        	})
-          .then((response) => {
-            console.log(response)
-            console.log(response.data)
-            console.log(response.data.access_token)
-            console.log('omg fucking work')
-          })
-          .catch((error) => {
-            console.log(error)
-            console.log(error.response)
-            console.log(error.response.data)
-            console.log('omg fucking work')
-
-          })
+      console.log('BlakeBlake')
+      axios({
+      		method: 'POST',
+      		url: 'https://api.ebay.com/wsapi',
+      		headers: {
+      			'Content-Type': 'application/x-www-form-urlencoded',
+      			'Accept': 'application/json',
+      			'Cache-Control': 'no-cache',
+            'Authorization': 'IAF ' + response.data.access_token,
+            'SOAPAction': 'GetUser'
+      		},
+          params: qs.stringify({
+      			'callname': 'GetUser',
+            'version': '1085',
+            'siteid': 0,
+            'IAF-TOKEN': response.data.access_token
+      		})
+      	})
+        .then((response) => {
+          console.log(response)
+          console.log('blakeblakeblake')
+        })
+        .catch((error) => {
+          console.log(error)
+          console.log('argg fuck')
+        })
     })
   	.catch((error) => {
       console.log(error)
-      console.log(error.response)
-      console.log(error.response.data)
-      console.log('omg fucking work')
     })
 
   //token = token.substr(token.indexOf("t^") + 2);
+
+  res.redirect('/')
+
+  return
 
   firebase
     .auth()
