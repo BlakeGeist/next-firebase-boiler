@@ -93,7 +93,7 @@ const EbayCardSearchInputs = ({ setSearchPhrase, fetchEbayData, searchPhrase }) 
 
         {/*  <RenderSelects selects={selects} /> */}
 
-        <div className="ebay-search-inputs-input" style={{width: '150px'}}>
+        <div className="ebay-search-inputs-input" style={{flex: '0 1 150px'}}>
           <div><label>Filters</label></div>
           <Select
             options={selects[0].values}
@@ -103,7 +103,7 @@ const EbayCardSearchInputs = ({ setSearchPhrase, fetchEbayData, searchPhrase }) 
             onChange={e => updateStateItemFromInput('filter', e)}
             />
         </div>
-        <div className="ebay-search-inputs-input" style={{width: '250px'}}>
+        <div className="ebay-search-inputs-input" style={{flex: '0 1 250px'}}>
           <div><label>Sort By</label></div>
           <Select
             options={selects[1].values}
@@ -113,7 +113,7 @@ const EbayCardSearchInputs = ({ setSearchPhrase, fetchEbayData, searchPhrase }) 
             onChange={e => updateStateItemFromInput('sortOrder', e)}
             />
         </div>
-        <div className="ebay-search-inputs-input" style={{width: '150px'}}>
+        <div className="ebay-search-inputs-input" style={{flex: '0 1 150px'}}>
           <div><label>Qty</label></div>
           <Select
             options={selects[2].values}
@@ -136,6 +136,7 @@ const EbayCardSearchInputs = ({ setSearchPhrase, fetchEbayData, searchPhrase }) 
           .ebay-seach-inputs {
             align-items: center;
             display: flex;
+            flex-wrap: wrap;            
             justify-content: space-around;
           }
             .ebay-search-inputs-input {

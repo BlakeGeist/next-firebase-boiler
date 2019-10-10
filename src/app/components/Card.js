@@ -62,6 +62,7 @@ const Card = ({ card, randoCard }) => {
         .card{
           display: flex;
           justify-content: center;
+          flex-wrap: wrap;
           padding: 15px;
         }
           .card-info-container {
