@@ -16,9 +16,9 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
         <div className={containerClass} style={{padding: '10px 15px'}}>
           { children }
         </div>
-        <LoadingSpinner />
       </main>
       <Footer />
+      <LoadingSpinner />      
       <style global jsx>{`
           html, body, #__next {
             height: 100%;
@@ -29,7 +29,6 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
           }
           body{
             background-color: #f1f1f1;
-            padding: 10px 15px
           }
           main {
             flex: 1 1 100%;

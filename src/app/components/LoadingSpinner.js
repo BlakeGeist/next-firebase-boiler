@@ -16,7 +16,7 @@ const LoadingSpinner = ({ isLoading }) => {
             animation: spin 2s linear infinite;
           }
           .loader-wrapper{
-            position: absolute;
+            position: fixed;
             margin: auto;
             height: 100%;
             width: 100%;
@@ -27,6 +27,7 @@ const LoadingSpinner = ({ isLoading }) => {
             display: flex;
             justify-content: center;
             align-items: center;
+            background-color: rgba(241, 241, 241, 0.7);
           }
 
           @keyframes spin {
