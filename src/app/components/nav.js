@@ -64,7 +64,7 @@ const Nav = ({ user, dispatch }) => {
         return user
           .getIdToken()
           .then(token => {
-            dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
+            //dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
             // eslint-disable-next-line no-undef
             return fetch('/api/login', {
               method: 'POST',

@@ -8,8 +8,9 @@ import { compose, withState } from 'recompose';
 import AuthForm from '../components/AuthForm';
 import LoadingSpinner from '../components/LoadingSpinner';
 const axios = require('axios');
+import { connect } from 'react-redux'
 
-const LoginBase = ({ setState, state }) => {
+const LoginBase = ({ setState, state, dispatch }) => {
 
   if (!firebase.apps.length) {
     firebase.initializeApp(clientCredentials)
@@ -48,8 +49,23 @@ const LoginBase = ({ setState, state }) => {
     });
   };
 
-  const onAuthStateChange = (user) => {
+  const onAuthStateChange = async (user) => {
     if(user && user.uid){
+      if(user) {
+
+        const userEbayData = firebase.firestore().collection('userEbayData').doc(user.uid);
+
+        await userEbayData.get()
+          .then((doc) =>{
+            console.log(doc.data())
+            user.ebayData = doc.data()
+          })
+          .catch((err) =>{
+            console.log(err)
+          })
+      }
+
+      dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
       Router.push('/dashboard')
     }
   };
@@ -92,4 +108,4 @@ const Login = compose(
   withState('state', 'setState', {email: '', password: '', isLoading: false, errorMessage: ''})
 )(LoginBase);
 
-export default Login;
+export default connect(state => state)(Login);

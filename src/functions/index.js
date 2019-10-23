@@ -67,6 +67,27 @@ server.post('/api/logout', (req, res) => {
   res.json({ status: true })
 })
 
+server.get('/api/usersCardCollection/add', (req, res) => {
+  const cardCollections = firebase.firestore().collection("userCardCollections")
+
+  if(req.session && req.session.decodedToken) {
+    const uid = req.session.decodedToken.uid;
+    const usersCardCollections = cardCollections.doc(uid);
+
+    usersCardCollections.collection('cards').doc(req.query.id).set(req.query)
+      .then(function() {
+        console.log("Card successfully added!");
+        res.json({ status: 200, data: req.query.id + ' card was added' })
+      })
+      .catch(function(error) {
+        console.error("Error removing document: ", error);
+      });
+
+  } else {
+    res.json({ mesage: 'NO USER FOUND' })
+  }
+})
+
 server.get('/api/getEbaySearchData', (req, res) => {
   axios({
     url: 'https://svcs.ebay.com/services/search/FindingService/v1',
@@ -107,31 +128,29 @@ server.get('/api/oauthEbay', async (req, res) => {
       console.log(response.data)
       console.log(response.data.access_token)
       console.log('BlakeBlake')
-      axios({
-      		method: 'POST',
-      		url: 'https://api.ebay.com/wsapi',
-      		headers: {
-      			'Content-Type': 'application/x-www-form-urlencoded',
-      			'Accept': 'application/json',
-      			'Cache-Control': 'no-cache',
-            'Authorization': 'IAF ' + response.data.access_token,
-            'SOAPAction': 'GetUser'
-      		},
-          params: qs.stringify({
-      			'callname': 'GetUser',
-            'version': '1085',
-            'siteid': 0,
-            'IAF-TOKEN': response.data.access_token
-      		})
-      	})
-        .then((response) => {
-          console.log(response)
-          console.log('blakeblakeblake')
+
+      const uid = req.session.decodedToken.uid;
+
+      if (!uid) { return }
+
+      if (!firebase2.apps.length) {
+        firebase2.initializeApp(require('./credentials/client'))
+      };
+
+      const db = firebase2.app().firestore();
+      const userEbayData = db.collection('userEbayData');
+      const data = response.data.access_token;
+
+      userEbayData.doc(uid).set(response.data)
+        .then(()=> {
+          console.log('success')
         })
-        .catch((error) => {
-          console.log(error)
-          console.log('argg fuck')
+        .catch((err) => {
+          console.log('failed')
         })
+
+        return
+
     })
   	.catch((error) => {
       console.log(error)

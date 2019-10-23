@@ -63,6 +63,29 @@ app.prepare().then(() => {
       .catch(error => res.json({ error }))
   })
 
+  server.post('/api/sellCard', (req, res) => {
+
+    axios({
+        method: 'POST',
+        url: 'https://api.ebay.com/ws/api.dll',
+        headers: {
+          'X-EBAY-API-SITEID': '0',
+          'X-EBAY-API-COMPATIBILITY-LEVEL': '967',
+          'X-EBAY-API-CALL-NAME': 'AddItem',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Authorization': 'Basic Qmxha2VHZWktc3RhbmRhcmQtUFJELWVlNmUzOTRlYS04MDBlMTI0MzpQUkQtYmZmM2ZlNDRmMGVhLTA5YWUtNDcwZi05MjIyLTZlMmM=',          
+        },
+        params: req.query
+      })
+        .then((data) => {
+          console.log(data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+
+  })
+
   server.post('/api/logout', (req, res) => {
     req.session.decodedToken = null
     res.json({ status: true })
@@ -142,6 +165,7 @@ app.prepare().then(() => {
         photoURL: "https://example.com/jane-q-user/profile.jpg"
       }).then(function() {
         res.redirect('/')
+
       }).catch(function(error) {
         // An error happened.
       });

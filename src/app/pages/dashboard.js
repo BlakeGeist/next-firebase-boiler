@@ -12,12 +12,13 @@ import { compose, withState } from 'recompose';
 const { moneyRoundOfArray, roundMoney } = require("../helpers/quickHelpers");
 const { deleteCardFromUsersCollection } = require("../helpers/cardCollectionHelpers");
 
+const qs = require('qs');
 
 const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject, cardCollection }) => {
 
   [userCardCollectionObject, setUserCardCollectionObject] = useState(cardCollection)
 
-  const pricesOfCardsInCollection = userCardCollectionObject.map(card => (card.prices.usd || card.prices.usd_foil) * card.qty);
+  const pricesOfCardsInCollection = userCardCollectionObject.map(card => (card.prices.usd || card.prices.usd_foil) * card.qty / 100);
   const rondedToMoneyTotalPriceOfCardsInCollection = moneyRoundOfArray(pricesOfCardsInCollection);
   const benchmarkPricesOfCardsInCollection = userCardCollectionObject.map(card => card.benchMarkPrice * card.qty);
   const rondedToMoneyTotalPriceOfCardMarkssInCollection = moneyRoundOfArray(benchmarkPricesOfCardsInCollection);
@@ -33,18 +34,44 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
   const renderCard = (card, i ) => {
 
     const CardInfo = () => {
-      const currentPrice = parseFloat(card.prices.usd || card.prices.usd_foil);
+      const currentPrice = parseFloat(card.prices.usd || card.prices.usd_foil) / 100;
       const benchMarkPrice = card.benchMarkPrice / 100;
       const changeSinceBenchmark = roundMoney(currentPrice - benchMarkPrice);
       const percentageChangeSinceBenchmark = Math.floor(((currentPrice - benchMarkPrice) / benchMarkPrice) * 100);
 
+      const initSellCardFlow = (e) => {
+        e.preventDefault();
+        axios({
+        		method: 'POST',
+        		url: '/api/sellCard',
+            params: qs.stringify({
+              'RequesterCredentials' : {
+                'eBayAuthToken': user.ebayData.access_token
+              },
+              'Item': {
+                'Title': 'Harry Potter'
+              }
+            })
+        	})
+          .then((data) => {
+            console.log('this was sucess')
+            console.log(data)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+
+
+      }
+
       return (
         <div>
           <div>{card.name}</div>
-          <div>{card.qty}</div>
-          <div>Current Price ${card.prices.usd || card.prices.usd_foil}</div>
-          <div>Benchmark Price ${card.benchMarkPrice / 100}</div>
+          <div>QTY: {card.qty}</div>
+          <div>Current Price ${currentPrice}</div>
+          <div>Benchmark Price ${benchMarkPrice}</div>
           <div>Banmark Diff ${changeSinceBenchmark} | %{percentageChangeSinceBenchmark}</div>
+          <div><a href="" onClick={initSellCardFlow}>Sell</a></div>
         </div>
       )
     }
@@ -83,17 +110,49 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
     )
   }
 
+
+
+  const EbayData = () => {
+    const setKeys = Object.keys(user.ebayData)
+    const renderSetKeyAndValue = (key, i) => {
+      return (
+        <tr key={i}>
+          <td>{key}</td>
+          <td>{user.ebayData[key].toString()}</td>
+        </tr>
+      )
+    };
+
+    if (user.ebayData) {
+      return (
+        <div>
+          <table>
+            <tbody>
+              {                setKeys.map((key, i) => renderSetKeyAndValue(key, i))
+}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+    return (
+      <a onClick={handleEbayLogin} href="">Link Ebay</a>
+    )
+  }
+
   const handleEbayLogin = (e) => {
     e.preventDefault()
     window.location ='https://auth.ebay.com/oauth2/authorize?client_id=BlakeGei-standard-PRD-ee6e394ea-800e1243&response_type=code&redirect_uri=Blake_Geist-BlakeGei-standa-oysusnr&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances'
   }
+
+  console.log(user)
 
   return (
     <Layout pageMod="dashboard" isAuthedRequired={true}>
       <h1>Dashbaord page</h1>
       <h2>User Info</h2>
       <div>
-        <p>Email: {user.email} | <a onClick={handleEbayLogin} href="">Link Ebay</a></p>
+        Email: {user.email} | <EbayData />
       </div>
       <h2>Collection info</h2>
 
@@ -186,6 +245,9 @@ Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
       );
     }
   }
+
+  cardCollection = _.orderBy(cardCollection, ['prices.usd', 'prices.usd_foil'], 'desc')
+
 
   return { cardCollection };
 }

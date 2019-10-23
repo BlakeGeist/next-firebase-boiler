@@ -112,6 +112,7 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
         fetchEbayData={fetchEbayData}
         searchPhrase={searchPhrase}
         setSearchPhrase={setSearchPhrase}
+        updateStateItemFromInput={updateStateItemFromInput}
         />
       <EbaySearchTable
         results={state.ebaySearchResults}

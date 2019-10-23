@@ -2,7 +2,7 @@ import React from 'react'
 import Select from 'react-select'
 
 
-const EbayCardSearchInputs = ({ setSearchPhrase, fetchEbayData, searchPhrase }) => {
+const EbayCardSearchInputs = ({ updateStateItemFromInput, setSearchPhrase, fetchEbayData, searchPhrase }) => {
 
   const selects = [
     {
@@ -136,7 +136,7 @@ const EbayCardSearchInputs = ({ setSearchPhrase, fetchEbayData, searchPhrase }) 
           .ebay-seach-inputs {
             align-items: center;
             display: flex;
-            flex-wrap: wrap;            
+            flex-wrap: wrap;
             justify-content: space-around;
           }
             .ebay-search-inputs-input {
