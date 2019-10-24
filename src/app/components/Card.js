@@ -8,6 +8,17 @@ import EbayCardSearchContainer from './EbayCardSearch/EbayCardSearchContainer';
 
 const Card = ({ card, randoCard }) => {
 
+  const CardPrice = (price) => {
+    if(isInt(price)){
+      return price / 100;
+    } else {
+      return price
+    }
+    function isInt(n) {
+     return n % 1 === 0;
+    }
+  }
+
   const MTGGoldFishLink = () => {
     let cleanedSetName = card.set_name.replace(/ /g, '+');
     let cleanedCardName = card.name.replace(/ /g, '+');
@@ -38,7 +49,7 @@ const Card = ({ card, randoCard }) => {
         <div className="card-info-container">
           <div className="card-info">
             <h1>{card.name}</h1>
-            <p>Price: ${card.prices.usd} | Foil Price: ${card.prices.usd_foil}</p>
+            <p>Price: ${CardPrice(card.prices.usd)} | Foil Price: ${CardPrice(card.prices.usd_foil)}</p>
             <p>
               Set: <Link href="/s/[setId]" as={`/s/${card.set}`}><a>{card.set_name}</a></Link>
             </p>

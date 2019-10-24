@@ -11,7 +11,30 @@ import 'firebase/firestore'
 import _ from 'lodash';
 import SetCard from '../../../components/SetCard';
 
-const Index = ({ user, set, cards, usersCardCollction }) => {
+
+const Index = ({ user, set, cards, usersCardCollction, dispatch }) => {
+  const handleImportSetClick = (e) => {
+    e.preventDefault();
+    dispatch({ type: 'SET_ITEM', name: 'isLoading', payload: true });
+    axios({
+      url: '/api/importCardsFromSet',
+      params: {
+        set: set.code
+      }
+    })
+      .then(res => {
+        dispatch({ type: 'SET_ITEM', name: 'isLoading', payload: false });
+        console.log('successfully did a thing ', res)
+        let tempSet = set;
+        tempSet.hasCards = true;
+        setState(tempSet)
+      })
+      .catch(err => {
+        dispatch({ type: 'SET_ITEM', name: 'isLoading', payload: false });
+        console.log('oh shit, you fucked up son')
+      })
+  }
+
   const setKeys = Object.keys(set)
   const renderSetKeyAndValue = (key, i) => {
     return (
@@ -63,6 +86,9 @@ const Index = ({ user, set, cards, usersCardCollction }) => {
             <SetCard card={card}/>
           }
           <div>{card.name}</div>
+          {card.ebaySalesCount &&
+            card.ebaySalesCount
+          }
           {card.prices.usd ? (
             <div>${card.prices.usd / 100}</div>
           ) : (
@@ -91,6 +117,7 @@ const Index = ({ user, set, cards, usersCardCollction }) => {
       <div>
         <div>
           <h2>{set.name}</h2>
+          <a href="" onClick={handleImportSetClick}>Import Link</a>
           <table>
             <tbody>
               {setKeys &&

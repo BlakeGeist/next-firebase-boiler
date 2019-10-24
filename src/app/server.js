@@ -64,7 +64,6 @@ app.prepare().then(() => {
   })
 
   server.post('/api/sellCard', (req, res) => {
-
     axios({
         method: 'POST',
         url: 'https://api.ebay.com/ws/api.dll',
@@ -73,7 +72,7 @@ app.prepare().then(() => {
           'X-EBAY-API-COMPATIBILITY-LEVEL': '967',
           'X-EBAY-API-CALL-NAME': 'AddItem',
           'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic Qmxha2VHZWktc3RhbmRhcmQtUFJELWVlNmUzOTRlYS04MDBlMTI0MzpQUkQtYmZmM2ZlNDRmMGVhLTA5YWUtNDcwZi05MjIyLTZlMmM=',          
+          'Authorization': 'Basic Qmxha2VHZWktc3RhbmRhcmQtUFJELWVlNmUzOTRlYS04MDBlMTI0MzpQUkQtYmZmM2ZlNDRmMGVhLTA5YWUtNDcwZi05MjIyLTZlMmM=',
         },
         params: req.query
       })
@@ -287,6 +286,20 @@ app.prepare().then(() => {
     res.status(200).send(cardIds)
   })
 
+  server.get('/api/top10FromSets', (req, res) => {
+    axios.get('https://api.scryfall.com/sets')
+      .then(resp => {
+        const sets = resp.data.data;
+        sets.forEach(async (set) => {
+          setTimeout(function(){
+            processSet(set)
+          }, 1000);
+        })
+        res.status(200).send(sets)
+      })
+      .catch(err => console.log(err))
+  })
+
   server.get('*', (req, res) => {
     return handle(req, res)
   })
@@ -296,3 +309,47 @@ app.prepare().then(() => {
     console.log(`> Ready on http://localhost:${port}`)
   })
 })
+
+async function processSet(set) {
+  let cards = [];
+  let page = 1;
+
+  let response = await axios.get('https://api.scryfall.com/cards/search?q=s:'+set.code+'&page='+page+'&order=color&unique=prints');
+
+  cards = cards.concat(response.data.data)
+
+  while(response.data.has_more) {
+    page++;
+    response = await axios.get('https://api.scryfall.com/cards/search?q=s:'+set.code+'&page='+page+'&order=color&unique=prints');
+    cards = cards.concat(response.data.data);
+  }
+
+  let proms = []
+
+  const db = firebase.app().firestore();
+  const cardsCollection = db.collection('cards');
+
+  const setDoc = db.collection('sets').doc(set.code);
+
+  await setDoc.update({hasCards: true})
+    .catch((err) => console.log(err))
+
+  cards.forEach((card, i) => {
+    card.prices.usd = parseFloat(card.prices.usd) * 100 || 0
+    card.prices.usd_foil = parseFloat(card.prices.usd_foil) * 100 || 0
+    proms.push(
+      cardsCollection.doc(card.id).set(card)
+       .then(()=>{
+         console.log('successfully imported ', card.name)
+       })
+       .then((card)=>{
+         return card
+       })
+       .catch((err)=>{
+         console.log('error: ', err)
+       })
+    )
+  })
+
+  return await Promise.all(proms)
+}

@@ -126,6 +126,9 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
     if (user.ebayData) {
       return (
         <div>
+
+          <a onClick={handleEbayLogin} href="">Link Ebay</a>
+
           <table>
             <tbody>
               {                setKeys.map((key, i) => renderSetKeyAndValue(key, i))

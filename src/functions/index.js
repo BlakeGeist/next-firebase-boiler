@@ -286,9 +286,7 @@ exports.app = functions.https.onRequest(async (req, res) => {
 
 });
 
-exports.importSets = functions.https.onRequest((req, res) => {
-  cors(req, res, async () => {
-
-
-  });
+exports.scheduledFunction = functions.pubsub.schedule('every 5 minutes').onRun((context) => {
+  console.log('This will be run every 5 minutes!');
+  return null;
 });
