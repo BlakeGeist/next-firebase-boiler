@@ -108,82 +108,42 @@ server.get('/api/oauthEbay', async (req, res) => {
     firebase2.initializeApp(require('./credentials/client'))
   };
 
+  console.log(req.session.ebaySessionId)
+  console.log('blakeFind1')
+
+  var str = `
+  <?xml version="1.0" encoding="utf-8"?>
+  <FetchTokenRequest xmlns="urn:ebay:apis:eBLBaseComponents">
+    <SessionID>` + req.session.ebaySessionId + `</SessionID>
+  </FetchTokenRequest>
+  `
+
   axios({
-  		method: 'POST',
-  		url: 'https://api.ebay.com/identity/v1/oauth2/token',
-  		headers: {
-  			'Content-Type': 'application/x-www-form-urlencoded',
-  			'Accept': 'application/json',
-  			'Cache-Control': 'no-cache',
-  			'Authorization': 'Basic Qmxha2VHZWktc3RhbmRhcmQtUFJELWVlNmUzOTRlYS04MDBlMTI0MzpQUkQtYmZmM2ZlNDRmMGVhLTA5YWUtNDcwZi05MjIyLTZlMmM='
-  		},
-  		data: qs.stringify({
-  			'grant_type': 'authorization_code',
-  			'redirect_uri': 'Blake_Geist-BlakeGei-standa-oysusnr',
-  			'code': token
-  		})
-  	})
-  	.then((response) => {
-      console.log(response)
-      console.log(response.data)
-      console.log(response.data.access_token)
-      console.log('BlakeBlake')
+    method: 'POST',
+    url: 'https://api.ebay.com/ws/api.dll',
+    headers: {
+      'X-EBAY-API-SITEID': '0',
+      'X-EBAY-API-COMPATIBILITY-LEVEL': '967',
+      'X-EBAY-API-CALL-NAME': 'FetchToken',
+      'X-EBAY-API-APP-NAME': 'BlakeGei-standard-PRD-ee6e394ea-800e1243',
+      'X-EBAY-API-DEV-NAME': 'a036b866-4e0d-49de-b7f6-a45309064be2',
+      'X-EBAY-API-CERT-NAME': 'PRD-bff3fe44f0ea-09ae-470f-9222-6e2c'
+    },
+    data: str
+  })
+    .then(async (data) => {
+      const response = await xmlToJson(data)
 
-      const uid = req.session.decodedToken.uid;
+      const token = response.FetchTokenResponse.eBayAuthToken[0]
 
-      if (!uid) { return }
-
-      if (!firebase2.apps.length) {
-        firebase2.initializeApp(require('./credentials/client'))
-      };
-
-      const db = firebase2.app().firestore();
-      const userEbayData = db.collection('userEbayData');
-      const data = response.data.access_token;
-
-      userEbayData.doc(uid).set(response.data)
-        .then(()=> {
-          console.log('success')
-        })
-        .catch((err) => {
-          console.log('failed')
-        })
-
-        return
+      req.session.eBayAuthToken = token
+      res.redirect('/')
 
     })
-  	.catch((error) => {
-      console.log(error)
+    .catch((err) => {
+      console.log(err)
+      res.status(500).send(err)
     })
-
-  //token = token.substr(token.indexOf("t^") + 2);
-
-  res.redirect('/')
-
-  return
-
-  firebase
-    .auth()
-    .createCustomToken(token)
-    .then(function(customToken) {
-      // Send token back to client
-      req.session.decodedToken = customToken
-      firebase2.auth().signInWithCustomToken(customToken)
-      .then((data)=>{
-        req.session.decodedToken = data.user
-        res.redirect('/')
-      })
-      .catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // ...
-      });
-    })
-
-    .catch(function(error) {
-      console.log('Error creating custom token:', error);
-    });
 
 })
 
@@ -275,18 +235,179 @@ server.get('/api/importCardsFromSet', async (req, res) => {
   res.status(200).send(cards)
 })
 
+server.post('/api/linkEbayAccount', (req, res) => {
+
+  var str = `
+    <?xml version="1.0" encoding="utf-8"?>
+    <GetSessionIDRequest xmlns="urn:ebay:apis:eBLBaseComponents">
+      <RuName>Blake_Geist-BlakeGei-standa-oysusnr</RuName>
+    </GetSessionIDRequest>
+  `
+
+  axios({
+      method: 'POST',
+      url: 'https://api.ebay.com/ws/api.dll',
+      headers: {
+        'X-EBAY-API-SITEID': '0',
+        'X-EBAY-API-COMPATIBILITY-LEVEL': '967',
+        'X-EBAY-API-CALL-NAME': 'GetSessionID',
+        'X-EBAY-API-APP-NAME': 'BlakeGei-standard-PRD-ee6e394ea-800e1243',
+        'X-EBAY-API-DEV-NAME': 'a036b866-4e0d-49de-b7f6-a45309064be2',
+        'X-EBAY-API-CERT-NAME': 'PRD-bff3fe44f0ea-09ae-470f-9222-6e2c'
+      },
+      data: str
+    })
+      .then(async (data) => {
+        const response = await xmlToJson(data)
+        const sessionId = response.GetSessionIDResponse.SessionID[0];
+        req.session.ebaySessionId = sessionId;
+        res.status(200).send(sessionId)
+      })
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
+
+})
+
+server.post('/api/sellCard', (req, res) => {
+
+  console.log(req.session.eBayAuthToken)
+
+  var str = `
+  <?xml version="1.0" encoding="utf-8"?>
+  <AddItemRequest xmlns="urn:ebay:apis:eBLBaseComponents">
+    <RequesterCredentials>
+      <eBayAuthToken>` + req.session.eBayAuthToken + `</eBayAuthToken>
+    </RequesterCredentials>
+    <ErrorLanguage>en_US</ErrorLanguage>
+    <WarningLevel>High</WarningLevel>
+    <Item>
+      <Title>Harry Potter and the Philosopher's Stone</Title>
+      <Description>
+        This is the first book in the Harry Potter series. In excellent condition!
+      </Description>
+      <PrimaryCategory>
+        <CategoryID>377</CategoryID>
+      </PrimaryCategory>
+      <StartPrice>1.0</StartPrice>
+      <CategoryMappingAllowed>true</CategoryMappingAllowed>
+      <ConditionID>4000</ConditionID>
+      <Country>US</Country>
+      <Currency>USD</Currency>
+      <DispatchTimeMax>3</DispatchTimeMax>
+      <ListingDuration>Days_7</ListingDuration>
+      <ListingType>Chinese</ListingType>
+      <PaymentMethods>PayPal</PaymentMethods>
+      <PayPalEmailAddress>blakesmtg@gmail.com</PayPalEmailAddress>
+      <PictureDetails>
+        <PictureURL>https://img.scryfall.com/cards/normal/front/5/7/57645743-27fa-4a75-9511-acfc32dd349a.jpg?1571699733</PictureURL>
+      </PictureDetails>
+      <PostalCode>95125</PostalCode>
+      <Quantity>1</Quantity>
+      <ReturnPolicy>
+        <ReturnsAcceptedOption>ReturnsAccepted</ReturnsAcceptedOption>
+        <RefundOption>MoneyBack</RefundOption>
+        <ReturnsWithinOption>Days_30</ReturnsWithinOption>
+        <ShippingCostPaidByOption>Buyer</ShippingCostPaidByOption>
+      </ReturnPolicy>
+      <ShippingDetails>
+        <ShippingType>Flat</ShippingType>
+        <ShippingServiceOptions>
+          <ShippingServicePriority>1</ShippingServicePriority>
+          <ShippingService>USPSMedia</ShippingService>
+          <ShippingServiceCost>2.50</ShippingServiceCost>
+        </ShippingServiceOptions>
+      </ShippingDetails>
+      <Site>US</Site>
+    </Item>
+  </AddItemRequest>
+  `
+
+
+  axios({
+      method: 'POST',
+      url: 'https://api.ebay.com/ws/api.dll',
+      headers: {
+        'X-EBAY-API-SITEID': '0',
+        'X-EBAY-API-COMPATIBILITY-LEVEL': '967',
+        'X-EBAY-API-CALL-NAME': 'AddItem'
+      },
+      data: str
+    })
+      .then(async data => {
+        const response = await xmlToJson(data)
+
+        const error = response.AddItemResponse.Errors;
+
+        console.log(response);
+        console.log(error);
+        console.log('blakeblake')
+        res.status(200).send(response)
+      })
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
+
+
+})
+
 server.get('*', (req, res) => {
   return handle(req, res)
 })
+
+
+async function xmlToJson(xml) {
+
+  const {parseString} = require('xml2js');
+
+  await parseString(xml.data, async function (err, result) {
+      xml = await result
+  });
+
+  return xml
+
+	// Create the return object
+	var obj = {};
+
+	if (xml.nodeType == 1) { // element
+		// do attributes
+		if (xml.attributes.length > 0) {
+		obj["@attributes"] = {};
+			for (var j = 0; j < xml.attributes.length; j++) {
+				var attribute = xml.attributes.item(j);
+				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+			}
+		}
+	} else if (xml.nodeType == 3) { // text
+		obj = xml.nodeValue;
+	}
+
+	// do children
+	if (xml.hasChildNodes()) {
+		for(var i = 0; i < xml.childNodes.length; i++) {
+			var item = xml.childNodes.item(i);
+			var nodeName = item.nodeName;
+			if (typeof(obj[nodeName]) == "undefined") {
+				obj[nodeName] = xmlToJson(item);
+			} else {
+				if (typeof(obj[nodeName].push) == "undefined") {
+					var old = obj[nodeName];
+					obj[nodeName] = [];
+					obj[nodeName].push(old);
+				}
+				obj[nodeName].push(xmlToJson(item));
+			}
+		}
+	}
+	return obj;
+};
+
 
 exports.app = functions.https.onRequest(async (req, res) => {
   await nextApp.prepare().then(() => {
     server(req, res);
   })
 
-});
-
-exports.scheduledFunction = functions.pubsub.schedule('every 5 minutes').onRun((context) => {
-  console.log('This will be run every 5 minutes!');
-  return null;
 });

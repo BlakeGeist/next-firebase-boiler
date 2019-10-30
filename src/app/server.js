@@ -64,30 +64,72 @@ app.prepare().then(() => {
   })
 
   server.post('/api/sellCard', (req, res) => {
+
+    var str = `<?xml version="1.0" encoding="utf-8"?>
+<GeteBayOfficialTimeRequest xmlns="urn:ebay:apis:eBLBaseComponents">
+  <RequesterCredentials>
+    <eBayAuthToken>AgAAAA**AQAAAA**aAAAAA**iiSyXQ**nY+sHZ2PrBmdj6wVnY+sEZ2PrA2dj6wFk4GjDJWBpQ6dj6x9nY+seQ**1u0DAA**AAMAAA**/fGGZJ1ZTDXt2xsnuCKjLCFLrIycDkrF8DXxot32D/iI6HaA9sygNtRqPPgdEjycDYyWZLeEfGivIeT+tDMBl8AXHC5wNyjvtCzixzaLvF4VkKdpvUpD02ZLO1crgfnxf2Kvf8KX34mtg0sd3U/YDGfaQwNE7NGwSBjTXg8dYaT+GpzMEoiS/af64/TK4CKbslSiB7NvTetK3GIgTEDQkRuzuRSAsvJrhe7klSpKSBOo5AOg6glc0RCXFQ1zPRbBuAiXHZD/9eYyCm5iEJx0pGmLAJvgVJzRiNjEFtTo4MQ19R5ylBiw4f3UGYkP87FF2DMpr0uAuZL1mUS5wuT2es25okVS1oFVzgsxpoeELaeMO+px1zzk64Tm5qQnYFusb5mZwl7RiAfTtzOujqPhCrcuawXch1LTonNnI5ec1anP362fyI4m6zG17ENDyjYrU/a6gYeBcX4lcytCc8XNtkax18f04H2+XXoGzCuh6lWtpPyAM4fczqOzeLWI6s4yUKgb8ShRJF2qiSFJFGH89RCAsRmOE6RTSYsIEjxfhvQe10DxDYrLFOJIUOEt/ilR/s5Nfr+bPTAWs+HihvNKKwPfin5CJrxJOnX5H9nKTDGu/MR2k2ISTeeoFA9meexOjmCUR8jiMqTn7E0qTmuhYBa8zXbBda3XbcxttGkzrZaq5LDYWUhYg/gj5gIxoiyvlnJnQF5kJGf6EAENkiAbWq1jUGJWmq/3oHUb1pBV2gJxiKB262mTtj+sIur0f8as</eBayAuthToken>
+  </RequesterCredentials>
+	<ErrorLanguage>en_US</ErrorLanguage>
+	<WarningLevel>High</WarningLevel>
+</GeteBayOfficialTimeRequest>`
+
     axios({
         method: 'POST',
-        url: 'https://api.ebay.com/ws/api.dll',
+        url: 'https://api.sandbox.ebay.com/ws/api.dll',
         headers: {
           'X-EBAY-API-SITEID': '0',
           'X-EBAY-API-COMPATIBILITY-LEVEL': '967',
-          'X-EBAY-API-CALL-NAME': 'AddItem',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Authorization': 'Basic Qmxha2VHZWktc3RhbmRhcmQtUFJELWVlNmUzOTRlYS04MDBlMTI0MzpQUkQtYmZmM2ZlNDRmMGVhLTA5YWUtNDcwZi05MjIyLTZlMmM=',
+          'X-EBAY-API-CALL-NAME': 'GeteBayOfficialTime'
         },
-        params: req.query
+        data: str
       })
-        .then((data) => {
-          console.log(data)
-        })
         .catch((err) => {
           console.log(err)
+          res.status(500).send(err)
         })
+
 
   })
 
   server.post('/api/logout', (req, res) => {
     req.session.decodedToken = null
     res.json({ status: true })
+  })
+
+  server.post('/api/linkEbayAccount', (req, res) => {
+
+
+    var str = `
+      <?xml version="1.0" encoding="utf-8"?>
+      <GetSessionIDRequest xmlns="urn:ebay:apis:eBLBaseComponents">
+        <RuName>Blake_Geist-BlakeGei-standa-bvslpr</RuName>
+      </GetSessionIDRequest>
+    `
+
+    axios({
+        method: 'POST',
+        url: 'https://api.sandbox.ebay.com/ws/api.dll',
+        headers: {
+          'X-EBAY-API-SITEID': '0',
+          'X-EBAY-API-COMPATIBILITY-LEVEL': '967',
+          'X-EBAY-API-CALL-NAME': 'GetSessionID',
+          'X-EBAY-API-APP-NAME': 'BlakeGei-standard-SBX-5e6e394ea-29d730e6',
+          'X-EBAY-API-DEV-NAME': 'a036b866-4e0d-49de-b7f6-a45309064be2',
+          'X-EBAY-API-CERT-NAME': 'SBX-e6e394ea763e-b466-4f1c-9f4e-f991	'
+        },
+        data: str
+      })
+        .then(async (data) => {
+          const response = await xmlToJson(data)
+          const sessionId = response.GetSessionIDResponse.SessionID[0];
+          res.status(200).send(sessionId)
+        })
+        .catch((err) => {
+          console.log(err)
+          res.status(500).send(err)
+        })
+
   })
 
   server.get('/api/usersCardCollection/add', (req, res) => {
@@ -309,6 +351,54 @@ app.prepare().then(() => {
     console.log(`> Ready on http://localhost:${port}`)
   })
 })
+
+
+// Changes XML to JSON
+async function xmlToJson(xml) {
+
+  const {parseString} = require('xml2js');
+
+  await parseString(xml.data, async function (err, result) {
+      xml = await result
+  });
+
+  return xml
+
+	// Create the return object
+	var obj = {};
+
+	if (xml.nodeType == 1) { // element
+		// do attributes
+		if (xml.attributes.length > 0) {
+		obj["@attributes"] = {};
+			for (var j = 0; j < xml.attributes.length; j++) {
+				var attribute = xml.attributes.item(j);
+				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+			}
+		}
+	} else if (xml.nodeType == 3) { // text
+		obj = xml.nodeValue;
+	}
+
+	// do children
+	if (xml.hasChildNodes()) {
+		for(var i = 0; i < xml.childNodes.length; i++) {
+			var item = xml.childNodes.item(i);
+			var nodeName = item.nodeName;
+			if (typeof(obj[nodeName]) == "undefined") {
+				obj[nodeName] = xmlToJson(item);
+			} else {
+				if (typeof(obj[nodeName].push) == "undefined") {
+					var old = obj[nodeName];
+					obj[nodeName] = [];
+					obj[nodeName].push(old);
+				}
+				obj[nodeName].push(xmlToJson(item));
+			}
+		}
+	}
+	return obj;
+};
 
 async function processSet(set) {
   let cards = [];

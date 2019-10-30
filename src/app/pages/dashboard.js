@@ -9,12 +9,15 @@ import Link from 'next/link'
 import  _ from 'lodash';
 import axios from 'axios';
 import { compose, withState } from 'recompose';
+import Modal from '../components/Modal';
+import Head from 'next/head'
+
 const { moneyRoundOfArray, roundMoney } = require("../helpers/quickHelpers");
 const { deleteCardFromUsersCollection } = require("../helpers/cardCollectionHelpers");
 
 const qs = require('qs');
 
-const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject, cardCollection }) => {
+const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject, cardCollection, modalIsOpen, dispatch }) => {
 
   [userCardCollectionObject, setUserCardCollectionObject] = useState(cardCollection)
 
@@ -41,6 +44,12 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
 
       const initSellCardFlow = (e) => {
         e.preventDefault();
+
+        dispatch({ type: 'SET_ITEM', name: 'modalIsOpen', payload: true });
+        dispatch({ type: 'SET_ITEM', name: 'modalCard', payload: card });
+
+        return
+
         axios({
         		method: 'POST',
         		url: '/api/sellCard',
@@ -60,7 +69,6 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
           .catch((err) => {
             console.log(err)
           })
-
 
       }
 
@@ -110,34 +118,14 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
     )
   }
 
-
+  const ModalContainer = () => {
+    if(modalIsOpen){
+      return <Modal />
+    }
+    return ''
+  }
 
   const EbayData = () => {
-    const setKeys = Object.keys(user.ebayData)
-    const renderSetKeyAndValue = (key, i) => {
-      return (
-        <tr key={i}>
-          <td>{key}</td>
-          <td>{user.ebayData[key].toString()}</td>
-        </tr>
-      )
-    };
-
-    if (user.ebayData) {
-      return (
-        <div>
-
-          <a onClick={handleEbayLogin} href="">Link Ebay</a>
-
-          <table>
-            <tbody>
-              {                setKeys.map((key, i) => renderSetKeyAndValue(key, i))
-}
-            </tbody>
-          </table>
-        </div>
-      )
-    }
     return (
       <a onClick={handleEbayLogin} href="">Link Ebay</a>
     )
@@ -145,13 +133,24 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
 
   const handleEbayLogin = (e) => {
     e.preventDefault()
-    window.location ='https://auth.ebay.com/oauth2/authorize?client_id=BlakeGei-standard-PRD-ee6e394ea-800e1243&response_type=code&redirect_uri=Blake_Geist-BlakeGei-standa-oysusnr&scope=https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances'
-  }
 
-  console.log(user)
+    axios({
+        method: 'POST',
+        url: '/api/linkEbayAccount'
+      })
+      .then((data) => {
+        window.location = 'https://signin.ebay.com/ws/eBayISAPI.dll?SignIn&runame=Blake_Geist-BlakeGei-standa-xrzudr&SessID=' + data.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
   return (
     <Layout pageMod="dashboard" isAuthedRequired={true}>
+      <Head>
+       <script src='https://cdn.tiny.cloud/1/hrdu9ovp596k3gsafc7irg2b83dl98x3e1020egi97hkxeiu/tinymce/5/tinymce.min.js'></script>
+      </Head>
       <h1>Dashbaord page</h1>
       <h2>User Info</h2>
       <div>
@@ -197,6 +196,7 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
           justify-content: space-between;
         }
       `}</style>
+      <ModalContainer />
     </Layout>
   )
 }

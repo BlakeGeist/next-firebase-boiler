@@ -14,7 +14,10 @@ const exampleInitialState = {
   messages: [],
   card: {},
   isLoading: false,
-  usersCardCollction: []
+  usersCardCollction: [],
+  modalIsOpen: false,
+  modalCard: {},
+  modalCardDescription: ''
 }
 
 export const actionTypes = {

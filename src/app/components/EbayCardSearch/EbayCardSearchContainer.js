@@ -69,14 +69,10 @@ const EbayCardSearchContainerBase = ({ title, card, operationName, state, setSta
       filters.push({name: 'SoldItemsOnly', value: "true"})
     }
 
-    console.log(filters)
-
     filters.forEach((filter, i)=>{
       params['itemFilter('+i+').name'] = filter.name
       params['itemFilter('+i+').value'] = filter.value
     })
-
-    console.log(params)
 
     axios({
       method: 'GET',

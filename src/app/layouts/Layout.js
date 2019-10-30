@@ -18,7 +18,7 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
         </div>
       </main>
       <Footer />
-      <LoadingSpinner />      
+      <LoadingSpinner />
       <style global jsx>{`
           html, body, #__next {
             height: 100%;

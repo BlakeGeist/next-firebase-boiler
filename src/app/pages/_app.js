@@ -26,7 +26,6 @@ MyApp.getInitialProps = async ({Component, ctx}) => {
 
     userEbayData.get()
       .then((doc) =>{
-        console.log(doc.data())
         user.ebayData = doc.data()
       })
       .catch((err) =>{

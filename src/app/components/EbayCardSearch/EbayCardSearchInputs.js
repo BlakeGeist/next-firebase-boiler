@@ -77,11 +77,8 @@ const EbayCardSearchInputs = ({ updateStateItemFromInput, setSearchPhrase, fetch
   }
 
   const handleSearchPhraseChange = (e) => {
-    console.log(e.target.value)
     setSearchPhrase(e.target.value)
   }
-
-  console.log(searchPhrase)
 
   return (
     <div className="ebay-seach-inputs-wrapper">
