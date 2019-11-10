@@ -133,7 +133,6 @@ const Dashbaord = ({ user, userCardCollectionObject, setUserCardCollectionObject
 
   const handleEbayLogin = (e) => {
     e.preventDefault()
-
     axios({
         method: 'POST',
         url: '/api/linkEbayAccount'

@@ -240,7 +240,7 @@ server.post('/api/linkEbayAccount', (req, res) => {
   var str = `
     <?xml version="1.0" encoding="utf-8"?>
     <GetSessionIDRequest xmlns="urn:ebay:apis:eBLBaseComponents">
-      <RuName>Blake_Geist-BlakeGei-standa-oysusnr</RuName>
+      <RuName>Blake_Geist-BlakeGei-standa-xrzudr</RuName>
     </GetSessionIDRequest>
   `
 
