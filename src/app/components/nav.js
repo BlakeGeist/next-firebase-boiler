@@ -11,7 +11,6 @@ const Nav = ({ user, dispatch }) => {
 
   const leftNav = [
     { href: '/', label: 'Home' },
-    { href: '/sets/1', label: 'Sets'},
     { href: '/about', label: 'About' },
     { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
   ].map(link => {
@@ -38,12 +37,6 @@ const Nav = ({ user, dispatch }) => {
       method: 'POST',
       credentials: 'same-origin'
     })
-  }
-
-  const hanldeFetchNewRandomCard = async (e) => {
-    e.preventDefault();
-    let card = await axios.get('https://api.scryfall.com/cards/random');
-    Router.push(('/c/' + card.data.id))
   }
 
   const LinkItem = ({ isExternal, href, label }) => {
@@ -93,9 +86,6 @@ const Nav = ({ user, dispatch }) => {
             <LinkItem href={href} label={label} isExternal={isExternal} />
           </li>
         ))}
-      </ul>
-      <ul>
-        <li><a onClick={hanldeFetchNewRandomCard} href="" >Random MTG Card</a></li>
       </ul>
       <ul className="user-nav">
         {user && user.uid ? (

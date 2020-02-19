@@ -17,7 +17,8 @@ const exampleInitialState = {
   usersCardCollction: [],
   modalIsOpen: false,
   modalCard: {},
-  modalCardDescription: ''
+  modalCardDescription: '',
+  lang: 'en'
 }
 
 export const actionTypes = {

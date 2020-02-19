@@ -13,8 +13,10 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
     <>
       <Header />
       <main className="body">
-        <div className={containerClass} style={{padding: '10px 15px'}}>
-          { children }
+        <div className={containerClass}>
+          <div style={{padding: '10px'}}>
+            { children }
+          </div>
         </div>
       </main>
       <Footer />
