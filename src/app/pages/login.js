@@ -51,20 +51,6 @@ const LoginBase = ({ setState, state, dispatch }) => {
 
   const onAuthStateChange = async (user) => {
     if(user && user.uid){
-      if(user) {
-
-        const userEbayData = firebase.firestore().collection('userEbayData').doc(user.uid);
-
-        await userEbayData.get()
-          .then((doc) =>{
-            console.log(doc.data())
-            user.ebayData = doc.data()
-          })
-          .catch((err) =>{
-            console.log(err)
-          })
-      }
-
       dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
       Router.push('/dashboard')
     }

@@ -27,7 +27,6 @@ const Dashbaord = ({ user, modalIsOpen, dispatch }) => {
           justify-content: space-between;
         }
       `}</style>
-      <ModalContainer />
     </Layout>
   )
 }
