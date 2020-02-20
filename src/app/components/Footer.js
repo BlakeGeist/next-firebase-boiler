@@ -24,7 +24,7 @@ const Footer = ({ dispatch, lang, user }) => {
     }
     return (
       <div>
-        <label for="languageSelect">
+        <label htmlFor="languageSelect">
           <div>Language:</div> 
           <select value={lang} onChange={handleLanguageSelectChange} id="languageSelect">
             {Langs.map((option, i) => renderOption(option, i))}

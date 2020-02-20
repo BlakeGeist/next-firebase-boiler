@@ -9,6 +9,7 @@ const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
+const stringsModule = require('./helpers/importStrings')
 
 //wtf does server do here?
 const firebaseAdmin = admin.initializeApp({
@@ -43,7 +44,6 @@ app.prepare().then(() => {
 
   server.post('/api/login', (req, res) => {
     if (!req.body) return res.sendStatus(400)
-
     const token = req.body.token
     firebaseAdmin
       .auth()
@@ -59,6 +59,10 @@ app.prepare().then(() => {
   server.post('/api/logout', (req, res) => {
     req.session.decodedToken = null
     res.json({ status: true })
+  })
+
+  server.post('/api/translate', (req, res) => {
+    stringsModule.handler(req, res);
   })
 
   server.get('*', (req, res) => {

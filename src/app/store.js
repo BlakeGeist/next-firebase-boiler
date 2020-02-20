@@ -18,7 +18,8 @@ const exampleInitialState = {
   modalIsOpen: false,
   modalCard: {},
   modalCardDescription: '',
-  lang: 'en'
+  lang: 'en',
+  strings: []
 }
 
 export const actionTypes = {
@@ -61,7 +62,6 @@ export const reducer = (state = exampleInitialState, action) => {
       return state
   }
 }
-
 
 // ACTIONS
 export const serverRenderClock = () => {
