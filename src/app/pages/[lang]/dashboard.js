@@ -1,22 +1,17 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux'
 import Layout from '../../layouts/Layout';
-import firebase from 'firebase/app'
 import 'firebase/firestore'
-import clientCredentials from '../../../functions/credentials/client'
 import { Formik } from 'formik';
 import axios from 'axios';
 import _ from 'lodash'
+import { translate } from '../../helpers/quickHelpers';
 
 const qs = require('qs');
 
 const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
 
-  const translate = (string) => { 
-    return strings[string][lang]
-  }
-
-  const Strings = () => {
+  const StringsForm = () => {
 
     const convertToSlug = (text) => {
       return text
@@ -27,7 +22,7 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
     
     return (
       <div>
-        <h2>{translate('STRINGS')}</h2>
+        <h2>{translate('STRINGS', strings, lang)}</h2>
         <div>
           <h1>Anywhere in your app!</h1>
           <Formik
@@ -48,7 +43,8 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
               const formData =JSON.stringify(values, null, 2)
               const response = axios.post('/api/translate', {
                 text: values.string_name,
-                slug: values.string_value
+                slug: values.string_value,
+                scope: values.string_scope
               }, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -119,6 +115,28 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
     )
   }
 
+  const renderString = (string, i) => {
+    const renderString = (lang, i) => {
+      return (
+        <tr key={`${i}-${lang}-${string}`}>
+          <td>{lang}</td>
+          <td>{strings[string][lang]}</td>
+        </tr>
+      )
+    }
+    return (
+      <tr key={`${string}-${i}`}>
+        <td>
+          <table>
+            <tbody>
+             {Object.keys(strings[string]).map((keyName, keyIndex) => renderString(keyName, keyIndex) )}
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    )
+  }
+
   return (
     <Layout pageMod="dashboard" isAuthedRequired={true}>
      
@@ -126,7 +144,16 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
 
       <hr />
 
-      <Strings />
+      <StringsForm />
+
+      <table>
+        <tbody>
+          {
+            Object.keys(strings).map((keyName, keyIndex) => renderString(keyName, keyIndex) )
+                      // and a[keyName] to get its value
+          }
+        </tbody>
+      </table>
 
       <style global jsx>{`
         .cards {

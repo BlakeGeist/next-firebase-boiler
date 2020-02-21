@@ -18,8 +18,7 @@ const stringsCollection = db.collection('strings');
 //if the string does not exist, run the createString funciton
 exports.handler = (req, res) => {
   cors(req, res, () => {
-    var slug = req.body.slug;
-    var text = req.body.text;
+    const { slug, text, scope } = req.body
     try {
       var existingDoc = stringsCollection.doc(slug).get();
       var docExists = existingDoc.exists
@@ -27,7 +26,7 @@ exports.handler = (req, res) => {
         //// TODO: create update strings function
       } else {
         console.log(slug, text)
-        createStrings(text, slug)
+        createStrings(text, slug, scope)
         res.status(200).send({text: 'TEXT'});
       }
     }
@@ -43,7 +42,7 @@ exports.handler = (req, res) => {
 //if it does, this should prolly be an update function
 //if the string does not exist, run the createString funciton
 
-function createStrings(stringText, slug){
+function createStrings(stringText, slug, scope){
   let string = {
     'en': stringText
   }

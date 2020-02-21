@@ -12,7 +12,7 @@ const Footer = ({ dispatch, lang, user }) => {
   const router = useRouter()
 
   const handleLanguageSelectChange = (e) => {
-    router.push(Router.pathname, Router.asPath.split(lang).join(e.target.value), { shallow: true });
+    router.push(Router.pathname, Router.asPath.split(`/${lang}/`).join(`/${e.target.value}/`), { shallow: true });
     return dispatch({ type: 'SET_ITEM', name: 'lang', payload: e.target.value });
   }
 
@@ -63,23 +63,25 @@ const Footer = ({ dispatch, lang, user }) => {
         <div className="footer-item">
           <ul>
             <li>
-              <Link href="/">
+            <Link href={`/${lang}`}>
                 <a>Home</a>
               </Link>
             </li>
             <li>
-              <Link href="/about">
+            <Link href={`/${lang}/about`}>
                 <a>About</a>
               </Link>
             </li>
             <li>
-              <a href="https://github.com/BlakeGeist/next-firebase-boiler">GitHub</a>
+              <a href="https://github.com/BlakeGeist/next-firebase-boiler" target="_blank">GitHub</a>
             </li>
 
             {user && user.uid ? (
               <>
                 <li>
-                  <Link href="/dashboard"><a className="navItem">Dashboard</a></Link>
+                <Link href={`/${lang}/dashboard`}>
+                    <a className="navItem">Dashboard</a>
+                  </Link>
                 </li>
                 <li>
                   <a href="" className="navItem" onClick={handleLogout}>Logout</a>
@@ -88,10 +90,14 @@ const Footer = ({ dispatch, lang, user }) => {
             ) : (
               <>
                 <li>
-                  <Link href="/sign-up"><a className="navItem">Sign Up</a></Link>
+                <Link href={`/${lang}/sign-up`}>
+                    <a className="navItem">Sign Up</a>
+                  </Link>
                 </li>
                 <li>
-                  <Link href="/login"><a className="navItem">Login</a></Link>
+                <Link href={`/${lang}/login`}>
+                    <a className="navItem">Login</a>
+                  </Link>
                 </li>
               </>
             )}
@@ -103,12 +109,12 @@ const Footer = ({ dispatch, lang, user }) => {
         <nav>
           <ul className="terms">
             <li>
-              <Link href="/terms">
+            <Link href={`/${lang}/terms`}>
                 <a>Terms</a>
               </Link>
             </li>
             <li>
-              <Link href="privacy">
+              <Link href={`/${lang}/privacy`}>
                 <a>Privacy</a>
               </Link>            
             </li>

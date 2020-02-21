@@ -6,12 +6,13 @@ import 'firebase/auth'
 import clientCredentials from '../../functions/credentials/client'
 import Router from 'next/router';
 import axios from 'axios';
+import { translate } from '../helpers/quickHelpers';
 
-const Nav = ({ user, dispatch, lang }) => {
-
+const Nav = ({ user, dispatch, lang, strings }) => {
+  
   const leftNav = [
-    { href: `/${lang}/sign-up`, label: 'Home' },
-    { href: `/${lang}/about`, label: 'About' },
+    { href: `/${lang}`, label: translate('HOME', strings, lang) },
+    { href: `/${lang}/about`, label: translate('ABOUT-US', strings, lang) },
     { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
   ].map(link => {
     link.key = `nav-link-${link.href}-${link.label}`
@@ -19,8 +20,8 @@ const Nav = ({ user, dispatch, lang }) => {
   });
 
   const userNav = [
-    { href: `/${lang}/sign-up`, label: 'Sign Up' },
-    { href: `/${lang}/login`, label: 'login' }
+    { href: `/${lang}/sign-up`, label: translate('SIGN-UP', strings, lang) },
+    { href: `/${lang}/login`, label: translate('LOGIN', strings, lang) }
   ].map(link => {
     link.key = `nav-link-${link.href}-${link.label}`
     return link
@@ -91,19 +92,19 @@ const Nav = ({ user, dispatch, lang }) => {
         {user && user.uid ? (
           <>
             <li>
-              <Link href={`${lang}/dashboard`}><a className="navItem">Dashboard</a></Link>
+              <Link href={`/${lang}/dashboard`}><a className="navItem">{translate('DASHBOARD', strings, lang)}</a></Link>
             </li>
             <li>
-              <a href="" className="navItem" onClick={handleLogout}>Logout</a>
+              <a href="" className="navItem" onClick={handleLogout}>{translate('LOGOUT', strings, lang)}</a>
             </li>
           </>
         ) : (
           <>
             <li>
-              <Link href={`${lang}/sign-up`}><a className="navItem">Sign Up</a></Link>
+              <Link href={`/${lang}/sign-up`}><a className="navItem">{translate('SIGN-UP', strings, lang)}</a></Link>
             </li>
             <li>
-              <Link href={`${lang}/login`}><a className="navItem">Login</a></Link>
+              <Link href={`/${lang}/login`}><a className="navItem">{translate('LOGIN', strings, lang)}</a></Link>
             </li>
           </>
         )}

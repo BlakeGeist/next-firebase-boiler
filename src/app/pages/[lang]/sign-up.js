@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import clientCredentials from '../../functions/credentials/client'
-import Layout from '../layouts/Layout';
+import clientCredentials from '../../../functions/credentials/client'
+import Layout from '../../layouts/Layout';
 import Router from 'next/router';
 import { compose, withState } from 'recompose';
-import AuthForm from '../components/AuthForm';
-import LoadingSpinner from '../components/LoadingSpinner';
+import AuthForm from '../../components/AuthForm';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
-const SignUpBase = ({ setState, state }) => {
+const SignUpBase = ({ setState, state, lang }) => {
 
   const { email, password, isLoading, errorMessage } = state;
 
@@ -50,7 +50,7 @@ const SignUpBase = ({ setState, state }) => {
 
   const onAuthStateChange = (user) => {
     if(user && user.uid){
-      Router.push('/dashboard')
+      Router.push(`/${lang}/dashboard`)
     }
   };
 
