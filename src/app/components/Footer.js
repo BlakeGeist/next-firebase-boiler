@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { connect } from 'react-redux'
 import Langs from '../helpers/languages'
-
+import _ from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import Router from 'next/router'
@@ -12,8 +12,8 @@ const Footer = ({ dispatch, lang, user }) => {
   const router = useRouter()
 
   const handleLanguageSelectChange = (e) => {
-    dispatch({ type: 'SET_ITEM', name: 'lang', payload: e.target.value });
-    router.push(`/${e.target.value}`)
+    router.push(Router.pathname, Router.asPath.split(lang).join(e.target.value), { shallow: true });
+    return dispatch({ type: 'SET_ITEM', name: 'lang', payload: e.target.value });
   }
 
   const LanguageSelect = () => {

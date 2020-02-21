@@ -28,11 +28,11 @@ MyApp.getInitialProps = async ({Component, ctx, query}) => {
     .then(snap =>{
       strings = snap.docs.map(d => {
         return {
-          name: d.id,
-          strings: d.data()
+          [d.id]: d.data()
         }
       });
-      ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'strings', payload: strings });
+      const objectizedStrings = Object.assign({}, ...strings)
+      ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'strings', payload:  objectizedStrings});
     })
     .catch(e => {
       console.log('err', e)

@@ -12,12 +12,9 @@ const qs = require('qs');
 
 const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
 
-  const translate = (string) => {
-    const stringObject = _.find(strings, {name:string})
-    return stringObject.strings[lang]
+  const translate = (string) => { 
+    return strings[string][lang]
   }
-
-  console.log(strings)
 
   const Strings = () => {
 

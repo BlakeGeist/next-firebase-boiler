@@ -7,11 +7,11 @@ import clientCredentials from '../../functions/credentials/client'
 import Router from 'next/router';
 import axios from 'axios';
 
-const Nav = ({ user, dispatch }) => {
+const Nav = ({ user, dispatch, lang }) => {
 
   const leftNav = [
-    { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
+    { href: `/${lang}/sign-up`, label: 'Home' },
+    { href: `/${lang}/about`, label: 'About' },
     { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
   ].map(link => {
     link.key = `nav-link-${link.href}-${link.label}`
@@ -19,8 +19,8 @@ const Nav = ({ user, dispatch }) => {
   });
 
   const userNav = [
-    { href: '/sign-up', label: 'Sign Up' },
-    { href: '/login', label: 'login' }
+    { href: `/${lang}/sign-up`, label: 'Sign Up' },
+    { href: `/${lang}/login`, label: 'login' }
   ].map(link => {
     link.key = `nav-link-${link.href}-${link.label}`
     return link
@@ -31,7 +31,7 @@ const Nav = ({ user, dispatch }) => {
     firebase.auth().signOut()
     .then(()=>{
       dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });
-      Router.push('/login')
+      Router.push(`/${lang}/login`)
     })
     fetch('/api/logout', {
       method: 'POST',
@@ -91,7 +91,7 @@ const Nav = ({ user, dispatch }) => {
         {user && user.uid ? (
           <>
             <li>
-              <Link href="/dashboard"><a className="navItem">Dashboard</a></Link>
+              <Link href={`${lang}/dashboard`}><a className="navItem">Dashboard</a></Link>
             </li>
             <li>
               <a href="" className="navItem" onClick={handleLogout}>Logout</a>
@@ -100,10 +100,10 @@ const Nav = ({ user, dispatch }) => {
         ) : (
           <>
             <li>
-              <Link href="/sign-up"><a className="navItem">Sign Up</a></Link>
+              <Link href={`${lang}/sign-up`}><a className="navItem">Sign Up</a></Link>
             </li>
             <li>
-              <Link href="/login"><a className="navItem">Login</a></Link>
+              <Link href={`${lang}/login`}><a className="navItem">Login</a></Link>
             </li>
           </>
         )}
