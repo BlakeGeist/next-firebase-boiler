@@ -53,11 +53,17 @@ const priceByQTY = (number, price) => {
   return '$' + roundMoney(price / number);
 }
 
+const translate = (string, strings, lang) => { 
+  if (strings[string] && strings[string][lang]) return strings[string][lang]
+  return null
+}
+
 module.exports = {
   filterOutliers,
   getAverage,
   roundMoney,
   firstNumber,
   priceByQTY,
-  moneyRoundOfArray
+  moneyRoundOfArray,
+  translate
 }

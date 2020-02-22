@@ -17,7 +17,11 @@ const exampleInitialState = {
   usersCardCollction: [],
   modalIsOpen: false,
   modalCard: {},
-  modalCardDescription: ''
+  modalCardDescription: '',
+  lang: 'en',
+  strings: [],
+  pageStrings: [],
+  isLoggedIn: false
 }
 
 export const actionTypes = {
@@ -60,7 +64,6 @@ export const reducer = (state = exampleInitialState, action) => {
       return state
   }
 }
-
 
 // ACTIONS
 export const serverRenderClock = () => {

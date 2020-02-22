@@ -6,13 +6,16 @@ import 'firebase/auth'
 import clientCredentials from '../../functions/credentials/client'
 import Router from 'next/router';
 import axios from 'axios';
+import { translate } from '../helpers/quickHelpers';
 
-const Nav = ({ user, dispatch }) => {
-
+const Nav = ({ user, dispatch, lang, strings }) => {
+  
   const leftNav = [
-    { href: '/', label: 'Home' },
-    { href: '/sets/1', label: 'Sets'},
-    { href: '/about', label: 'About' },
+    { href: `/${lang}`, label: translate('HOME', strings, lang) },
+    { href: `/${lang}/about`, label: translate('ABOUT-US', strings, lang) },
+    { href: `/${lang}/contact`, label: translate('CONTACT', strings, lang) },
+    { href: `/${lang}/p`, label: translate('SHOP', strings, lang) },
+    { href: `/${lang}/blog`, label: translate('BLOG', strings, lang) },
     { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
   ].map(link => {
     link.key = `nav-link-${link.href}-${link.label}`
@@ -20,8 +23,8 @@ const Nav = ({ user, dispatch }) => {
   });
 
   const userNav = [
-    { href: '/sign-up', label: 'Sign Up' },
-    { href: '/login', label: 'login' }
+    { href: `/${lang}/sign-up`, label: translate('SIGN-UP', strings, lang) },
+    { href: `/${lang}/login`, label: translate('LOGIN', strings, lang) }
   ].map(link => {
     link.key = `nav-link-${link.href}-${link.label}`
     return link
@@ -32,18 +35,12 @@ const Nav = ({ user, dispatch }) => {
     firebase.auth().signOut()
     .then(()=>{
       dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });
-      Router.push('/login')
+      Router.push(`/${lang}/login`)
     })
     fetch('/api/logout', {
       method: 'POST',
       credentials: 'same-origin'
     })
-  }
-
-  const hanldeFetchNewRandomCard = async (e) => {
-    e.preventDefault();
-    let card = await axios.get('https://api.scryfall.com/cards/random');
-    Router.push(('/c/' + card.data.id))
   }
 
   const LinkItem = ({ isExternal, href, label }) => {
@@ -94,26 +91,23 @@ const Nav = ({ user, dispatch }) => {
           </li>
         ))}
       </ul>
-      <ul>
-        <li><a onClick={hanldeFetchNewRandomCard} href="" >Random MTG Card</a></li>
-      </ul>
       <ul className="user-nav">
         {user && user.uid ? (
           <>
             <li>
-              <Link href="/dashboard"><a className="navItem">Dashboard</a></Link>
+              <Link href={`/${lang}/dashboard`}><a className="navItem">{translate('DASHBOARD', strings, lang)}</a></Link>
             </li>
             <li>
-              <a href="" className="navItem" onClick={handleLogout}>Logout</a>
+              <a href="" className="navItem" onClick={handleLogout}>{translate('LOGOUT', strings, lang)}</a>
             </li>
           </>
         ) : (
           <>
             <li>
-              <Link href="/sign-up"><a className="navItem">Sign Up</a></Link>
+              <Link href={`/${lang}/sign-up`}><a className="navItem">{translate('SIGN-UP', strings, lang)}</a></Link>
             </li>
             <li>
-              <Link href="/login"><a className="navItem">Login</a></Link>
+              <Link href={`/${lang}/login`}><a className="navItem">{translate('LOGIN', strings, lang)}</a></Link>
             </li>
           </>
         )}
