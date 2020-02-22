@@ -4,7 +4,8 @@ import withReduxStore from '../lib/reducers'
 import { Provider } from 'react-redux'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import "firebase/firestore";
+import "firebase/firestore"
+import Router from 'next/router'
 
 import clientCredentials from '../../functions/credentials/client'
 if (!firebase.apps.length) {
@@ -20,10 +21,28 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
   )
 }
 
-MyApp.getInitialProps = async ({Component, ctx, query}) => {
+MyApp.getInitialProps = async ({ Component, ctx }) => {
 
-  var strings = db.collection("strings")
+  const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '')
 
+
+  var pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
+
+  await pageStrings.get()
+    .then(snap =>{
+      pageStrings = snap.docs.map(d => {
+        return {
+          [d.id]: d.data()
+        }
+      });
+      const objectizedStrings = Object.assign({}, ...pageStrings)
+      ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'pageStrings', payload:  objectizedStrings});
+    })
+    .catch(e => {
+      console.log('err', e)
+    })
+
+  var strings = db.collection("strings").doc('global').collection('strings')
   await strings.get()
     .then(snap =>{
       strings = snap.docs.map(d => {

@@ -7,8 +7,9 @@ import _ from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import Router from 'next/router'
+import { translate } from '../helpers/quickHelpers';
 
-const Footer = ({ dispatch, lang, user }) => {
+const Footer = ({ dispatch, lang, user, strings }) => {
   const router = useRouter()
 
   const handleLanguageSelectChange = (e) => {
@@ -25,7 +26,7 @@ const Footer = ({ dispatch, lang, user }) => {
     return (
       <div>
         <label htmlFor="languageSelect">
-          <div>Language:</div> 
+          <div>{translate('LANGUAGE', strings, lang)}:</div> 
           <select value={lang} onChange={handleLanguageSelectChange} id="languageSelect">
             {Langs.map((option, i) => renderOption(option, i))}
           </select>

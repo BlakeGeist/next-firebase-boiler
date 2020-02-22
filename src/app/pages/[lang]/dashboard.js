@@ -9,7 +9,9 @@ import { translate } from '../../helpers/quickHelpers';
 
 const qs = require('qs');
 
-const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
+const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) => {
+
+  console.log(strings)
 
   const StringsForm = () => {
 
@@ -24,7 +26,7 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
       <div>
         <h2>{translate('STRINGS', strings, lang)}</h2>
         <div>
-          <h1>Anywhere in your app!</h1>
+          <h1>{translate('ANYWHERE-IN-YOUR-APP', pageStrings, lang)}</h1>
           <Formik
             initialValues={{ string_name: '', string_value: '', string_scope: '' }}
             
@@ -50,9 +52,6 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
                     'Content-Type': 'application/json',
                 }
               })
-
-              console.log(response)
-
               setSubmitting(false);
             }}
           >
@@ -68,7 +67,7 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <label>
-                  <div>String Name</div>
+                  <div>{translate('STRING-NAME', pageStrings, lang)}</div>
                   <input
                     type="text"
                     name="string_name"
@@ -83,7 +82,7 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
                   {errors.string_name && touched.string_name && errors.string_name}
                 </label>
                 <label>
-                 <div>String Value</div>
+                 <div>{translate('STRING-VALUE', pageStrings, lang)}</div>
                   <input
                     type="text"
                     name="string_value"
@@ -94,7 +93,7 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
                   {errors.string_value && touched.string_value && errors.string_value}
                 </label>
                 <label>
-                 <div>String Scope</div>
+                 <div>{translate('STRING-SCOPE', pageStrings, lang)}</div>
                   <input
                     type="text"
                     name="string_scope"
@@ -104,9 +103,7 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
                   />
                   {errors.string_scope && touched.string_scope && errors.string_scope}
                 </label>                
-                <button type="submit" disabled={isSubmitting}>
-                  Submit
-                </button>
+                <button type="submit" disabled={isSubmitting}>{translate('SUBMIT', strings, lang)}</button>
               </form>
             )}
           </Formik>
@@ -149,7 +146,7 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang }) => {
       <table>
         <tbody>
           {
-            Object.keys(strings).map((keyName, keyIndex) => renderString(keyName, keyIndex) )
+           // Object.keys(strings).map((keyName, keyIndex) => renderString(keyName, keyIndex) )
                       // and a[keyName] to get its value
           }
         </tbody>

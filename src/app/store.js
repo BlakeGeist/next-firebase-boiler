@@ -19,7 +19,8 @@ const exampleInitialState = {
   modalCard: {},
   modalCardDescription: '',
   lang: 'en',
-  strings: []
+  strings: [],
+  pageStrings: []
 }
 
 export const actionTypes = {

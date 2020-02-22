@@ -42,10 +42,38 @@ exports.handler = (req, res) => {
 //if it does, this should prolly be an update function
 //if the string does not exist, run the createString funciton
 
-function createStrings(stringText, slug, scope){
+async function createStrings(stringText, slug, scope){
   let string = {
     'en': stringText
   }
+
+  const object = {
+    ar: await getTranslatedString(stringText, 'ar'),
+    da: await getTranslatedString(stringText, 'da'),
+    de: await getTranslatedString(stringText, 'de'),
+    en: await getTranslatedString(stringText, 'en'),
+    es: await getTranslatedString(stringText, 'es'),
+    fr: await getTranslatedString(stringText, 'fr'),
+    it: await getTranslatedString(stringText, 'it'),
+    jp: await getTranslatedString(stringText, 'ja'),
+    ko: await getTranslatedString(stringText, 'ko'),
+    pt: await getTranslatedString(stringText, 'pt'),
+    ru: await getTranslatedString(stringText, 'ru')
+  }
+
+  stringsCollection.doc(scope).collection('strings').doc(slug).set(object)
+  .then(()=>{
+    console.log('update string was successful ', object);
+    return true
+  })
+  .catch((e)=>{
+    console.log('error ' + e)
+  })
+
+  console.log(object)
+
+  return
+
   stringsCollection.doc(slug).set(string)
     .then(()=>{
       console.log('create string was successful ' + slug + ' en ' + stringText);
@@ -147,5 +175,5 @@ async function getTranslatedString(string, targetLang){
     })
   })
   var result = await promise;
-  return result;
+  return result.TranslatedText;
 }
