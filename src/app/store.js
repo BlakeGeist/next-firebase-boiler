@@ -20,7 +20,8 @@ const exampleInitialState = {
   modalCardDescription: '',
   lang: 'en',
   strings: [],
-  pageStrings: []
+  pageStrings: [],
+  isLoggedIn: false
 }
 
 export const actionTypes = {

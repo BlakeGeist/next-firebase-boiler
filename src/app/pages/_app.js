@@ -24,9 +24,7 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
 MyApp.getInitialProps = async ({ Component, ctx }) => {
 
   const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '')
-
-
-  var pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
+  let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
 
   await pageStrings.get()
     .then(snap =>{
@@ -42,7 +40,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       console.log('err', e)
     })
 
-  var strings = db.collection("strings").doc('global').collection('strings')
+  let strings = db.collection("strings").doc('global').collection('strings')
   await strings.get()
     .then(snap =>{
       strings = snap.docs.map(d => {
@@ -59,6 +57,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 
   const user = ctx.req && ctx.req.session ? ctx.req.session.decodedToken : null;
   (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'user', payload: user }) : '';
+  (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'isLoggedIn', payload: true }) : '';
   ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'lang', payload: ctx.query.lang });
   const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
   return {pageProps};

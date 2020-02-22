@@ -11,8 +11,6 @@ const qs = require('qs');
 
 const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) => {
 
-  console.log(strings)
-
   const StringsForm = () => {
 
     const convertToSlug = (text) => {
@@ -161,6 +159,11 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) 
       `}</style>
     </Layout>
   )
+}
+
+Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
+  const state = reduxStore.getState()
+  if(!state.isLoggedIn) res.redirect(`/${state.lang}`)
 }
 
 export default connect(state => state)(Dashbaord);
