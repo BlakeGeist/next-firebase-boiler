@@ -38,6 +38,7 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
           main .container {
             height: 100%;
             background-color: #fff;
+            min-height: 500px;
           }
           .container {
             max-width: 1150px;

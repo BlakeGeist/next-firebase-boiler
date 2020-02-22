@@ -65,12 +65,12 @@ const Footer = ({ dispatch, lang, user, strings }) => {
           <ul>
             <li>
             <Link href={`/${lang}`}>
-                <a>Home</a>
+                <a>{translate('HOME', strings, lang)}</a>
               </Link>
             </li>
             <li>
             <Link href={`/${lang}/about`}>
-                <a>About</a>
+                <a>{translate('ABOUT-US', strings, lang)}</a>
               </Link>
             </li>
             <li>
@@ -80,24 +80,24 @@ const Footer = ({ dispatch, lang, user, strings }) => {
             {user && user.uid ? (
               <>
                 <li>
-                <Link href={`/${lang}/dashboard`}>
-                    <a className="navItem">Dashboard</a>
+                  <Link href={`/${lang}/dashboard`}>
+                    <a className="navItem">{translate('DASHBOARD', strings, lang)}</a>
                   </Link>
                 </li>
                 <li>
-                  <a href="" className="navItem" onClick={handleLogout}>Logout</a>
+                  <a href="" className="navItem" onClick={handleLogout}>{translate('LOGOUT', strings, lang)}</a>
                 </li>
               </>
             ) : (
               <>
                 <li>
                 <Link href={`/${lang}/sign-up`}>
-                    <a className="navItem">Sign Up</a>
+                    <a className="navItem">{translate('SIGN-UP', strings, lang)}</a>
                   </Link>
                 </li>
                 <li>
                 <Link href={`/${lang}/login`}>
-                    <a className="navItem">Login</a>
+                    <a className="navItem">{translate('LOGIN', strings, lang)}</a>
                   </Link>
                 </li>
               </>
@@ -111,19 +111,19 @@ const Footer = ({ dispatch, lang, user, strings }) => {
           <ul className="terms">
             <li>
             <Link href={`/${lang}/terms`}>
-                <a>Terms</a>
+                <a>{translate('TERMS', strings, lang)}</a>
               </Link>
             </li>
             <li>
               <Link href={`/${lang}/privacy`}>
-                <a>Privacy</a>
+                <a>{translate('PRIVACY', strings, lang)}</a>
               </Link>            
             </li>
           </ul>
         </nav>
       </div>
     </footer>
-    <style jsx>{`
+    <style global jsx>{`
       .footer {
         column-count: 4;
         background-color: #fff;
@@ -166,7 +166,13 @@ const Footer = ({ dispatch, lang, user, strings }) => {
         display: flex;
         align-items: center;
         justify-content: center;
-      }         
+      }
+      .footer-item label {
+        display: flex;
+      }
+      .footer-item label select {
+        margin: 0 5px;
+      }
     `}</style>
     </>
   )
