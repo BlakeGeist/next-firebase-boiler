@@ -23,7 +23,7 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
 
 MyApp.getInitialProps = async ({ Component, ctx }) => {
 
-  const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '')
+  const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '').replace('/','-')
   let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
 
   await pageStrings.get()

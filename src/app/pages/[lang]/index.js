@@ -6,7 +6,7 @@ import axios from 'axios';
 const Index = ({ lang }) => {
   return (
     <Layout pageMod='index'>
-       {lang} Home PAge
+       <h1>{lang} Home Page</h1>
     </Layout>
   )
 }

@@ -1,6 +1,6 @@
 export default [
     {
-        lang: 'Ar',
+        lang: 'ar',
         name: 'Arabic'
     },
     {
@@ -23,5 +23,24 @@ export default [
         lang: 'fr',
         name: 'French'
     },
-
+    {
+        lang: 'it',
+        name: 'Italian'
+    },
+    {
+        lang: 'jp',
+        name: 'Japanese'
+    },
+    {
+        lang: 'ko',
+        name: 'Korean'
+    },
+    {
+        lang: 'pt',
+        name: 'Portuguese'
+    },
+    {
+        lang: 'ru',
+        name: 'Russian'
+    }
 ]
