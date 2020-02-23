@@ -22,9 +22,21 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
 }
 
 MyApp.getInitialProps = async ({ Component, ctx }) => {
+  const headers = ctx.req.headers;
+  const userRegionLang = headers['accept-language'].split(',')[0].split('-')
+  const userLang = userRegionLang[0]
+  const userRegion = userRegionLang[1].toLowerCase()
+
+  //if there is no lang 
+  if(!ctx.query.lang) ctx.res.redirect(`/${userLang}`)
 
   const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '').replace('/','-')
   let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
+
+
+  console.log(userLang, userRegion)
+
+  //// todo if there is not ctx.query.lang redirect them to the userLang above
 
   await pageStrings.get()
     .then(snap =>{
