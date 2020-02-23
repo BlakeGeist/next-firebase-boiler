@@ -1,8 +1,9 @@
-const withCSS = require('@zeit/next-css');
+const withCSS = require('@zeit/next-css')
+const path = require('path')
 
 module.exports = withCSS({
   webpack: (config, { dev }) => {
-    config.module.rules.push({ test: /\.scss$/, loader: ['style-loader', 'css-loader', 'sass-loader'] });
+    config.module.rules.push({ test: /\.scss$/, loader: ['style-loader', 'css-loader', 'sass-loader'] })
     return config;
   },
   cssModules: true,

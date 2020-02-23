@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import clientCredentials from '../../../../functions/credentials/client'
+import clientCredentials from '../../..//credentials/client'
 import Layout from '../../../layouts/Layout';
 import Router from 'next/router';
 import { compose, withState } from 'recompose';

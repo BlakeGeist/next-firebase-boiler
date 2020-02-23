@@ -7,7 +7,7 @@ import "firebase/firestore"
 
 //TODO prolly move the firebase everything to an api call, this should prolly be done server side
 
-import clientCredentials from '../../functions/credentials/client'
+import clientCredentials from '..//credentials/client'
 if (!firebase.apps.length) {
   firebase.initializeApp(clientCredentials)
 };
