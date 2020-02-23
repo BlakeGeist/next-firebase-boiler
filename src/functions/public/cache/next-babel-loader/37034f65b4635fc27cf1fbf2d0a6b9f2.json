@@ -1,1 +1,0 @@
-{"ast":null,"code":"var __jsx = React.createElement;\nimport React from 'react';\nimport Layout from '../../../layouts/Layout';\nexport default (function () {\n  return __jsx(Layout, {\n    pageMod: \"privacy\"\n  }, __jsx(\"h1\", null, \"Privacy Policy\"));\n});","map":null,"metadata":{},"sourceType":"module"}
