@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux'
 import Layout from '../../../layouts/Layout';
-import 'firebase/firestore'
-import { Formik } from 'formik';
-import axios from 'axios';
-import _ from 'lodash'
 import { translate } from '../../../helpers/quickHelpers';
 import Link from 'next/link'
 

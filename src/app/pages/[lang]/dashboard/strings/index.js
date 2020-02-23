@@ -1,9 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import Layout from '../../../../layouts/Layout';
-import 'firebase/firestore'
-import axios from 'axios';
-import _ from 'lodash'
 import { translate } from '../../../../helpers/quickHelpers';
 import Form from './components/Form'
 

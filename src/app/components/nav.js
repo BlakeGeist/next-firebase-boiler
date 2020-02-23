@@ -5,7 +5,6 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import clientCredentials from '../../functions/credentials/client'
 import Router from 'next/router';
-import axios from 'axios';
 import { translate } from '../helpers/quickHelpers';
 
 const Nav = ({ user, dispatch, lang, strings }) => {

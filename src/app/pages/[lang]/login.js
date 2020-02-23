@@ -7,7 +7,6 @@ import Router from 'next/router';
 import { compose, withState } from 'recompose';
 import AuthForm from '../../components/AuthForm';
 import LoadingSpinner from '../../components/LoadingSpinner';
-const axios = require('axios');
 import { connect } from 'react-redux'
 
 const LoginBase = ({ setState, state, dispatch, lang }) => {

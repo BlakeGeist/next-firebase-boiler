@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { connect } from 'react-redux'
-import Router from 'next/router';
-import css from '../App.css';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const Layout = ({ children, pageMod, isAuthedRequired }) => {
