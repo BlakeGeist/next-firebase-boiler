@@ -36,6 +36,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
         Location: '/en'
       })
       res.end()
+      return {}
     }
 
 
