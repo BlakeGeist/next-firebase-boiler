@@ -13,7 +13,7 @@ const stringsModule = require('./helpers/importStrings')
 
 //wtf does server do here?
 const firebaseAdmin = admin.initializeApp({
-    credential: admin.credential.cert(require('../functions/credentials/server'))
+    credential: admin.credential.cert(require('./credentials/server'))
   }, 'server' )
 
 var cors = require('cors');
