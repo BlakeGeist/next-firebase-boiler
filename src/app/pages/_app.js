@@ -32,10 +32,10 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 
     if(!ctx.query.lang) {
       console.log('the writehead was attempted')
-      res.writeHead(301, {
+      ctx.res.writeHead(301, {
         Location: '/en'
       })
-      res.end()
+      ctx.res.end()
       return {}
     }
 
