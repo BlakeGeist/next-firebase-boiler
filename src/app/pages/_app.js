@@ -27,47 +27,50 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   const userLang = userRegionLang[0]
   const userRegion = userRegionLang[1].toLowerCase()
 
-  //if there is no lang redirect to route with lang
-  if(!ctx.query.lang && ctx.res) ctx.res.redirect(`/${userLang}`)
+  if(ctx.res){
+    //if there is no lang redirect to route with lang
+    if(!ctx.query.lang) ctx.res.redirect(`/${userLang}`)
 
-  const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '').replace('/','-')
-  let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
+    const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '').replace('/','-')
+    let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
 
-  await pageStrings.get()
-    .then(snap =>{
-      pageStrings = snap.docs.map(d => {
-        return {
-          [d.id]: d.data()
-        }
-      });
-      const objectizedStrings = Object.assign({}, ...pageStrings)
-      ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'pageStrings', payload:  objectizedStrings});
-    })
-    .catch(e => {
-      console.log('err', e)
-    })
+    await pageStrings.get()
+      .then(snap =>{
+        pageStrings = snap.docs.map(d => {
+          return {
+            [d.id]: d.data()
+          }
+        });
+        const objectizedStrings = Object.assign({}, ...pageStrings)
+        ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'pageStrings', payload:  objectizedStrings});
+      })
+      .catch(e => {
+        console.log('err', e)
+      })
 
-  let strings = db.collection("strings").doc('global').collection('strings')
-  await strings.get()
-    .then(snap =>{
-      strings = snap.docs.map(d => {
-        return {
-          [d.id]: d.data()
-        }
-      });
-      const objectizedStrings = Object.assign({}, ...strings)
-      ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'strings', payload:  objectizedStrings});
-    })
-    .catch(e => {
-      console.log('err', e)
-    })
+    let strings = db.collection("strings").doc('global').collection('strings')
+    await strings.get()
+      .then(snap =>{
+        strings = snap.docs.map(d => {
+          return {
+            [d.id]: d.data()
+          }
+        });
+        const objectizedStrings = Object.assign({}, ...strings)
+        ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'strings', payload:  objectizedStrings});
+      })
+      .catch(e => {
+        console.log('err', e)
+      })
 
-  const user = ctx.req && ctx.req.session ? ctx.req.session.decodedToken : null;
-  (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'user', payload: user }) : '';
-  (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'isLoggedIn', payload: true }) : '';
-  ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'lang', payload: ctx.query.lang });
-  const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-  return {pageProps};
+    const user = ctx.req && ctx.req.session ? ctx.req.session.decodedToken : null;
+    (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'user', payload: user }) : '';
+    (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'isLoggedIn', payload: true }) : '';
+    ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'lang', payload: ctx.query.lang });
+    const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+    return {pageProps};
+  }
+  return {}
 }
 
 export default withReduxStore(MyApp)
