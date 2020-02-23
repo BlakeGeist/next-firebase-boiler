@@ -31,7 +31,8 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   if(ctx.query && !ctx.query.lang) {
     console.log('_app redirect happend')
     ctx.res.writeHead(302, {
-      Location: `/${userLang}`
+      Location: `/${userLang}`,
+      'Cache-Control': 'no-cache'
     })
     ctx.res.end()
     return {}
