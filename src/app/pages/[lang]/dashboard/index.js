@@ -30,7 +30,8 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) 
 Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
   const state = reduxStore.getState()
   if(!state.isLoggedIn) {
-    res.writeHead(301, {
+    console.log('dashboard redirect')
+    res.writeHead(302, {
       Location: `/${state.lang}`
     })
     res.end()   
