@@ -29,6 +29,15 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 
   if(ctx.res){
     console.log(ctx.res)
+
+    if(!ctx.query.lang) {
+      res.writeHead(301, {
+        Location: '/en'
+      })
+      res.end()
+    }
+
+
     //if there is no lang redirect to route with lang
     if(!ctx.query.lang) ctx.res.redirect(`/${userLang}`)
 
