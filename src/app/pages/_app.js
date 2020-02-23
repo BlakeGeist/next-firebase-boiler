@@ -1,13 +1,13 @@
-import App, {Container} from "next/app";
 import React from 'react'
 import withReduxStore from '../lib/reducers'
 import { Provider } from 'react-redux'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import "firebase/firestore"
-import Router from 'next/router'
 
-import clientCredentials from '../../functions/credentials/client'
+//TODO prolly move the firebase everything to an api call, this should prolly be done server side
+
+import clientCredentials from '..//credentials/client'
 if (!firebase.apps.length) {
   firebase.initializeApp(clientCredentials)
 };
@@ -22,6 +22,13 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
 }
 
 MyApp.getInitialProps = async ({ Component, ctx }) => {
+  const headers = ctx.req.headers;
+  const userRegionLang = headers['accept-language'].split(',')[0].split('-')
+  const userLang = userRegionLang[0]
+  const userRegion = userRegionLang[1].toLowerCase()
+
+  //if there is no lang redirect to route with lang
+  if(!ctx.query.lang) ctx.res.redirect(`/${userLang}`)
 
   const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '').replace('/','-')
   let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')

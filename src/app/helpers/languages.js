@@ -1,19 +1,19 @@
 export default [
     {
         lang: 'ar',
-        name: 'Arabic'
+        name: 'عربى'
     },
     {
          lang: 'es',
-         name: 'Spanish'
+         name: 'Español'
     },
     {
         lang: 'da',
-        name: 'Danish'
+        name: 'Dansk'
     },
     {
         lang: 'de',
-        name: 'Germany'        
+        name: 'Deutsche'        
     },
     {
         lang: 'en',
@@ -21,26 +21,26 @@ export default [
     },    
     {
         lang: 'fr',
-        name: 'French'
+        name: 'Français'
     },
     {
         lang: 'it',
-        name: 'Italian'
+        name: 'Italiano'
     },
     {
         lang: 'jp',
-        name: 'Japanese'
+        name: '日本語'
     },
     {
         lang: 'ko',
-        name: 'Korean'
+        name: '한국어'
     },
     {
         lang: 'pt',
-        name: 'Portuguese'
+        name: 'Português'
     },
     {
         lang: 'ru',
-        name: 'Russian'
+        name: 'Pусский'
     }
 ]
