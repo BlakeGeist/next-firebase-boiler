@@ -51,6 +51,7 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
   const onAuthStateChange = async (user) => {
     if(user && user.uid){
       dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
+      dispatch({ type: 'SET_ITEM', name: 'isLoggedIn', payload: true });
       Router.push(`/${lang}/dashboard`)
     }
   };
