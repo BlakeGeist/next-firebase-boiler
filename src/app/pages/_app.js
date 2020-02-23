@@ -27,6 +27,8 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   const userLang = userRegionLang[0]
   const userRegion = userRegionLang[1].toLowerCase()
 
+  console.log(ctx)
+
   //if there is no lang redirect to route with lang
   if(!ctx.query.lang) ctx.res.redirect(`/${userLang}`)
 
