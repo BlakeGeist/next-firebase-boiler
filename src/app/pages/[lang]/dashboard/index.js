@@ -32,7 +32,8 @@ Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
   if(!state.isLoggedIn) {
     console.log('dashboard redirect')
     res.writeHead(302, {
-      Location: `/${state.lang}`
+      Location: `/${state.lang}`,
+      'Cache-Control': 'no-cache'
     })
     res.end()   
     return {}
