@@ -7,25 +7,24 @@ import Link from 'next/link'
 const qs = require('qs');
 
 const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) => {
+  return (
+    <Layout pageMod="dashboard" isAuthedRequired={true}>
+      
+      <nav>
+        <Link href={`/${lang}/dashboard/strings`}>
+          <a>{translate('MANAGE-STRINGS', pageStrings, lang)}</a>
+        </Link>
+      </nav>
 
-return (
-  <Layout pageMod="dashboard" isAuthedRequired={true}>
-    
-    <nav>
-      <Link href={`/${lang}/dashboard/strings`}>
-        <a>{translate('MANAGE-STRINGS', pageStrings, lang)}</a>
-      </Link>
-    </nav>
-
-    <style global jsx>{`
-      .cards {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-    `}</style>
-  </Layout>
-)
+      <style global jsx>{`
+        .cards {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+        }
+      `}</style>
+    </Layout>
+  )
 }
 
 Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
