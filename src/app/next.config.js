@@ -7,5 +7,5 @@ module.exports = withCSS({
     return config;
   },
   cssModules: true,
-  distDir: process.env.NODE_ENV === 'production' ? `../functions/public` : '.next',
+  distDir: '.next',
 })
