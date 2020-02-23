@@ -28,13 +28,15 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   const userRegion = userRegionLang[1].toLowerCase()
 
   //if there is no lang redirect to route with lang
-  if(!ctx.query.lang) {
-    ctx.res.writeHead(301, {
+  if(ctx.query && !ctx.query.lang) {
+    console.log('_app redirect happend')
+    ctx.res.writeHead(302, {
       Location: `/${userLang}`
     })
     ctx.res.end()
     return {}
   }
+
 
   const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '').replace('/','-')
   let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
