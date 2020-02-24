@@ -69,6 +69,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
     })
 
   console.log(ctx.req)
+
   
   const user = ctx.req && ctx.req.session ? ctx.req.session.decodedToken : null;
 
