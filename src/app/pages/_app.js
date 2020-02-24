@@ -27,15 +27,6 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   const userLang = userRegionLang[0]
   const userRegion = userRegionLang[1].toLowerCase()
 
-  console.log(ctx.query)
-  console.log(ctx.query.lang)
-
-  if(ctx.query.lang === 'api' || ctx.query.lang === 'favicon.ico') {
-    const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-    return {pageProps};
-  
-  }
-
   const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '').replace('/','-')
   let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
 
@@ -68,9 +59,6 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       console.log('err', e)
     })
 
-  console.log(ctx.req)
-
-  
   const user = ctx.req && ctx.req.session ? ctx.req.session.decodedToken : null;
 
   (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'user', payload: user }) : '';
