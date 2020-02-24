@@ -7,7 +7,7 @@ import "firebase/firestore"
 
 //TODO prolly move the firebase everything to an api call, this should prolly be done server side
 
-import clientCredentials from '..//credentials/client'
+import clientCredentials from '../credentials/client'
 if (!firebase.apps.length) {
   firebase.initializeApp(clientCredentials)
 };
@@ -29,6 +29,8 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 
   console.log(ctx.query)
   console.log(ctx.query.lang)
+
+  if(ctx.query.lang === 'api' || ctx.query.lang === 'favicon.ico') return {}
 
   //if there is no lang redirect to route with lang
   if(ctx.query && !ctx.query.lang) {
