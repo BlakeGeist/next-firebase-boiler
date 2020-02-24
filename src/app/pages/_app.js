@@ -30,19 +30,6 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   console.log(ctx.query)
   console.log(ctx.query.lang)
 
-  if(ctx.query.lang === 'api' || ctx.query.lang === 'favicon.ico') return {}
-
-  //if there is no lang redirect to route with lang
-  if(ctx.query && !ctx.query.lang) {
-    console.log('_app redirect happend')
-    ctx.res.writeHead(302, {
-      Location: `/${userLang}`,
-      'Cache-Control': 'no-cache'
-    })
-    ctx.res.end()
-    return {}
-  }
-
 
   const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '').replace('/','-')
   let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
