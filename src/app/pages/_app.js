@@ -69,6 +69,9 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
     })
 
   const user = ctx.req && ctx.req.session ? ctx.req.session.decodedToken : null;
+  console.log(user)
+  console.log(user)
+  console.log(user)
   (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'user', payload: user }) : '';
   (user) ? ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'isLoggedIn', payload: true }) : '';
   ctx.reduxStore.dispatch({ type: 'SET_ITEM', name: 'lang', payload: ctx.query.lang });
