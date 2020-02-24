@@ -12,7 +12,7 @@ const Admin = () => {
 
 Admin.getInitialProps = async ({ reduxStore, res }) => {
     const state = reduxStore.getState()
-    if(!state.isLoggedIn) res.redirect(`/${state.lang}`)
+    //if(!state.isLoggedIn) res.redirect(`/${state.lang}`)
   }
   
 export default connect(state => state)(Admin);
