@@ -30,6 +30,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   console.log(ctx.query)
   console.log(ctx.query.lang)
 
+  if(ctx.query.lang === 'api' || ctx.query.lang === 'favicon.ico') return {}
 
   const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, '').replace('/','-')
   let pageStrings = db.collection("strings").doc(pathWithoutLang).collection('strings')
