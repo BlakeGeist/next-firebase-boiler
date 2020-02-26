@@ -29,8 +29,7 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) 
 
 Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
   const state = reduxStore.getState();
-  console.log(state);
-
+  if(!state.isLoggedIn) res.redirect(`/${state.lang}`)
 };
 
 export default connect(state => state)(Dashbaord);
