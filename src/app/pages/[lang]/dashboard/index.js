@@ -1,10 +1,10 @@
-import React from 'react';
-import { connect } from 'react-redux'
-import Layout from '../../../layouts/Layout';
-import { translate } from '../../../helpers/quickHelpers';
-import Link from 'next/link'
+import React from "react";
+import { connect } from "react-redux";
+import Layout from "../../../layouts/Layout";
+import { translate } from "../../../helpers/quickHelpers";
+import Link from "next/link";
 
-const qs = require('qs');
+const qs = require("qs");
 
 const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) => {
   return (
@@ -12,7 +12,7 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) 
       
       <nav>
         <Link href={`/${lang}/dashboard/strings`}>
-          <a>{translate('MANAGE-STRINGS', pageStrings, lang)}</a>
+          <a>{translate("MANAGE-STRINGS", pageStrings, lang)}</a>
         </Link>
       </nav>
 
@@ -24,13 +24,13 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) 
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
 Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
-  const state = reduxStore.getState()
-  console.log(state)
+  const state = reduxStore.getState();
+  console.log(state);
 
-}
+};
 
 export default connect(state => state)(Dashbaord);

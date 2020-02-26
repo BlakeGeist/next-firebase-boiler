@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import clientCredentials from '../../..//credentials/client'
-import Layout from '../../../layouts/Layout';
-import Router from 'next/router';
-import { compose, withState } from 'recompose';
-import AuthForm from '../../../components/AuthForm';
-import LoadingSpinner from '../../../components/LoadingSpinner';
-import { connect } from 'react-redux'
+import React, { useEffect } from "react";
+import firebase from "firebase/app";
+import "firebase/auth";
+import clientCredentials from "../../..//credentials/client";
+import Layout from "../../../layouts/Layout";
+import Router from "next/router";
+import { compose, withState } from "recompose";
+import AuthForm from "../../../components/AuthForm";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import { connect } from "react-redux";
 
 const LoginBase = ({ setState, state, dispatch, lang }) => {
 
   if (!firebase.apps.length) {
-    firebase.initializeApp(clientCredentials)
+    firebase.initializeApp(clientCredentials);
   };
 
   const { email, password, isLoading, errorMessage } = state;
@@ -20,38 +20,38 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
   const handleChange = (event) => {
     let tempObj = {
       ...state
-    }
+    };
     tempObj[event.target.name] = event.target.value;
-    setState(tempObj)
+    setState(tempObj);
   };
 
   function updateState(item, payload) {
     let tempObj = {
       ...state
-    }
+    };
     tempObj[item] = payload;
-    setState(tempObj)
+    setState(tempObj);
   }
 
   const handleEmailPassAuth = (e) => {
     e.preventDefault();
-    updateState('isLoading', true)
+    updateState("isLoading", true);
     const {email, password} = state;
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
-      updateState('isLoading', false)
-      if(errorCode === 'auth/user-not-found'){
-        errorMessage = 'User not found please register'
+      updateState("isLoading", false);
+      if(errorCode === "auth/user-not-found"){
+        errorMessage = "User not found please register";
       }
-      updateState('errorMessage', errorMessage)
+      updateState("errorMessage", errorMessage);
     });
   };
 
   const onAuthStateChange = async (user) => {
     if(user && user.uid){
-      dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
-      dispatch({ type: 'SET_ITEM', name: 'isLoggedIn', payload: true });
+      dispatch({ type: "SET_ITEM", name: "user", payload: user });
+      dispatch({ type: "SET_ITEM", name: "isLoggedIn", payload: true });
       //Router.push(`/${lang}/dashboard`)
     }
   };
@@ -87,11 +87,11 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
 const Login = compose(
-  withState('state', 'setState', {email: '', password: '', isLoading: false, errorMessage: ''})
+  withState("state", "setState", {email: "", password: "", isLoading: false, errorMessage: ""})
 )(LoginBase);
 
 export default connect(state => state)(Login);
