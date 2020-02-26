@@ -47,7 +47,6 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
             ctx.reduxStore.dispatch({ type: "SET_ITEM", name: "pageStrings", payload:  objectizedStrings});
           })
           .catch(e => {
-            console.log("err", e);
           });
       } else {
       }
@@ -70,15 +69,10 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
           ctx.reduxStore.dispatch({ type: "SET_ITEM", name: "strings", payload:  objectizedStrings});
         })
         .catch(e => {
-          console.log("err", e);
         });
     } else {
     }
 });
-
-
-    console.log(ctx.req.session);
-
   const user = ctx.req && ctx.req.session ? ctx.req.session.decodedToken : null;
   
   (user) ? ctx.reduxStore.dispatch({ type: "SET_ITEM", name: "user", payload: user }) : "";

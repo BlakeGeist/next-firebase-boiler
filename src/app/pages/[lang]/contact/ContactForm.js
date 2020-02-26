@@ -19,7 +19,6 @@ const ContactForm = ({ strings, pageStrings, lang }) => {
               return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-                console.log(values);
                 setSubmitting(false);
             }}
           >
