@@ -29,25 +29,21 @@ const ContactForm = ({ strings, pageStrings, lang }) => {
               isSubmitting,
             }) => (
               <form onSubmit={handleSubmit}>
-
                 <label>
                   <div>{translate("NAME", pageStrings, lang)}</div>
                   <Field name="name" className="form-input"/>
                   {errors.name && touched.name && errors.name}
                 </label> 
-                
                 <label>
                   <div>{translate("EMAIL", pageStrings, lang)}</div>
                   <Field name="email" className="form-input"/>
                   {errors.email && touched.email && errors.email}
                 </label> 
-                
                 <label>
                   <div>{translate("MESSAGE", pageStrings, lang)}</div>
                   <Field name="message" as="textarea"  className="form-input"/>
                   {errors.message && touched.message && errors.message}
                 </label>
-
                 <button type="submit" disabled={isSubmitting}>{translate("SUBMIT", strings, lang)}</button>
               </form>
             )}
