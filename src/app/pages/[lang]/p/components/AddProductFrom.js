@@ -1,6 +1,4 @@
 
-import './rich-editor.css';
-
 import React from "react";
 import { Formik, Field } from "formik";
 import { connect } from "react-redux";
@@ -50,16 +48,14 @@ const AddProductFrom = ({ strings, pageStrings, lang }) => {
                   {errors.name && touched.name && errors.name}
                 </label> 
                 <label>
-
                 <RichEditorExample
                     editorState={values.editorState}
                     onChange={setFieldValue}
                     onBlur={handleBlur}
                     plugins={plugins}
-                  />   
-
-                  <div>{translate("DESCRIPTION", pageStrings, lang)}</div>
-                  {errors.editorState && touched.editorState && errors.editorState}
+                />
+                <div>{translate("DESCRIPTION", pageStrings, lang)}</div>
+                {errors.editorState && touched.editorState && errors.editorState}
                 </label> 
                 <button type="submit" disabled={isSubmitting}>{translate("SUBMIT", strings, lang)}</button>
                 <style global jsx>{`
