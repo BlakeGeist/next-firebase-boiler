@@ -38,14 +38,10 @@ const Footer = ({ dispatch, lang, user, strings }) => {
   const handleLogout = (e) => {
     e.preventDefault();
     firebase.auth().signOut()
-    .then(()=>{
-      dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });
-      Router.push('/login')
-    })
-    fetch('/api/logout', {
-      method: 'POST',
-      credentials: 'same-origin'
-    })
+      .then(()=>{
+        dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });
+        Router.push('/login')
+      })
   }
 
   return (
@@ -64,12 +60,12 @@ const Footer = ({ dispatch, lang, user, strings }) => {
         <div className="footer-item">
           <ul>
             <li>
-            <Link href={`/${lang}`}>
+              <Link href='/[lang]' as={`/${lang}`}>
                 <a>{translate('HOME', strings, lang)}</a>
               </Link>
             </li>
             <li>
-            <Link href={`/${lang}/about`}>
+              <Link href='/[lang]/about' as={`/${lang}/about`}>
                 <a>{translate('ABOUT-US', strings, lang)}</a>
               </Link>
             </li>
@@ -80,7 +76,7 @@ const Footer = ({ dispatch, lang, user, strings }) => {
             {user && user.uid ? (
               <>
                 <li>
-                  <Link href={`/${lang}/dashboard`}>
+                  <Link href='/[lang]/dashboard' as={`/${lang}/dashboard`}>
                     <a className="navItem">{translate('DASHBOARD', strings, lang)}</a>
                   </Link>
                 </li>
@@ -91,12 +87,12 @@ const Footer = ({ dispatch, lang, user, strings }) => {
             ) : (
               <>
                 <li>
-                <Link href={`/${lang}/sign-up`}>
+                  <Link href='/[lang]/sign-up' as={`/${lang}/sign-up`}>
                     <a className="navItem">{translate('SIGN-UP', strings, lang)}</a>
                   </Link>
                 </li>
                 <li>
-                <Link href={`/${lang}/login`}>
+                <Link href='/[lang]/login' as={`/${lang}/login`}>
                     <a className="navItem">{translate('LOGIN', strings, lang)}</a>
                   </Link>
                 </li>
@@ -110,12 +106,12 @@ const Footer = ({ dispatch, lang, user, strings }) => {
         <nav>
           <ul className="terms">
             <li>
-            <Link href={`/${lang}/terms`}>
+              <Link href='/[lang]/terms' as={`/${lang}/terms`}>
                 <a>{translate('TERMS', strings, lang)}</a>
               </Link>
             </li>
             <li>
-              <Link href={`/${lang}/privacy`}>
+              <Link href='/[lang]/privacy' as={`/${lang}/privacy`}>
                 <a>{translate('PRIVACY', strings, lang)}</a>
               </Link>            
             </li>

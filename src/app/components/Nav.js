@@ -10,11 +10,11 @@ import cookie from 'js-cookie'
 const Nav = ({ user, dispatch, lang, strings }) => {
   
   const leftNav = [
-    { href: `/${lang}`, label: translate('HOME', strings, lang) },
-    { href: `/${lang}/about`, label: translate('ABOUT-US', strings, lang) },
-    { href: `/${lang}/contact`, label: translate('CONTACT', strings, lang) },
-    { href: `/${lang}/p`, label: translate('SHOP', strings, lang) },
-    { href: `/${lang}/blog`, label: translate('BLOG', strings, lang) },
+    { href: `/${lang}`, label: translate('HOME', strings, lang), target: '/' },
+    { href: `/${lang}/about`, label: translate('ABOUT-US', strings, lang), target: '/about' },
+    { href: `/${lang}/contact`, label: translate('CONTACT', strings, lang), target: '/contact' },
+    { href: `/${lang}/p`, label: translate('SHOP', strings, lang), target: '/p' },
+    { href: `/${lang}/blog`, label: translate('BLOG', strings, lang), target: '/blog' },
     { href: 'https://github.com/BlakeGeist/next-firebase-boiler', label: 'GitHub', isExternal: true }
   ].map(link => {
     link.key = `nav-link-${link.href}-${link.label}`
@@ -22,8 +22,8 @@ const Nav = ({ user, dispatch, lang, strings }) => {
   });
 
   const userNav = [
-    { href: `/${lang}/sign-up`, label: translate('SIGN-UP', strings, lang) },
-    { href: `/${lang}/login`, label: translate('LOGIN', strings, lang) }
+    { href: `/${lang}/sign-up`, label: translate('SIGN-UP', strings, lang), target: '/sign-up' },
+    { href: `/${lang}/login`, label: translate('LOGIN', strings, lang), target: '/login' }
   ].map(link => {
     link.key = `nav-link-${link.href}-${link.label}`
     return link
@@ -40,11 +40,15 @@ const Nav = ({ user, dispatch, lang, strings }) => {
       })
   }
 
-  const LinkItem = ({ isExternal, href, label }) => {
+  const LinkItem = ({ isExternal, href, label, target }) => {
     if(isExternal){
       return <a href={href} className="navItem" target="_blank">{label}</a>
     } else {
-      return <Link href={href}><a className="navItem">{label}</a></Link>
+      return (
+        <Link href={`/[lang]${target}`} as={href}>
+          <a>{label}</a>
+        </Link>
+      )
     }
   }
 
@@ -52,9 +56,9 @@ const Nav = ({ user, dispatch, lang, strings }) => {
     <>
     <nav>
       <ul>
-        {leftNav.map(({ key, href, label, isExternal }) => (
+        {leftNav.map(({ key, href, label, isExternal, target }) => (
           <li key={key}>
-            <LinkItem href={href} label={label} isExternal={isExternal} />
+            <LinkItem href={href} label={label} isExternal={isExternal} target={target} />
           </li>
         ))}
       </ul>
