@@ -8,6 +8,7 @@ import { compose, withState } from "recompose";
 import AuthForm from "../../../components/AuthForm";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import { connect } from "react-redux";
+import cookie from 'js-cookie'
 
 const LoginBase = ({ setState, state, dispatch, lang }) => {
 
@@ -37,7 +38,25 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
     e.preventDefault();
     updateState("isLoading", true);
     const {email, password} = state;
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(response => {
+
+      response.user
+        .getIdToken()
+          .then(token => {
+            //dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
+            // eslint-disable-next-line no-undef
+            console.log(token)
+            cookie.set('token2', token, { expires: 1 })
+          })      
+
+      console.log(response)
+      dispatch({ type: "SET_ITEM", name: "user", payload: response.user });
+      dispatch({ type: "SET_ITEM", name: "isLoggedIn", payload: true });
+      //Router.push(`/${lang}/dashboard`);
+
+    })
+    .catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
       updateState("isLoading", false);
@@ -47,19 +66,6 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
       updateState("errorMessage", errorMessage);
     });
   };
-
-  const onAuthStateChange = async (user) => {
-    if(user && user.uid){
-      dispatch({ type: "SET_ITEM", name: "user", payload: user });
-      dispatch({ type: "SET_ITEM", name: "isLoggedIn", payload: true });
-      Router.push(`/${lang}/dashboard`);
-    }
-  };
-
-  useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(onAuthStateChange);
-    return () => unsubscribe();
-  });
 
   return (
     <Layout pageMod="about">

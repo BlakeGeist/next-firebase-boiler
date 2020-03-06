@@ -4,6 +4,9 @@ import { Provider } from "react-redux";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import nextCookie from 'next-cookies'
+const fetch = require('node-fetch');
+import axios from 'axios'
 
 import clientCredentials from "../credentials/client";
 if (!firebase.apps.length) {
@@ -20,15 +23,22 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
 };
 
 MyApp.getInitialProps = async ({ Component, ctx }) => {
+
+  const { token2 } = nextCookie(ctx)
+
+  const getUserResponse = await axios.post('http://localhost:3000/api/getUserFromToken', {token: token2})
+
+  const user = getUserResponse.data.user;
+
   const headers = ctx.req.headers;
   const userRegionLang = headers["accept-language"].split(",")[0].split("-");
   const userLang = userRegionLang[0];
   const userRegion = userRegionLang[1].toLowerCase();
 
-  if(ctx.asPath === '/'){
+  if (ctx.res && ctx.res.redirect && ctx.asPath === '/') {
     ctx.res.redirect(`/${userLang}`);
   }
-  
+
   const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, "").replace("/","-");
   const usersRef = db.collection("strings").doc("global");
 
@@ -73,7 +83,6 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       } else {
       }
 });
-  const user = ctx.req && ctx.req.session ? ctx.req.session.decodedToken : null;
   
   (user) ? ctx.reduxStore.dispatch({ type: "SET_ITEM", name: "user", payload: user }) : "";
   (user) ? ctx.reduxStore.dispatch({ type: "SET_ITEM", name: "isLoggedIn", payload: true }) : "";

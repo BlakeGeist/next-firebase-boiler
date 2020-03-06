@@ -7,6 +7,9 @@ import Link from "next/link";
 const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) => {
   return (
     <Layout pageMod="dashboard" isAuthedRequired={true}>
+
+      <h2>{user.email}</h2>
+
       <nav>
         <Link href={`/${lang}/dashboard/strings`}>
           <a>{translate("MANAGE-STRINGS", pageStrings, lang)}</a>

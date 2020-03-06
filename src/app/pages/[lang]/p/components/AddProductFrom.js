@@ -6,11 +6,16 @@ import { Formik, Field } from "formik";
 import { connect } from "react-redux";
 import { translate } from "../../../../helpers/quickHelpers";
 import { EditorState, convertToRaw } from 'draft-js';
-import { RichEditorExample } from './RichEditor';
+import RichEditorExample from './RichEditor';
+import {stateToHTML} from 'draft-js-export-html';
+import createLinkifyPlugin from 'draft-js-linkify-plugin';
+import 'draft-js-linkify-plugin/lib/plugin.css';
 
 const AddProductFrom = ({ strings, pageStrings, lang }) => {
 
     const dis = new EditorState.createEmpty()
+    const linkifyPlugin = createLinkifyPlugin();
+    const plugins = [linkifyPlugin];
 
     return (
         <Formik
@@ -24,9 +29,9 @@ const AddProductFrom = ({ strings, pageStrings, lang }) => {
             }}
             onSubmit={async (values, { setSubmitting }) => {
               const contentState = values.editorState.getCurrentContent()
-              const editorContentRaw = convertToRaw(contentState);
-              console.log(editorContentRaw)
-                setSubmitting(false);
+              let html = stateToHTML(contentState);
+              console.log(html)
+              setSubmitting(false);
             }}
           >
             {({
@@ -50,6 +55,7 @@ const AddProductFrom = ({ strings, pageStrings, lang }) => {
                     editorState={values.editorState}
                     onChange={setFieldValue}
                     onBlur={handleBlur}
+                    plugins={plugins}
                   />   
 
                   <div>{translate("DESCRIPTION", pageStrings, lang)}</div>
