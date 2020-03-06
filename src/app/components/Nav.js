@@ -46,7 +46,7 @@ const Nav = ({ user, dispatch, lang, strings }) => {
     } else {
       return (
         <Link href={`/[lang]${target}`} as={href}>
-          <a>{label}</a>
+          <a className="navItem">{label}</a>
         </Link>
       )
     }
@@ -75,10 +75,10 @@ const Nav = ({ user, dispatch, lang, strings }) => {
         ) : (
           <>
             <li>
-              <Link href={`/${lang}/sign-up`}><a className="navItem">{translate('SIGN-UP', strings, lang)}</a></Link>
+              <Link href='/[lang]/sign-up' as={`/${lang}/sign-up`}><a className="navItem">{translate('SIGN-UP', strings, lang)}</a></Link>
             </li>
             <li>
-              <Link href={`/${lang}/login`}><a className="navItem">{translate('LOGIN', strings, lang)}</a></Link>
+              <Link href='/[lang]/login' as={`/${lang}/login`}><a className="navItem">{translate('LOGIN', strings, lang)}</a></Link>
             </li>
           </>
         )}
