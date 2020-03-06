@@ -7,7 +7,6 @@ import { EditorState, convertToRaw } from 'draft-js';
 import RichEditorExample from './RichEditor';
 import {stateToHTML} from 'draft-js-export-html';
 import createLinkifyPlugin from 'draft-js-linkify-plugin';
-import 'draft-js-linkify-plugin/lib/plugin.css';
 
 const AddProductFrom = ({ strings, pageStrings, lang }) => {
 
