@@ -50,7 +50,7 @@ const SignUpBase = ({ setState, state, lang }) => {
 
   const onAuthStateChange = (user) => {
     if(user && user.uid){
-      //Router.push(`/${lang}/dashboard`);
+      Router.push(`/${lang}/dashboard`);
     }
   };
 
