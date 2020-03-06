@@ -1,5 +1,4 @@
 const withCSS = require('@zeit/next-css')
-const path = require('path')
 
 module.exports = withCSS({
   webpack: (config, { dev }) => {
@@ -7,5 +6,5 @@ module.exports = withCSS({
     return config;
   },
   cssModules: true,
-  distDir: '.next',
+  //distDir: process.env.NODE_ENV === 'production' ? `../functions/public` : '.next',
 })

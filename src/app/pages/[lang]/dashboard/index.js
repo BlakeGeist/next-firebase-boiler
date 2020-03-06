@@ -1,21 +1,20 @@
-import React from 'react';
-import { connect } from 'react-redux'
-import Layout from '../../../layouts/Layout';
-import { translate } from '../../../helpers/quickHelpers';
-import Link from 'next/link'
-
-const qs = require('qs');
+import React from "react";
+import { connect } from "react-redux";
+import Layout from "../../../layouts/Layout";
+import { translate } from "../../../helpers/quickHelpers";
+import Link from "next/link";
 
 const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) => {
   return (
     <Layout pageMod="dashboard" isAuthedRequired={true}>
-      
+
+      <h2>{user.email}</h2>
+
       <nav>
         <Link href={`/${lang}/dashboard/strings`}>
-          <a>{translate('MANAGE-STRINGS', pageStrings, lang)}</a>
+          <a>{translate("MANAGE-STRINGS", pageStrings, lang)}</a>
         </Link>
       </nav>
-
       <style global jsx>{`
         .cards {
           display: flex;
@@ -24,13 +23,11 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) 
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
 Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
-  const state = reduxStore.getState()
-  console.log(state)
-
-}
+  const state = reduxStore.getState();
+};
 
 export default connect(state => state)(Dashbaord);

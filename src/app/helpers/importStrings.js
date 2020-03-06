@@ -1,12 +1,9 @@
 const AWS = require('aws-sdk');
 const admin = require('firebase-admin');
-
 const firebaseAdmin = admin.initializeApp({
     credential: admin.credential.cert(require('../credentials/server'))
   })
-
 const db = firebaseAdmin.firestore();
-
 const cors = require('cors')({
   origin: true
 });
@@ -41,12 +38,7 @@ exports.handler = (req, res) => {
 //check the database for if the slug already exists
 //if it does, this should prolly be an update function
 //if the string does not exist, run the createString funciton
-
 async function createStrings(stringText, slug, scope){
-  let string = {
-    'en': stringText
-  }
-
   const object = {
     ar: await getTranslatedString(stringText, 'ar'),
     da: await getTranslatedString(stringText, 'da'),
@@ -60,7 +52,6 @@ async function createStrings(stringText, slug, scope){
     pt: await getTranslatedString(stringText, 'pt'),
     ru: await getTranslatedString(stringText, 'ru')
   }
-
   stringsCollection.doc(scope).collection('strings').doc(slug).set(object)
   .then(()=>{
     console.log('update string was successful ', object);
@@ -69,89 +60,6 @@ async function createStrings(stringText, slug, scope){
   .catch((e)=>{
     console.log('error ' + e)
   })
-
-  console.log(object)
-
-  return
-
-  stringsCollection.doc(slug).set(string)
-    .then(()=>{
-      console.log('create string was successful ' + slug + ' en ' + stringText);
-      return true
-    })
-    .then(async ()=>{
-      var lang = 'ar';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .then(async ()=>{
-      var lang = 'da';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .then(async ()=>{
-      var lang = 'de';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .then(async ()=>{
-      var lang = 'es';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .then(async ()=>{
-      var lang = 'fr';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .then(async ()=>{
-      var lang = 'it';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .then(async ()=>{
-      var lang = 'ja';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .then(async ()=>{
-      var lang = 'ko';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .then(async ()=>{
-      var lang = 'pt';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .then(async ()=>{
-      var lang = 'ru';
-      var translated = await getTranslatedString(stringText, lang);
-      return updateString(translated.TranslatedText, lang, slug)
-    })
-    .catch((e)=>{
-      console.log('error ' + e)
-    })
-}
-
-//take a slug, targetLanguage and string and add that to the string with that slug
-function updateString(stringText, targetLang, slug) {
-  if(targetLang === 'ja'){
-    targetLang = 'jp';
-  }
-  if(targetLang === 'ko'){
-    targetLang = 'kr'
-  }
-  let string = {}
-  string[targetLang] = stringText
-  stringsCollection.doc(slug).update(string)
-    .then(()=>{
-      console.log('update string was successful ' + slug + ' ' + targetLang + ' ' + stringText);
-      return true
-    })
-    .catch((e)=>{
-      console.log('error ' + e)
-    })
 }
 
 //takes a string and a target language, sends it to AWS translate, and returns the result

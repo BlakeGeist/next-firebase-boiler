@@ -3,9 +3,9 @@ import Link from 'next/link'
 import { connect } from 'react-redux';
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import clientCredentials from '../credentials/client'
 import Router from 'next/router';
 import { translate } from '../helpers/quickHelpers';
+import cookie from 'js-cookie'
 
 const Nav = ({ user, dispatch, lang, strings }) => {
   
@@ -32,14 +32,12 @@ const Nav = ({ user, dispatch, lang, strings }) => {
   const handleLogout = (e) => {
     e.preventDefault();
     firebase.auth().signOut()
-    .then(()=>{
-      dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });
-      Router.push(`/${lang}/login`)
-    })
-    fetch('/api/logout', {
-      method: 'POST',
-      credentials: 'same-origin'
-    })
+      .then(()=>{
+        dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });
+        dispatch({ type: "SET_ITEM", name: "isLoggedIn", payload: false });
+        cookie.remove('token2')
+        Router.push(`/${lang}/login`)
+      })
   }
 
   const LinkItem = ({ isExternal, href, label }) => {
@@ -49,36 +47,6 @@ const Nav = ({ user, dispatch, lang, strings }) => {
       return <Link href={href}><a className="navItem">{label}</a></Link>
     }
   }
-
-  useEffect(() => {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(clientCredentials)
-    };
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        return user
-          .getIdToken()
-          .then(token => {
-            //dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
-            // eslint-disable-next-line no-undef
-            return fetch('/api/login', {
-              method: 'POST',
-              // eslint-disable-next-line no-undef
-              headers: new Headers({ 'Content-Type': 'application/json' }),
-              credentials: 'same-origin',
-              body: JSON.stringify({ token })
-            })
-          })
-      } else {
-        // eslint-disable-next-line no-undef
-        fetch('/api/logout', {
-          method: 'POST',
-          credentials: 'same-origin'
-        })
-      }
-    })
-  });
 
   return (
     <>

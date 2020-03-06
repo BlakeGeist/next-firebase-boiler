@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import clientCredentials from '../../../credentials/client'
-import Layout from '../../../layouts/Layout';
-import Router from 'next/router';
-import { compose, withState } from 'recompose';
-import AuthForm from '../../../components/AuthForm';
-import LoadingSpinner from '../../../components/LoadingSpinner';
+import React, { useEffect } from "react";
+import firebase from "firebase/app";
+import "firebase/auth";
+import clientCredentials from "../../../credentials/client";
+import Layout from "../../../layouts/Layout";
+import Router from "next/router";
+import { compose, withState } from "recompose";
+import AuthForm from "../../../components/AuthForm";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 const SignUpBase = ({ setState, state, lang }) => {
 
@@ -15,42 +15,42 @@ const SignUpBase = ({ setState, state, lang }) => {
   const handleChange = (event) => {
     let tempObj = {
       ...state
-    }
+    };
     tempObj[event.target.name] = event.target.value;
-    setState(tempObj)
+    setState(tempObj);
   };
 
   function updateState(item, payload) {
     let tempObj = {
       ...state
-    }
+    };
     tempObj[item] = payload;
-    setState(tempObj)
+    setState(tempObj);
   }
 
   const handleEmailPassAuth = (e) => {
     e.preventDefault();
-    updateState('isLoading', true)
-    updateState('errorMessage', '');
+    updateState("isLoading", true);
+    updateState("errorMessage", "");
 
     const {email, password} = state;
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
-      if(errorCode === 'auth/email-already-in-use'){
-        errorMessage = 'email already in use, please sign in or use another email'
+      if(errorCode === "auth/email-already-in-use"){
+        errorMessage = "email already in use, please sign in or use another email";
       }
-      updateState('errorMessage', errorMessage);
+      updateState("errorMessage", errorMessage);
     });
   };
 
   if (!firebase.apps.length) {
-    firebase.initializeApp(clientCredentials)
+    firebase.initializeApp(clientCredentials);
   };
 
   const onAuthStateChange = (user) => {
     if(user && user.uid){
-      Router.push(`/${lang}/dashboard`)
+      Router.push(`/${lang}/dashboard`);
     }
   };
 
@@ -84,11 +84,11 @@ const SignUpBase = ({ setState, state, lang }) => {
         }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
 const SignUp = compose(
-  withState('state', 'setState', {email: '', password: '', isLoading: false, errorMessage: ''})
+  withState("state", "setState", {email: "", password: "", isLoading: false, errorMessage: ""})
 )(SignUpBase);
 
 export default SignUp;
