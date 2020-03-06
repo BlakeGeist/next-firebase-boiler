@@ -23,7 +23,7 @@ const Nav = ({ user, dispatch, lang, strings }) => {
 
   const userNav = [
     { href: `/${lang}/sign-up`, label: translate('SIGN-UP', strings, lang), target: '/sign-up' },
-    { href: `/${lang}/login`, label: translate('LOGIN', strings, lang), target: 'login' }
+    { href: `/${lang}/login`, label: translate('LOGIN', strings, lang), target: '/login' }
   ].map(link => {
     link.key = `nav-link-${link.href}-${link.label}`
     return link
@@ -42,9 +42,13 @@ const Nav = ({ user, dispatch, lang, strings }) => {
 
   const LinkItem = ({ isExternal, href, label, target }) => {
     if(isExternal){
-      return <a href={`/[lang]${target}`} as={href} className="navItem" target="_blank">{label}</a>
+      return <a href={href} className="navItem" target="_blank">{label}</a>
     } else {
-      return <Link href={href}><a className="navItem">{label}</a></Link>
+      return (
+        <Link href={`/[lang]${target}`} as={href}>
+          <a>{label}</a>
+        </Link>
+      )
     }
   }
 
@@ -52,9 +56,9 @@ const Nav = ({ user, dispatch, lang, strings }) => {
     <>
     <nav>
       <ul>
-        {leftNav.map(({ key, href, label, isExternal }) => (
+        {leftNav.map(({ key, href, label, isExternal, target }) => (
           <li key={key}>
-            <LinkItem href={href} label={label} isExternal={isExternal} />
+            <LinkItem href={href} label={label} isExternal={isExternal} target={target} />
           </li>
         ))}
       </ul>
