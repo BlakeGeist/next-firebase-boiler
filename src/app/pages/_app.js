@@ -22,11 +22,30 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
   );
 };
 
+function absoluteUrl (req, setLocalhost) {
+  var protocol = 'https:'
+  var host = req ? req.headers.host : window.location.hostname
+  if (host.indexOf('localhost') > -1) {
+    if (setLocalhost) host = setLocalhost
+    protocol = 'http:'
+  }
+
+  return {
+    protocol: protocol,
+    host: host
+  }
+}
+
 MyApp.getInitialProps = async ({ Component, ctx }) => {
+
+  const { protocol, host } = absoluteUrl(ctx.req)
+  const apiURL = `${protocol}//${host}`
+
+  console.log(apiURL)
 
   const { token2 } = nextCookie(ctx)
 
-  const getUserResponse = await axios.post('http://localhost:3000/api/getUserFromToken', {token: token2})
+  const getUserResponse = await axios.post(`${apiURL}/api/getUserFromToken`, {token: token2})
 
   const user = getUserResponse.data.user;
 
