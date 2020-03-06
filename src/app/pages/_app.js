@@ -7,6 +7,7 @@ import "firebase/firestore";
 import nextCookie from 'next-cookies'
 const fetch = require('node-fetch');
 import axios from 'axios'
+import absoluteUrl from '../helpers/getAbsoluteUrl'
 
 import clientCredentials from "../credentials/client";
 if (!firebase.apps.length) {
@@ -22,40 +23,27 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
   );
 };
 
-function absoluteUrl (req, setLocalhost) {
-  var protocol = 'https:'
-  var host = req ? req.headers.host : window.location.hostname
-  if (host.indexOf('localhost') > -1) {
-    if (setLocalhost) host = setLocalhost
-    protocol = 'http:'
-  }
-
-  return {
-    protocol: protocol,
-    host: host
-  }
-}
 
 MyApp.getInitialProps = async ({ Component, ctx }) => {
-
   const { protocol, host } = absoluteUrl(ctx.req)
   const apiURL = `${protocol}//${host}`
-
-  console.log(apiURL)
-
   const { token2 } = nextCookie(ctx)
-
   const getUserResponse = await axios.post(`${apiURL}/api/getUserFromToken`, {token: token2})
-
   const user = getUserResponse.data.user;
-
   const headers = ctx.req.headers;
   const userRegionLang = headers["accept-language"].split(",")[0].split("-");
   const userLang = userRegionLang[0];
   const userRegion = userRegionLang[1].toLowerCase();
 
-  if (ctx.res && ctx.res.redirect && ctx.asPath === '/') {
-    ctx.res.redirect(`/${userLang}`);
+  
+
+  if (ctx.res && ctx.asPath === '/') {
+    ctx.res.writeHead(301, {
+      Location: `/${userLang}`,
+      // Add the content-type for SEO considerations
+      'Content-Type': 'text/html; charset=utf-8',
+    })
+    ctx.res.end()
   }
 
   const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, "").replace("/","-");
