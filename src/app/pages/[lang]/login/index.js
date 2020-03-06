@@ -53,7 +53,6 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
       console.log(response)
       dispatch({ type: "SET_ITEM", name: "user", payload: response.user });
       dispatch({ type: "SET_ITEM", name: "isLoggedIn", payload: true });
-      //Router.push(`/${lang}/dashboard`);
 
     })
     .catch(function(error) {
