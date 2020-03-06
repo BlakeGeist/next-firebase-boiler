@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import { connect } from 'react-redux'
 import LoadingSpinner from '../components/LoadingSpinner';
 import './rich-editor.css';
+import 'draft-js-linkify-plugin/lib/plugin.css';
 
 const Layout = ({ children, pageMod, isAuthedRequired }) => {
   const containerClass = ((pageMod) ? 'container ' + pageMod + '-page' : 'container');
