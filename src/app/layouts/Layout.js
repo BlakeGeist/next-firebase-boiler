@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { connect } from 'react-redux'
 import LoadingSpinner from '../components/LoadingSpinner';
+import './rich-editor.css';
 
 const Layout = ({ children, pageMod, isAuthedRequired }) => {
   const containerClass = ((pageMod) ? 'container ' + pageMod + '-page' : 'container');
