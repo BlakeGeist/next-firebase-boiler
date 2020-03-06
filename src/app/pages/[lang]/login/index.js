@@ -46,8 +46,8 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
           .then(token => {
             //dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
             // eslint-disable-next-line no-undef
-            console.log(token)
             cookie.set('token2', token, { expires: 1 })
+            Router.push(`/${lang}/dashboard`);
           })      
 
       console.log(response)
