@@ -66,7 +66,7 @@ const Nav = ({ user, dispatch, lang, strings }) => {
         {user && user.uid ? (
           <>
             <li>
-              <Link href={`/${lang}/dashboard`}><a className="navItem">{translate('DASHBOARD', strings, lang)}</a></Link>
+              <Link href="/[lang]/dashboard" as={`/${lang}/dashboard`}><a className="navItem">{translate('DASHBOARD', strings, lang)}</a></Link>
             </li>
             <li>
               <a href="" className="navItem" onClick={handleLogout}>{translate('LOGOUT', strings, lang)}</a>
