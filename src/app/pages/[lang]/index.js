@@ -1,22 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
 import Layout from "../../layouts/Layout";
-import Carousel from '../../components/Carousel'
+import Carousel from '../../components/Carousel';
 import Modal from '../../components/Modal';
 
-const Index = ({ dispatch, lang, modalIsOpen }) => {
-
-    const ModalContainer = () => {	
-        if(modalIsOpen){	
-            return <Modal />	
-        }	
-        return null
-    }    
-
-    const handleOpenModal = () => {
-        dispatch({ type: "SET_ITEM", name: "modalIsOpen", payload: true });
+const Index = ({ dispatch, lang }) => {
+    const ModalContent = () => {
+        return (
+            <h1>This is the body of the modal</h1>
+        )
     }
-
+    const handleOpenModal = () => {
+        dispatch({ type: "SET_ITEM", name: "modalTarget", payload: <ModalContent /> });
+    }
     return (
         <Layout pageMod='index'>
             <Carousel />
@@ -28,7 +24,7 @@ const Index = ({ dispatch, lang, modalIsOpen }) => {
                     </button>
                 </p>
             </div>
-            <ModalContainer />
+            <Modal />
         </Layout>
     );
 };

@@ -23,7 +23,6 @@ const NewsLetterForm = ({ user, lang, strings }) => {
                 if(user.uid) {
                     payload.uid = user.uid
                 } 
-
                 await axios.post("/api/addEmailToNewsLetter", payload)
                     .catch(e => console.log(e)); // eslint-disable-line no-console
             }}
