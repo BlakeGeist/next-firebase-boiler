@@ -11,7 +11,7 @@ const Dashbaord = ({ user, lang, pageStrings }) => {
       <h2>{user.email}</h2>
 
       <nav>
-        <Link href={`/${lang}/dashboard/strings`}>
+        <Link href='/[lang]/dashboard/strings' as={`/${lang}/dashboard/strings`}>
           <a>{translate("MANAGE-STRINGS", pageStrings, lang)}</a>
         </Link>
       </nav>
