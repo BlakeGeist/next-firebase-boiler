@@ -3,6 +3,8 @@ export default (ctx) => {
     const userRegionLang = headers["accept-language"].split(",")[0].split("-");
     const userLang = userRegionLang[0];
     const userRegion = userRegionLang[1].toLowerCase();
+    console.log('this happened 2')
+
     if (ctx.res && ctx.asPath === "/") {
         console.log('this happened')
         ctx.res.writeHead(301, {
