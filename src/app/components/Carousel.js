@@ -13,20 +13,16 @@ const CarouselSlider = () => {
                 swipeable={true}
                 showThumbs={false}
                 showStatus={false}
+                infiniteLoop={true}
             >
                 <div className="slide" style={{'background-image': `url(${canyionImg})`}} />
                 <div className="slide" style={{'background-image': `url(${canyionImg2})`}} />
                 <div className="slide" style={{'background-image': `url(${canyionImg3})`}} />
                 <div className="slide" style={{'background-image': `url(${canyionImg4})`}} />
             </Carousel>
-            <style jsx>{`
+            <style global jsx>{`
                 .slide {
                     min-height: 400px;
-                    width: 100%;
-                }
-            `}</style>
-            <style global jsx>{`
-                img {
                     width: 100%;
                 }
                 .carousel .control-arrow, .carousel.carousel-slider .control-arrow {
