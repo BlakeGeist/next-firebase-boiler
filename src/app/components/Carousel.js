@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Carousel } from 'react-responsive-carousel';
-import canyionImg from './assets/canyon.jpg'
-import canyionImg2 from './assets/canyon-2.jpg'
-import canyionImg3 from './assets/canyon-3.jpg'
-import canyionImg4 from './assets/canyon-4.jpg'
+import canyionImg from './assets/canyon.webp'
+import canyionImg2 from './assets/canyon-2.webp'
+import canyionImg3 from './assets/canyon-3.webp'
+import canyionImg4 from './assets/canyon-4.webp'
 
 const CarouselSlider = () => {
     return (
@@ -15,10 +15,10 @@ const CarouselSlider = () => {
                 showStatus={false}
                 infiniteLoop={true}
             >
-                <div className="slide" style={{'background-image': `url(${canyionImg})`}} />
-                <div className="slide" style={{'background-image': `url(${canyionImg2})`}} />
-                <div className="slide" style={{'background-image': `url(${canyionImg3})`}} />
-                <div className="slide" style={{'background-image': `url(${canyionImg4})`}} />
+                <div className="slide" style={{backgroundImage: `url(${canyionImg})`}} />
+                <div className="slide" style={{backgroundImage: `url(${canyionImg2})`}} />
+                <div className="slide" style={{backgroundImage: `url(${canyionImg3})`}} />
+                <div className="slide" style={{backgroundImage: `url(${canyionImg4})`}} />
             </Carousel>
             <style global jsx>{`
                 .slide {
