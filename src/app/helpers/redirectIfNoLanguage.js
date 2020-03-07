@@ -2,7 +2,7 @@ export default async (ctx) => {
     const headers = ctx.req.headers;
     const userRegionLang = headers["accept-language"].split(",")[0].split("-");
     const userLang = userRegionLang[0];
-    const userRegion = userRegionLang[1].toLowerCase();    
+    const userRegion = userRegionLang[1].toLowerCase();
     if (ctx.res && ctx.asPath === "/") {
         ctx.res.writeHead(301, {
             Location: `/${userLang}`,
