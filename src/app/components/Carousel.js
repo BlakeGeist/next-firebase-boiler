@@ -1,8 +1,10 @@
-import { Carousel } from "react-responsive-carousel";
-import canyionImg from "./assets/canyon.webp";
-import canyionImg2 from "./assets/canyon-2.webp";
-import canyionImg3 from "./assets/canyon-3.webp";
-import canyionImg4 from "./assets/canyon-4.webp";
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { Carousel } from 'react-responsive-carousel';
+import canyionImg from './assets/canyon.webp'
+import canyionImg2 from './assets/canyon-2.webp'
+import canyionImg3 from './assets/canyon-3.webp'
+import canyionImg4 from './assets/canyon-4.webp'
 
 const CarouselSlider = () => {
     return (
@@ -252,7 +254,7 @@ const CarouselSlider = () => {
                       opacity: 1; }                  
             `}</style>
         </>
-    );
-};
+    )
+}
 
-export default CarouselSlider;
+export default CarouselSlider

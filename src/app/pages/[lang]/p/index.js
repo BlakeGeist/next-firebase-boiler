@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from "../../../layouts/Layout";
-import AddProductForm from "./components/AddProductFrom";
+import AddProductForm from './components/AddProductFrom';
 
 const ProductsPage = () => {
     return (
