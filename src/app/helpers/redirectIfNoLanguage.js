@@ -5,6 +5,7 @@ export default (ctx) => {
     const userRegion = userRegionLang[1].toLowerCase();
     if (ctx.res && ctx.asPath === "/") {
         console.log('this happened')
+        console.log(`/${userLang}`)
         ctx.res.writeHead(301, {
             Location: `/${userLang}`,
             // Add the content-type for SEO considerations
