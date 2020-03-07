@@ -14,63 +14,63 @@ const stringsModule = require("./helpers/importStrings");
 //wtf does server do here?
 const firebaseAdmin = admin.initializeApp({
     credential: admin.credential.cert(require("./credentials/server"))
-  }, "server" );
+}, "server" );
 
 var cors = require("cors");
 const _ = require("lodash");
 
 app.prepare().then(() => {
-  const server = express();
+    const server = express();
 
-  server.use(cors());
+    server.use(cors());
 
-  server.use(bodyParser.json());
-  server.use(
-    session({
-      secret: "geheimnis",
-      saveUninitialized: true,
-      store: new FileStore({ secret: "geheimnis" }),
-      resave: false,
-      rolling: true,
-      httpOnly: true,
-      cookie: { maxAge: 604800000 } // week
-    })
-  );
+    server.use(bodyParser.json());
+    server.use(
+        session({
+            secret: "geheimnis",
+            saveUninitialized: true,
+            store: new FileStore({ secret: "geheimnis" }),
+            resave: false,
+            rolling: true,
+            httpOnly: true,
+            cookie: { maxAge: 604800000 } // week
+        })
+    );
 
-  server.use((req, res, next) => {
-    req.firebaseServer = firebaseAdmin;
-    next();
-  });
+    server.use((req, res, next) => {
+        req.firebaseServer = firebaseAdmin;
+        next();
+    });
 
-  server.post("/api/login", (req, res) => {
-    if (!req.body) return res.sendStatus(400);
-    const token = req.body.token;
-    firebaseAdmin
-      .auth()
-      .verifyIdToken(token)
-      .then(decodedToken => {
-        req.session.decodedToken = decodedToken;
-        return decodedToken;
-      })
-      .then(decodedToken => res.json({ status: true, decodedToken }))
-      .catch(error => res.json({ error }));
-  });
+    server.post("/api/login", (req, res) => {
+        if (!req.body) return res.sendStatus(400);
+        const token = req.body.token;
+        firebaseAdmin
+            .auth()
+            .verifyIdToken(token)
+            .then(decodedToken => {
+                req.session.decodedToken = decodedToken;
+                return decodedToken;
+            })
+            .then(decodedToken => res.json({ status: true, decodedToken }))
+            .catch(error => res.json({ error }));
+    });
 
-  server.post("/api/logout", (req, res) => {
-    req.session.decodedToken = null;
-    res.json({ status: true });
-  });
+    server.post("/api/logout", (req, res) => {
+        req.session.decodedToken = null;
+        res.json({ status: true });
+    });
 
-  server.post("/api/translate", (req, res) => {
-    stringsModule.handler(req, res);
-  });
+    server.post("/api/translate", (req, res) => {
+        stringsModule.handler(req, res);
+    });
 
-  server.get("*", (req, res) => {
-    return handle(req, res);
-  });
+    server.get("*", (req, res) => {
+        return handle(req, res);
+    });
 
-  server.listen(port, err => {
-    if (err) throw err;
-    console.log(`> Ready on http://localhost:${port}`); // eslint-disable-line no-console
-  });
+    server.listen(port, err => {
+        if (err) throw err;
+        console.log(`> Ready on http://localhost:${port}`); // eslint-disable-line no-console
+    });
 });

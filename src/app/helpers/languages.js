@@ -4,8 +4,8 @@ export default [
         name: "عربى"
     },
     {
-         lang: "es",
-         name: "Español"
+        lang: "es",
+        name: "Español"
     },
     {
         lang: "da",

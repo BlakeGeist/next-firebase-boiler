@@ -11,14 +11,14 @@ export default async (ctx) => {
     const pathWithoutLang = ctx.asPath.replace(`/${ctx.query.lang}/`, "").replace("/","-");
     const usersRef = db.collection("strings").doc("global");
     await usersRef.get()
-      .then(async (docSnapshot) => {
+        .then(async (docSnapshot) => {
             if (docSnapshot.exists) {
-            let pageStrings = db.collection("strings").doc(pathWithoutLang).collection("strings");
-            await pageStrings.get()
-                .then(snap =>{
-                    pageStrings = snap.docs.map(d => {
-                        return {
-                            [d.id]: d.data()
+                let pageStrings = db.collection("strings").doc(pathWithoutLang).collection("strings");
+                await pageStrings.get()
+                    .then(snap =>{
+                        pageStrings = snap.docs.map(d => {
+                            return {
+                                [d.id]: d.data()
                             };
                         });
                         const objectizedStrings = Object.assign({}, ...pageStrings);
@@ -26,6 +26,6 @@ export default async (ctx) => {
                     })
                     .catch(e => { console.log(e);}); // eslint-disable-line no-console
             } else {
-          }
-      });
+            }
+        });
 };

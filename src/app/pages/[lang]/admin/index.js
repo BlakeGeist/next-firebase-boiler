@@ -14,7 +14,7 @@ const Admin = ({ user }) => {
 
 Admin.getInitialProps = async ({ reduxStore, res }) => {
     const state = reduxStore.getState();
-  };
+};
   
 export default connect(state => state)(Admin);
   
