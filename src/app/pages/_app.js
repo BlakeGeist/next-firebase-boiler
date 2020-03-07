@@ -15,7 +15,21 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
 };
 
 MyApp.getInitialProps = async ({ Component, ctx }) => {
-    redirectIfNoLanguage(ctx)
+    const headers = ctx.req.headers;
+    const userRegionLang = headers["accept-language"].split(",")[0].split("-");
+    const userLang = userRegionLang[0];
+    const userRegion = userRegionLang[1].toLowerCase();
+    if (ctx.res && ctx.asPath === "/") {
+        console.log('this happened')
+        console.log(`/${userLang}`)
+        ctx.res.writeHead(302, {
+            'Location': `/${userLang}`
+            //add other headers here...
+          });
+        ctx.res.end();
+        return
+    }
+
     if (ctx.req){
         await setUserState(ctx);
     }
