@@ -27,11 +27,20 @@ const NewsLetterForm = ({ lang, strings }) => {
                 isSubmitting,
             }) => (
             <form onSubmit={handleSubmit}>
-                <Field name="email" className="form-input" placeholder={translate("EMAIL", strings, lang)}/>
-                {errors.email && touched.email && errors.email}
-                <button type="submit" disabled={isSubmitting}>{translate("SUBMIT", strings, lang)}</button>
+                <div>{translate("SIGN-UP-FOR-OUR-NEWSLETTER", strings, lang)}</div>
+                <div className="newsLetter-inputs">
+                    <label>
+                        <Field name="email" className="form-input" placeholder={translate("EMAIL", strings, lang)}/>
+                        {errors.email && touched.email && errors.email}
+                    </label>
+                    <button type="submit" disabled={isSubmitting}>{translate("SUBMIT", strings, lang)}</button>
+                </div>
+                
                 <style jsx>{`
                     form {
+                        text-align: left;
+                    }
+                    .newsLetter-inputs {
                         display: flex;
                     }
                 `}</style>
