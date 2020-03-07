@@ -37,7 +37,8 @@ const Nav = ({ user, dispatch, lang, strings }) => {
                 Router.push(`/${lang}/login`);
             });
     };
-    const handleOpenModal = () => {
+    const handleOpenModal = (e) => {
+        e.preventDefault();
         dispatch({ type: "SET_ITEM", name: "modalTarget", payload: <LoginModal /> });
     }
     const LinkItem = ({ isExternal, href, label, target }) => {
@@ -78,9 +79,9 @@ const Nav = ({ user, dispatch, lang, strings }) => {
                                 <Link href='/[lang]/sign-up' as={`/${lang}/sign-up`}><a className="navItem">{translate("SIGN-UP", strings, lang)}</a></Link>
                             </li>
                             <li>
-                                <button onClick={handleOpenModal}>
+                                <a onClick={e => handleOpenModal(e)} className="navItem" href={"/[lang]/login"} as={`/${lang}/login`}>
                                     Login
-                                </button>
+                                </a>
                             </li>
                         </>
                     )}
