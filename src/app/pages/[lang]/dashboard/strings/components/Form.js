@@ -27,17 +27,17 @@ const Form = ({ strings, pageStrings, lang }) => {
             return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-            const formData =JSON.stringify(values, null, 2);
-            const response = axios.post("/api/translate", {
-                text: values.string_name,
-                slug: values.string_value,
-                scope: values.string_scope
-            }, {
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            });
-            setSubmitting(false);
+                const formData =JSON.stringify(values, null, 2);
+                const response = axios.post("/api/translate", {
+                    text: values.string_name,
+                    slug: values.string_value,
+                    scope: values.string_scope
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+                setSubmitting(false);
             }}
             >
             {({
