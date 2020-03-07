@@ -3,14 +3,14 @@ import React from "react";
 import { Formik, Field } from "formik";
 import { connect } from "react-redux";
 import { translate } from "../../../../helpers/quickHelpers";
-import { EditorState, convertToRaw } from 'draft-js';
-import RichEditorExample from './RichEditor';
-import {stateToHTML} from 'draft-js-export-html';
-import createLinkifyPlugin from 'draft-js-linkify-plugin';
+import { EditorState, convertToRaw } from "draft-js";
+import RichEditorExample from "./RichEditor";
+import {stateToHTML} from "draft-js-export-html";
+import createLinkifyPlugin from "draft-js-linkify-plugin";
 
 const AddProductFrom = ({ strings, pageStrings, lang }) => {
 
-    const dis = new EditorState.createEmpty()
+    const dis = new EditorState.createEmpty();
     const linkifyPlugin = createLinkifyPlugin();
     const plugins = [linkifyPlugin];
 
@@ -18,46 +18,46 @@ const AddProductFrom = ({ strings, pageStrings, lang }) => {
         <Formik
             initialValues={{ name: "", editorState: dis }}
             validate={values => {
-              const errors = {};
-              if (!values.name) {
-                errors.name = "Required";
-              }     
-              return errors;
+                const errors = {};
+                if (!values.name) {
+                    errors.name = "Required";
+                }     
+                return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              const contentState = values.editorState.getCurrentContent()
-              let html = stateToHTML(contentState);
-              console.log(html)
-              setSubmitting(false);
+                const contentState = values.editorState.getCurrentContent();
+                let html = stateToHTML(contentState);
+                console.log(html); // eslint-disable-line no-console
+                setSubmitting(false);
             }}
-          >
+        >
             {({
-              values,
-              errors,
-              touched,
-              handleSubmit,
-              isSubmitting,
-              setFieldValue,
-              handleBlur
+                values,
+                errors,
+                touched,
+                handleSubmit,
+                isSubmitting,
+                setFieldValue,
+                handleBlur
             }) => (
-              <form onSubmit={handleSubmit}>
-                <label>
-                  <div>{translate("PRODUCT-NAME", pageStrings, lang)}</div>
-                  <Field name="name" className="form-input"/>
-                  {errors.name && touched.name && errors.name}
-                </label> 
-                <label>
-                <RichEditorExample
-                    editorState={values.editorState}
-                    onChange={setFieldValue}
-                    onBlur={handleBlur}
-                    plugins={plugins}
-                />
-                <div>{translate("DESCRIPTION", pageStrings, lang)}</div>
-                {errors.editorState && touched.editorState && errors.editorState}
-                </label> 
-                <button type="submit" disabled={isSubmitting}>{translate("SUBMIT", strings, lang)}</button>
-                <style global jsx>{`
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        <div>{translate("PRODUCT-NAME", pageStrings, lang)}</div>
+                        <Field name="name" className="form-input"/>
+                        {errors.name && touched.name && errors.name}
+                    </label> 
+                    <label>
+                        <RichEditorExample
+                            editorState={values.editorState}
+                            onChange={setFieldValue}
+                            onBlur={handleBlur}
+                            plugins={plugins}
+                        />
+                        <div>{translate("DESCRIPTION", pageStrings, lang)}</div>
+                        {errors.editorState && touched.editorState && errors.editorState}
+                    </label> 
+                    <button type="submit" disabled={isSubmitting}>{translate("SUBMIT", strings, lang)}</button>
+                    <style global jsx>{`
 .RichEditor-root {
   background: #fff;
   border: 1px solid #ddd;
@@ -138,10 +138,10 @@ const AddProductFrom = ({ strings, pageStrings, lang }) => {
 }
 
       `}</style>                
-              </form>
+                </form>
             )}
 
-          </Formik>
+        </Formik>
     );
 };
 

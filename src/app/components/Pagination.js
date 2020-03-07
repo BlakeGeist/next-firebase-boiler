@@ -1,32 +1,32 @@
-import React from 'react'
-import Link from 'next/link'
-import _ from 'lodash';
+import React from "react";
+import Link from "next/link";
+import _ from "lodash";
 
 const Pagination = ({ pagination }) => {
-  const { data, listingsPerPage, totalPaginateditems, activePageNumber } = pagination;
-  const paginateXTimes = Math.ceil(totalPaginateditems / listingsPerPage);
+    const { data, listingsPerPage, totalPaginateditems, activePageNumber } = pagination;
+    const paginateXTimes = Math.ceil(totalPaginateditems / listingsPerPage);
 
-  const PaginatedItem = () => {
-    let items = [];
+    const PaginatedItem = () => {
+        let items = [];
 
-    _.times(paginateXTimes, (i) => {
-      const number = i + 1;
-      let paginatedItemClass = '';
-      if (activePageNumber === number) {
-        paginatedItemClass = 'is-active';
-      }
-      items.push(
-        <Link key={i} href={`/sets/${number}`}><a className={paginatedItemClass}>{number}</a></Link>
-      );
-    });
+        _.times(paginateXTimes, (i) => {
+            const number = i + 1;
+            let paginatedItemClass = "";
+            if (activePageNumber === number) {
+                paginatedItemClass = "is-active";
+            }
+            items.push(
+                <Link key={i} href={`/sets/${number}`}><a className={paginatedItemClass}>{number}</a></Link>
+            );
+        });
 
-    return items
-  }
+        return items;
+    };
 
-  return (
-    <div className="pagination-container">
-      <PaginatedItem />
-      <style global jsx>{`
+    return (
+        <div className="pagination-container">
+            <PaginatedItem />
+            <style global jsx>{`
         .pagination-container{
           display: flex;
           justify-content: center;
@@ -47,8 +47,8 @@ const Pagination = ({ pagination }) => {
           width: 100%;
         }
         `}</style>
-    </div>
-  )
+        </div>
+    );
 };
 
 export default Pagination;

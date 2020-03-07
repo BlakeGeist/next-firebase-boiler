@@ -1,23 +1,23 @@
-import React from 'react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import { connect } from 'react-redux'
-import LoadingSpinner from '../components/LoadingSpinner';
+import React from "react";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { connect } from "react-redux";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Layout = ({ children, pageMod }) => {
-  const containerClass = ((pageMod) ? 'container ' + pageMod + '-page' : 'container');
+    const containerClass = ((pageMod) ? "container " + pageMod + "-page" : "container");
 
-  return (
-    <>
-      <Header />
-      <main className="body">
-        <div className={containerClass}>
-          <div>{ children }</div>
-        </div>
-      </main>
-      <Footer />
-      <LoadingSpinner />
-      <style global jsx>{`
+    return (
+        <>
+            <Header />
+            <main className="body">
+                <div className={containerClass}>
+                    <div>{ children }</div>
+                </div>
+            </main>
+            <Footer />
+            <LoadingSpinner />
+            <style global jsx>{`
           html, body, #__next {
             height: 100%;
           }
@@ -48,8 +48,8 @@ const Layout = ({ children, pageMod }) => {
             padding: 2rem 0 1rem;            
           }
       `}</style>
-    </>
-  )
-}
+        </>
+    );
+};
 
 export default connect(state => state)(Layout);

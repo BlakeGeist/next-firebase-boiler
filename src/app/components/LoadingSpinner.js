@@ -1,12 +1,12 @@
-import React from 'react'
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
 const LoadingSpinner = ({ isLoading }) => {
-  return (
-    isLoading &&
+    return (
+        isLoading &&
       <div className="loader-wrapper">
-        <div className="loader"></div>
-        <style jsx>{`
+          <div className="loader"></div>
+          <style jsx>{`
           .loader {
             border: 16px solid #f3f3f3; /* Light grey */
             border-top: 16px solid #3498db; /* Blue */
@@ -36,7 +36,7 @@ const LoadingSpinner = ({ isLoading }) => {
           }
         `}</style>
       </div>
-  )
-}
+    );
+};
 
 export default connect(state => state)(LoadingSpinner);
