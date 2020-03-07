@@ -8,7 +8,7 @@ const Dashbaord = ({ user, lang, pageStrings }) => {
     return (
         <Layout pageMod="dashboard">
             <div className="container">
-                <h2>{user.email}</h2>
+                <h1>{user.email}</h1>
                 <nav>
                     <Link href='/[lang]/dashboard/strings' as={`/${lang}/dashboard/strings`}>
                         <a>{translate("MANAGE-STRINGS", pageStrings, lang)}</a>

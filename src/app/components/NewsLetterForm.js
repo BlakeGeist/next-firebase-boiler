@@ -4,10 +4,11 @@ import { translate } from "../helpers/quickHelpers";
 import { connect } from "react-redux";
 import axios from "axios";
 
-const NewsLetterForm = ({ lang, strings }) => {
+const NewsLetterForm = ({ user, lang, strings }) => {
+    const initalEmail = user.email || '';
     return (
         <Formik
-            initialValues={{ email: "" }}
+            initialValues={{ email: initalEmail }}
             validate={values => {
                 const errors = {};
                 if (!values.email) {
@@ -16,7 +17,14 @@ const NewsLetterForm = ({ lang, strings }) => {
                 return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-                await axios.post("/api/addEmailToNewsLetter", {email: values.email})
+                const payload = {
+                    email: values.email
+                }
+                if(user.uid) {
+                    payload.uid = user.uid
+                } 
+
+                await axios.post("/api/addEmailToNewsLetter", payload)
                     .catch(e => console.log(e)); // eslint-disable-line no-console
             }}
         >

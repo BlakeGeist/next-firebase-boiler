@@ -10,6 +10,10 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 
 const SignUpBase = ({ setState, state, lang }) => {
 
+    if (!firebase.apps.length) {
+        firebase.initializeApp(clientCredentials);
+    };
+
     const { email, password, isLoading, errorMessage } = state;
 
     const handleChange = (event) => {
@@ -34,14 +38,30 @@ const SignUpBase = ({ setState, state, lang }) => {
         updateState("errorMessage", "");
 
         const {email, password} = state;
-        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            if(errorCode === "auth/email-already-in-use"){
-                errorMessage = "email already in use, please sign in or use another email";
-            }
-            updateState("errorMessage", errorMessage);
-        });
+        const db = firebase.firestore();
+
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(async (res) => {
+                console.log(res.user)
+
+                const userDataCollection = db.collection("userData");
+                await userDataCollection.doc(res.user.uid).set({})
+                    .then(()=>{
+                        console.log('there is a user, and they have been subscribed')
+                    })
+                    .catch((e)=>{
+                        res.json({ error: e });
+                    });
+
+            })
+            .catch(function(error) {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                if(errorCode === "auth/email-already-in-use"){
+                    errorMessage = "email already in use, please sign in or use another email";
+                }
+                updateState("errorMessage", errorMessage);
+            });
     };
 
     if (!firebase.apps.length) {
@@ -50,7 +70,7 @@ const SignUpBase = ({ setState, state, lang }) => {
 
     const onAuthStateChange = (user) => {
         if(user && user.uid){
-            Router.push(`/${lang}/dashboard`);
+            //Router.push(`/${lang}/dashboard`);
         }
     };
 
