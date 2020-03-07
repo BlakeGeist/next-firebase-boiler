@@ -17,7 +17,6 @@ const firebaseAdmin = admin.initializeApp({
 }, "server" );
 
 var cors = require("cors");
-const _ = require("lodash");
 
 app.prepare().then(() => {
     const server = express();

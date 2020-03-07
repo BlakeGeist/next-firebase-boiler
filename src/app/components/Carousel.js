@@ -1,5 +1,3 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import { Carousel } from "react-responsive-carousel";
 import canyionImg from "./assets/canyon.webp";
 import canyionImg2 from "./assets/canyon-2.webp";

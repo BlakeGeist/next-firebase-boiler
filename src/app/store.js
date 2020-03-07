@@ -36,32 +36,15 @@ export const actionTypes = {
 
 // REDUCERS
 export const reducer = (state = exampleInitialState, action) => {
-    function removeProfileByIndex(index) {
-        return state.profiles.filter((ele) => {
-            return ele !== state.profiles[index];
-        });
-    }
-    // this seems like an odd spot to be declaring this function
-    function updateProfiles(profileDoesNotExist, profiles, state) {
-        if (profileDoesNotExist) {
-            return {
-                ...state,
-                profiles,
-                rawProfiles: profiles
-            };
-        } else {
-            return state;
-        }
-    }
-
     switch (action.type) {
     case actionTypes.SET_ITEM: {
         return Object.assign({}, state, {
             [action.name]: action.payload
         });
     }
-    default:
+    default: {
         return state;
+    }
     }
 };
 
