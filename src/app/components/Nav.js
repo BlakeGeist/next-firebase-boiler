@@ -6,9 +6,14 @@ import "firebase/auth";
 import Router from "next/router";
 import { translate } from "../helpers/quickHelpers";
 import cookie from "js-cookie";
+import clientCredentials from "../credentials/client";
 
 const Nav = ({ user, dispatch, lang, strings }) => {
   
+    if (!firebase.apps.length) {
+        firebase.initializeApp(clientCredentials);
+    };
+
     const leftNav = [
         { href: `/${lang}`, label: translate("HOME", strings, lang), target: "/" },
         { href: `/${lang}/about`, label: translate("ABOUT-US", strings, lang), target: "/about" },

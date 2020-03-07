@@ -11,8 +11,14 @@ export default async (req, res) => {
     admin
         .auth()
         .verifyIdToken(token)
-        .then(user => {
-            return res.status(200).json({ user });
+        .then(async user => {
+            const db = admin.firestore()
+            const userDataCollection = db.collection('userData')
+            userDataCollection.doc(user.uid).get()
+                .then(doc => {
+                    const userData = {...user, ...doc.data()}
+                    return res.status(200).json({ user: userData });
+                })
         })
         .catch(error => {
             res.json({ error: error });
