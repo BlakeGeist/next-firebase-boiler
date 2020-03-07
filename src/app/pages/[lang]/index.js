@@ -7,7 +7,9 @@ const Index = ({ lang }) => {
   return (
     <Layout pageMod='index'>
       <Carousel />
-      <h1>{lang} Home Page</h1>
+      <div className="container">
+        <h1>{lang} Home Page</h1>
+      </div>
     </Layout>
   );
 };

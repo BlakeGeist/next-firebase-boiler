@@ -7,8 +7,10 @@ import { translate } from "../../../helpers/quickHelpers";
 const Contact = ({ pageStrings, lang }) => {
     return (
         <Layout>
-            <h1>{translate("CONTACT-US", pageStrings, lang)}</h1>
-            <ContactForm />
+            <div className="container">
+                <h1>{translate("CONTACT-US", pageStrings, lang)}</h1>
+                <ContactForm />
+            </div>
         </Layout>
     );
 };

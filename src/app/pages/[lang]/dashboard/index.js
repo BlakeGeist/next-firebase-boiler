@@ -6,15 +6,15 @@ import Link from "next/link";
 
 const Dashbaord = ({ user, lang, pageStrings }) => {
   return (
-    <Layout pageMod="dashboard" isAuthedRequired={true}>
-
-      <h2>{user.email}</h2>
-
-      <nav>
-        <Link href='/[lang]/dashboard/strings' as={`/${lang}/dashboard/strings`}>
-          <a>{translate("MANAGE-STRINGS", pageStrings, lang)}</a>
-        </Link>
-      </nav>
+    <Layout pageMod="dashboard">
+      <div className="container">
+        <h2>{user.email}</h2>
+        <nav>
+          <Link href='/[lang]/dashboard/strings' as={`/${lang}/dashboard/strings`}>
+            <a>{translate("MANAGE-STRINGS", pageStrings, lang)}</a>
+          </Link>
+        </nav>
+      </div>
       <style global jsx>{`
         .cards {
           display: flex;

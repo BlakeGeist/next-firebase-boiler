@@ -61,20 +61,22 @@ const SignUpBase = ({ setState, state, lang }) => {
 
   return (
     <Layout pageMod="about">
-      <h1>Sign Up page</h1>
-      <p>Sign Up page content</p>
-      <div className="login-form-wrapper">
-        <div className="login-form">
-          <AuthForm
-            errorMessage={errorMessage}
-            email={email}
-            password={password}
-            handleEmailPassAuth={handleEmailPassAuth}
-            handleChange={handleChange}
-            />
-          <button>Sign Up with Google</button>
+      <div className="container">
+        <h1>Sign Up page</h1>
+        <p>Sign Up page content</p>
+        <div className="login-form-wrapper">
+          <div className="login-form">
+            <AuthForm
+              errorMessage={errorMessage}
+              email={email}
+              password={password}
+              handleEmailPassAuth={handleEmailPassAuth}
+              handleChange={handleChange}
+              />
+            <button>Sign Up with Google</button>
+          </div>
+          <LoadingSpinner isLoading={isLoading} />
         </div>
-        <LoadingSpinner isLoading={isLoading} />
       </div>
       <style jsx>{`
         .login-form-wrapper{

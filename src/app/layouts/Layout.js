@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import LoadingSpinner from '../components/LoadingSpinner';
 
 
-const Layout = ({ children, pageMod, isAuthedRequired }) => {
+const Layout = ({ children, pageMod }) => {
   const containerClass = ((pageMod) ? 'container ' + pageMod + '-page' : 'container');
 
   return (
@@ -13,9 +13,7 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
       <Header />
       <main className="body">
         <div className={containerClass}>
-          <div style={{padding: '10px'}}>
-            { children }
-          </div>
+          <div>{ children }</div>
         </div>
       </main>
       <Footer />
@@ -42,6 +40,13 @@ const Layout = ({ children, pageMod, isAuthedRequired }) => {
           .container {
             max-width: 1150px;
             margin: 0 auto;
+          }
+          .container .container {
+            padding: 0 24px;
+          }
+          h1 {
+            margin: 0;
+            padding: 2rem 0 1rem;            
           }
       `}</style>
     </>
