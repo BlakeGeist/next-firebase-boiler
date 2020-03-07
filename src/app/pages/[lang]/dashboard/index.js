@@ -4,7 +4,7 @@ import Layout from "../../../layouts/Layout";
 import { translate } from "../../../helpers/quickHelpers";
 import Link from "next/link";
 
-const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) => {
+const Dashbaord = ({ user, lang, pageStrings }) => {
   return (
     <Layout pageMod="dashboard" isAuthedRequired={true}>
 
@@ -27,7 +27,6 @@ const Dashbaord = ({ user, modalIsOpen, dispatch, strings, lang, pageStrings }) 
 };
 
 Dashbaord.getInitialProps = async ({ reduxStore, req, query, res }) => {
-  const state = reduxStore.getState();
 };
 
 export default connect(state => state)(Dashbaord);

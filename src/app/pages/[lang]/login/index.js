@@ -49,8 +49,6 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
             cookie.set('token2', token, { expires: 1 })
             Router.push(`/${lang}/dashboard`);
           })      
-
-      console.log(response)
       dispatch({ type: "SET_ITEM", name: "user", payload: response.user });
       dispatch({ type: "SET_ITEM", name: "isLoggedIn", payload: true });
 

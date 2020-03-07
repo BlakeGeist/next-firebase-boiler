@@ -12,8 +12,8 @@ const Index = ({ card }) => {
 };
 
 Index.getInitialProps = async ({ reduxStore, req, query, res }) => {
-  let card = await axios.get("https://api.scryfall.com/cards/random");
-  reduxStore.dispatch({ type: "SET_ITEM", name: "card", payload: card.data });
+ 
+
 };
 
 export default connect(state => state)(Index);

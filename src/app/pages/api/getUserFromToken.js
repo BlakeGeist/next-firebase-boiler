@@ -1,5 +1,4 @@
 const admin = require('firebase-admin')
-var Parser = require('stream-parser');
 
 export default async (req, res) => {
     if(!admin.apps.length)
@@ -16,7 +15,6 @@ export default async (req, res) => {
                     return res.status(200).json({ user })
                 })
                 .catch(error => {
-                    console.log(error)
                     res.json({ error: error })
                 })
 }
