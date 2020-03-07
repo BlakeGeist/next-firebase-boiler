@@ -19,11 +19,14 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
     const userRegionLang = headers["accept-language"].split(",")[0].split("-");
     const userLang = userRegionLang[0];
     const userRegion = userRegionLang[1].toLowerCase();
+    const { protocol, host } = absoluteUrl(ctx.req);
+    const apiURL = `${protocol}//${host}`;
+
     if (ctx.res && ctx.asPath === "/") {
         console.log('this happened')
-        console.log(`/${userLang}`)
-        ctx.res.writeHead(302, {
-            'Location': `/${userLang}`
+        console.log(`${apiURL}/${userLang}`)
+        ctx.res.writeHead(301, {
+            'Location': `${apiURL}/${userLang}`
             //add other headers here...
           });
         ctx.res.end();
