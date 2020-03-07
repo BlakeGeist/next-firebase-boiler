@@ -8,7 +8,7 @@ export default async (ctx) => {
             Location: `/${userLang}`,
             // Add the content-type for SEO considerations
             "Content-Type": "text/html; charset=utf-8",
-        })
+        });
         ctx.res.end();
     }
 };

@@ -29,5 +29,4 @@ const TextEditor = ({ dispatch }) => {
     );
 };
 
-
 export default connect(state => state)(TextEditor);

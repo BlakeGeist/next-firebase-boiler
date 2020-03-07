@@ -12,7 +12,8 @@
         "quotes": ["error", "double"],
         "no-console": "error",
         "indent": ["error", 4],
-        "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
+        "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
+        "no-multiple-empty-lines": ["error", { "max": 1, "maxBOF": 1}]
     },
     "extends": ["prettier", "plugin:react/recommended"]
 }
