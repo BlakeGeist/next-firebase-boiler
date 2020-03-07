@@ -11,6 +11,7 @@ export default (ctx) => {
             // Add the content-type for SEO considerations
             "Content-Type": "text/html; charset=utf-8",
         })
-        return ctx.res.end();
+        ctx.res.end();
+        return false;
     }
 };
