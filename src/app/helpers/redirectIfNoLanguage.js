@@ -6,7 +6,10 @@ export default (ctx) => {
     if (ctx.res && ctx.asPath === "/") {
         console.log('this happened')
         console.log(`/${userLang}`)
-        ctx.res.writeHead(301, { Location: `/${userLang}` });
+        ctx.res.writeHead(302, {
+            'Location': `/${userLang}`
+            //add other headers here...
+          });
         ctx.res.end();
     }
 };
