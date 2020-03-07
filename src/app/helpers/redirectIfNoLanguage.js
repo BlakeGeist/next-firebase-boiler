@@ -8,6 +8,5 @@ export default (ctx) => {
         console.log(`/${userLang}`)
         ctx.res.writeHead(301, { Location: `/${userLang}` });
         ctx.res.end();
-        return false
     }
 };
