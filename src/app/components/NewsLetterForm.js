@@ -34,8 +34,7 @@ const NewsLetterForm = ({ lang, strings }) => {
                         {errors.email && touched.email && errors.email}
                     </label>
                     <button type="submit" disabled={isSubmitting}>{translate("SUBMIT", strings, lang)}</button>
-                </div>
-                
+                </div>                
                 <style jsx>{`
                     form {
                         text-align: left;

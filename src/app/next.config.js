@@ -8,3 +8,10 @@ module.exports = withCSS({
   cssModules: true,
   //distDir: process.env.NODE_ENV === 'production' ? `../functions/public` : '.next',
 })
+
+const withImages = require('next-images')
+  module.exports = withImages({
+    webpack(config, options) {
+      return config
+    }
+  })
