@@ -3,15 +3,11 @@ import Nav from './Nav';
 
 const Header = () => {
   return (
-    <header>
-
+    <div>
       <div className="container">
-
         <Nav />
-
       </div>
-
-    </header>
+    </div>
   )
 };
 

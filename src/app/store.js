@@ -19,8 +19,8 @@ const exampleInitialState = {
   modalCard: {},
   modalCardDescription: '',
   lang: 'en',
-  strings: [],
-  pageStrings: [],
+  strings: {},
+  pageStrings: {},
   isLoggedIn: false
 }
 
