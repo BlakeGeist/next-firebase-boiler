@@ -4,7 +4,6 @@ import Footer from '../components/Footer';
 import { connect } from 'react-redux'
 import LoadingSpinner from '../components/LoadingSpinner';
 
-
 const Layout = ({ children, pageMod }) => {
   const containerClass = ((pageMod) ? 'container ' + pageMod + '-page' : 'container');
 
