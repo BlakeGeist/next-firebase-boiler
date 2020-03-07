@@ -9,24 +9,22 @@ import canyionImg4 from './assets/canyon-4.jpg'
 const CarouselSlider = () => {
     return (
         <>
-            <Carousel>
-                <div>
-                    <img src={canyionImg} />
-                    <p className="legend">Legend 1</p>
-                </div>
-                <div>
-                    <img src={canyionImg2} />
-                    <p className="legend">Legend 2</p>
-                </div>
-                <div>
-                    <img src={canyionImg3} />
-                    <p className="legend">Legend 3</p>
-                </div>
-                <div>
-                <img src={canyionImg4} />
-                    <p className="legend">Legend43</p>
-                </div>          
+            <Carousel
+                swipeable={true}
+                showThumbs={false}
+                showStatus={false}
+            >
+                <div className="slide" style={{'background-image': `url(${canyionImg})`}} />
+                <div className="slide" style={{'background-image': `url(${canyionImg2})`}} />
+                <div className="slide" style={{'background-image': `url(${canyionImg3})`}} />
+                <div className="slide" style={{'background-image': `url(${canyionImg4})`}} />
             </Carousel>
+            <style jsx>{`
+                .slide {
+                    min-height: 400px;
+                    width: 100%;
+                }
+            `}</style>
             <style global jsx>{`
                 img {
                     width: 100%;
