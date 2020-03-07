@@ -1,9 +1,11 @@
 const AWS = require('aws-sdk');
 const admin = require('firebase-admin');
-const firebaseAdmin = admin.initializeApp({
-    credential: admin.credential.cert(require('../credentials/server'))
+if(!admin.apps.length){
+  admin.initializeApp({
+      credential: admin.credential.cert(require('../credentials/server'))
   })
-const db = firebaseAdmin.firestore();
+}
+const db = admin.firestore();
 const cors = require('cors')({
   origin: true
 });
@@ -14,7 +16,7 @@ const stringsCollection = db.collection('strings');
 //if it does, this should prolly be an update function
 //if the string does not exist, run the createString funciton
 exports.handler = (req, res) => {
-  cors(req, res, () => {
+  cors(req, res, async () => {
     const { slug, text, scope } = req.body
     try {
       var existingDoc = stringsCollection.doc(slug).get();
@@ -22,9 +24,8 @@ exports.handler = (req, res) => {
       if(docExists){
         //// TODO: create update strings function
       } else {
-        console.log(slug, text)
-        createStrings(text, slug, scope)
-        res.status(200).send({text: 'TEXT'});
+        const strings = await createStrings(text, slug, scope)
+        res.status(200).send(strings)
       }
     }
     catch (error){
@@ -53,13 +54,13 @@ async function createStrings(stringText, slug, scope){
     ru: await getTranslatedString(stringText, 'ru')
   }
   stringsCollection.doc(scope).collection('strings').doc(slug).set(object)
-  .then(()=>{
-    console.log('update string was successful ', object);
-    return true
-  })
-  .catch((e)=>{
-    console.log('error ' + e)
-  })
+    .then(()=>{
+      return object
+    })
+    .catch((e)=>{
+      console.log('error ' + e)
+    })
+  return object
 }
 
 //takes a string and a target language, sends it to AWS translate, and returns the result

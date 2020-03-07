@@ -4,10 +4,11 @@ import { useRouter } from 'next/router'
 import { connect } from 'react-redux'
 import Langs from '../helpers/languages'
 import _ from 'lodash'
+import NewsLetterForm from './NewsLetterForm'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import Router from 'next/router'
-import { translate } from '../helpers/quickHelpers';
+import { translate } from '../helpers/quickHelpers'
 
 const Footer = ({ dispatch, lang, user, strings }) => {
   const router = useRouter()
@@ -52,7 +53,7 @@ const Footer = ({ dispatch, lang, user, strings }) => {
           <LanguageSelect />
         </div>
         <div className="footer-item">
-          item 1
+          <NewsLetterForm />
         </div>
         <div className="footer-item">
           item 1
