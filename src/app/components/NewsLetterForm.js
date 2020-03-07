@@ -1,8 +1,8 @@
-import React from 'react'
+import React from "react";
 import { Formik, Field } from "formik";
-import { translate } from '../helpers/quickHelpers'
-import { connect } from 'react-redux'
-import axios from 'axios';
+import { translate } from "../helpers/quickHelpers";
+import { connect } from "react-redux";
+import axios from "axios";
 
 const NewsLetterForm = ({ lang, strings }) => {
     return (
@@ -16,8 +16,8 @@ const NewsLetterForm = ({ lang, strings }) => {
             return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-                const addEmailToNewsLetterResponse = await axios.post('/api/addEmailToNewsLetter', {email: values.email})
-                console.log(addEmailToNewsLetterResponse)
+                await axios.post("/api/addEmailToNewsLetter", {email: values.email})
+                    .catch(e => console.log(e)); // eslint-disable-line no-console
             }}
         >
             {({
@@ -46,7 +46,7 @@ const NewsLetterForm = ({ lang, strings }) => {
             </form>
             )}
       </Formik>
-    )
-}
+    );
+};
 
 export default connect(state => state)(NewsLetterForm);

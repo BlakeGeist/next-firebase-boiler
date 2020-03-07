@@ -23,40 +23,40 @@ const getAverage = (someArray) => {
   });
   let average = total / someArray.length;
   return average;
-}
+};
 
 const roundMoney = (float) => {
   return Math.ceil(float * 100) / 100;
-}
+};
 
 const moneyRoundOfArray = (someArray) => {
   let total = 0;
   someArray.forEach(number => {
-    total += parseFloat(number)
-  })
+    total += parseFloat(number);
+  });
   return roundMoney(total);
-}
+};
 
 const firstNumber = (string) => {
   if(string.match(/\d+/)){
     if (string.match(/\d+/)[0] > 4) {
-      return 1
+      return 1;
     } else {
-      return string.match(/\d+/)[0]
+      return string.match(/\d+/)[0];
     }
   } else {
-    return 1
+    return 1;
   }
-}
+};
 
 const priceByQTY = (number, price) => {
-  return '$' + roundMoney(price / number);
-}
+  return "$" + roundMoney(price / number);
+};
 
 const translate = (string, strings, lang) => { 
-  if (strings[string] && strings[string][lang]) return strings[string][lang]
-  return null
-}
+  if (strings[string] && strings[string][lang]) return strings[string][lang];
+  return null;
+};
 
 module.exports = {
   filterOutliers,
@@ -66,4 +66,4 @@ module.exports = {
   priceByQTY,
   moneyRoundOfArray,
   translate
-}
+};

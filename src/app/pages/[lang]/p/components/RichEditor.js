@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 import { Editor, EditorState, RichUtils } from 'draft-js';
 

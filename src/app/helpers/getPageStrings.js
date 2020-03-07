@@ -24,8 +24,8 @@ export default async (ctx) => {
                         const objectizedStrings = Object.assign({}, ...pageStrings);
                         ctx.reduxStore.dispatch({ type: "SET_ITEM", name: "pageStrings", payload:  objectizedStrings});
                     })
-                    .catch(e => { console.log(e)});
+                    .catch(e => { console.log(e);}); // eslint-disable-line no-console
             } else {
           }
       });
-}
+};

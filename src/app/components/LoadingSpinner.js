@@ -1,5 +1,5 @@
-import React from 'react'
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
 const LoadingSpinner = ({ isLoading }) => {
   return (
@@ -36,7 +36,7 @@ const LoadingSpinner = ({ isLoading }) => {
           }
         `}</style>
       </div>
-  )
-}
+  );
+};
 
 export default connect(state => state)(LoadingSpinner);

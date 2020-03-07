@@ -8,7 +8,7 @@ import { compose, withState } from "recompose";
 import AuthForm from "../../../components/AuthForm";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import { connect } from "react-redux";
-import cookie from 'js-cookie'
+import cookie from "js-cookie";
 
 const LoginBase = ({ setState, state, dispatch, lang }) => {
 
@@ -46,9 +46,9 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
           .then(token => {
             //dispatch({ type: 'SET_ITEM', name: 'user', payload: user });
             // eslint-disable-next-line no-undef
-            cookie.set('token2', token, { expires: 1 })
+            cookie.set("token2", token, { expires: 1 });
             Router.push(`/${lang}/dashboard`);
-          })      
+          });      
       dispatch({ type: "SET_ITEM", name: "user", payload: response.user });
       dispatch({ type: "SET_ITEM", name: "isLoggedIn", payload: true });
 

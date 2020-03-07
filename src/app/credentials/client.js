@@ -7,4 +7,4 @@ module.exports = {
   storageBucket: "next-firebase-boiler.appspot.com",
   messagingSenderId: "10012920341",
   appId: "1:10012920341:web:14cd40691b942ed14f1c1c"
-}
+};

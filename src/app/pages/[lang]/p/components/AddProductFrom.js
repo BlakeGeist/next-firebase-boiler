@@ -3,14 +3,14 @@ import React from "react";
 import { Formik, Field } from "formik";
 import { connect } from "react-redux";
 import { translate } from "../../../../helpers/quickHelpers";
-import { EditorState, convertToRaw } from 'draft-js';
-import RichEditorExample from './RichEditor';
-import {stateToHTML} from 'draft-js-export-html';
-import createLinkifyPlugin from 'draft-js-linkify-plugin';
+import { EditorState, convertToRaw } from "draft-js";
+import RichEditorExample from "./RichEditor";
+import {stateToHTML} from "draft-js-export-html";
+import createLinkifyPlugin from "draft-js-linkify-plugin";
 
 const AddProductFrom = ({ strings, pageStrings, lang }) => {
 
-    const dis = new EditorState.createEmpty()
+    const dis = new EditorState.createEmpty();
     const linkifyPlugin = createLinkifyPlugin();
     const plugins = [linkifyPlugin];
 
@@ -25,9 +25,9 @@ const AddProductFrom = ({ strings, pageStrings, lang }) => {
               return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              const contentState = values.editorState.getCurrentContent()
+              const contentState = values.editorState.getCurrentContent();
               let html = stateToHTML(contentState);
-              console.log(html)
+              console.log(html); // eslint-disable-line no-console
               setSubmitting(false);
             }}
           >

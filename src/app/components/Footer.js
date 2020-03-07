@@ -1,49 +1,49 @@
-import React from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { connect } from 'react-redux'
-import Langs from '../helpers/languages'
-import _ from 'lodash'
-import NewsLetterForm from './NewsLetterForm'
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import Router from 'next/router'
-import { translate } from '../helpers/quickHelpers'
+import React from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { connect } from "react-redux";
+import Langs from "../helpers/languages";
+import _ from "lodash";
+import NewsLetterForm from "./NewsLetterForm";
+import firebase from "firebase/app";
+import "firebase/auth";
+import Router from "next/router";
+import { translate } from "../helpers/quickHelpers";
 
 const Footer = ({ dispatch, lang, user, strings }) => {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleLanguageSelectChange = (e) => {
     router.push(Router.pathname, Router.asPath.split(`/${lang}/`).join(`/${e.target.value}/`), { shallow: true });
-    return dispatch({ type: 'SET_ITEM', name: 'lang', payload: e.target.value });
-  }
+    return dispatch({ type: "SET_ITEM", name: "lang", payload: e.target.value });
+  };
 
   const LanguageSelect = () => {
     const renderOption = (option, i) => {
       return (
         <option key={i} value={option.lang}>{option.name}</option>
-      )
-    }
+      );
+    };
     return (
       <div>
         <label htmlFor="languageSelect">
-          <div>{translate('LANGUAGE', strings, lang)}:</div> 
+          <div>{translate("LANGUAGE", strings, lang)}:</div> 
           <select value={lang} onChange={handleLanguageSelectChange} id="languageSelect">
             {Langs.map((option, i) => renderOption(option, i))}
           </select>
         </label>
       </div>      
-    )
-  }
+    );
+  };
 
   const handleLogout = (e) => {
     e.preventDefault();
     firebase.auth().signOut()
       .then(()=>{
-        dispatch({ type: 'SET_ITEM', name: 'user', payload: {} });
-        Router.push('/login')
-      })
-  }
+        dispatch({ type: "SET_ITEM", name: "user", payload: {} });
+        Router.push("/login");
+      });
+  };
 
   return (
     <>
@@ -62,12 +62,12 @@ const Footer = ({ dispatch, lang, user, strings }) => {
           <ul>
             <li>
               <Link href='/[lang]' as={`/${lang}`}>
-                <a>{translate('HOME', strings, lang)}</a>
+                <a>{translate("HOME", strings, lang)}</a>
               </Link>
             </li>
             <li>
               <Link href='/[lang]/about' as={`/${lang}/about`}>
-                <a>{translate('ABOUT-US', strings, lang)}</a>
+                <a>{translate("ABOUT-US", strings, lang)}</a>
               </Link>
             </li>
             <li>
@@ -78,23 +78,23 @@ const Footer = ({ dispatch, lang, user, strings }) => {
               <>
                 <li>
                   <Link href='/[lang]/dashboard' as={`/${lang}/dashboard`}>
-                    <a className="navItem">{translate('DASHBOARD', strings, lang)}</a>
+                    <a className="navItem">{translate("DASHBOARD", strings, lang)}</a>
                   </Link>
                 </li>
                 <li>
-                  <a href="" className="navItem" onClick={handleLogout}>{translate('LOGOUT', strings, lang)}</a>
+                  <a href="" className="navItem" onClick={handleLogout}>{translate("LOGOUT", strings, lang)}</a>
                 </li>
               </>
             ) : (
               <>
                 <li>
                   <Link href='/[lang]/sign-up' as={`/${lang}/sign-up`}>
-                    <a className="navItem">{translate('SIGN-UP', strings, lang)}</a>
+                    <a className="navItem">{translate("SIGN-UP", strings, lang)}</a>
                   </Link>
                 </li>
                 <li>
                 <Link href='/[lang]/login' as={`/${lang}/login`}>
-                    <a className="navItem">{translate('LOGIN', strings, lang)}</a>
+                    <a className="navItem">{translate("LOGIN", strings, lang)}</a>
                   </Link>
                 </li>
               </>
@@ -108,12 +108,12 @@ const Footer = ({ dispatch, lang, user, strings }) => {
           <ul className="terms">
             <li>
               <Link href='/[lang]/terms' as={`/${lang}/terms`}>
-                <a>{translate('TERMS', strings, lang)}</a>
+                <a>{translate("TERMS", strings, lang)}</a>
               </Link>
             </li>
             <li>
               <Link href='/[lang]/privacy' as={`/${lang}/privacy`}>
-                <a>{translate('PRIVACY', strings, lang)}</a>
+                <a>{translate("PRIVACY", strings, lang)}</a>
               </Link>            
             </li>
           </ul>
@@ -172,7 +172,7 @@ const Footer = ({ dispatch, lang, user, strings }) => {
       }
     `}</style>
     </>
-  )
+  );
 };
 
 export default connect(state => state)(Footer);

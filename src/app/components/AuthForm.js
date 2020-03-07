@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const AuthForm = ({email, password, handleChange, handleEmailPassAuth, errorMessage}) => {
   return (
@@ -10,7 +10,7 @@ const AuthForm = ({email, password, handleChange, handleEmailPassAuth, errorMess
       <div><input type="password" placeholder="Password" value={password} name="password" onChange={handleChange} required /></div>
       <div><input type="submit" /></div>
     </form>
-  )
-}
+  );
+};
 
 export default AuthForm;

@@ -1,6 +1,6 @@
-import React from 'react'
-import Link from 'next/link'
-import _ from 'lodash';
+import React from "react";
+import Link from "next/link";
+import _ from "lodash";
 
 const Pagination = ({ pagination }) => {
   const { data, listingsPerPage, totalPaginateditems, activePageNumber } = pagination;
@@ -11,17 +11,17 @@ const Pagination = ({ pagination }) => {
 
     _.times(paginateXTimes, (i) => {
       const number = i + 1;
-      let paginatedItemClass = '';
+      let paginatedItemClass = "";
       if (activePageNumber === number) {
-        paginatedItemClass = 'is-active';
+        paginatedItemClass = "is-active";
       }
       items.push(
         <Link key={i} href={`/sets/${number}`}><a className={paginatedItemClass}>{number}</a></Link>
       );
     });
 
-    return items
-  }
+    return items;
+  };
 
   return (
     <div className="pagination-container">
@@ -48,7 +48,7 @@ const Pagination = ({ pagination }) => {
         }
         `}</style>
     </div>
-  )
+  );
 };
 
 export default Pagination;
