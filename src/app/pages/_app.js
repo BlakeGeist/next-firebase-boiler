@@ -5,6 +5,7 @@ import setUserState from "../helpers/setUserState";
 import redirectIfNoLanguage from "../helpers/redirectIfNoLanguage";
 import getPageStrings from "../helpers/getPageStrings";
 import getGlobalStrings from "../helpers/getGlobalStrings";
+import absoluteUrl from "../helpers/getAbsoluteUrl";
 
 const MyApp = ({ Component, pageProps, reduxStore }) => {
     return (
