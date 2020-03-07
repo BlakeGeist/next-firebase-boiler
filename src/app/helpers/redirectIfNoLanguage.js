@@ -1,4 +1,4 @@
-export default (ctx) => {
+export default async (ctx) => {
     const headers = ctx.req.headers;
     const userRegionLang = headers["accept-language"].split(",")[0].split("-");
     const userLang = userRegionLang[0];
@@ -6,12 +6,11 @@ export default (ctx) => {
     if (ctx.res && ctx.asPath === "/") {
         console.log('this happened')
         console.log(`/${userLang}`)
-        ctx.res.writeHead(301, {
+        await ctx.res.writeHead(301, {
             Location: `/${userLang}`,
             // Add the content-type for SEO considerations
             "Content-Type": "text/html; charset=utf-8",
         })
-        ctx.res.end();
-        return false;
+        await ctx.res.end();
     }
 };
