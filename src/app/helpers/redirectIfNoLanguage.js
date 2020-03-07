@@ -1,4 +1,4 @@
-export default async (ctx) => {
+export default (ctx) => {
     const headers = ctx.req.headers;
     const userRegionLang = headers["accept-language"].split(",")[0].split("-");
     const userLang = userRegionLang[0];
@@ -8,7 +8,7 @@ export default async (ctx) => {
             Location: `/${userLang}`,
             // Add the content-type for SEO considerations
             "Content-Type": "text/html; charset=utf-8",
-        });
+        })
         ctx.res.end();
     }
 };
