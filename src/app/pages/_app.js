@@ -31,6 +31,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
             //add other headers here...
           });
         ctx.res.end();
+        ctx.res.finished = true;
         return
     }
 
