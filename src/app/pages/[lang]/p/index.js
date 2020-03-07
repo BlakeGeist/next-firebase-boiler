@@ -5,8 +5,10 @@ import AddProductForm from './components/AddProductFrom';
 const ProductsPage = () => {
     return (
         <Layout>
-            <h1>Products</h1>
-            <AddProductForm />
+            <div className="container">
+                <h1>Products</h1>
+                <AddProductForm />
+            </div>
         </Layout>
     );
 };

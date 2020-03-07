@@ -5,7 +5,9 @@ import Layout from "../../../layouts/Layout";
 const Admin = ({ user }) => {
     return (
         <Layout>
-            <h1>Admin page</h1>
+            <div className="container">
+                <h1>Admin page</h1>
+            </div>
         </Layout>
     );
 };

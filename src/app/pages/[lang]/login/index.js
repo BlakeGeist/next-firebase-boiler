@@ -66,20 +66,22 @@ const LoginBase = ({ setState, state, dispatch, lang }) => {
 
   return (
     <Layout pageMod="about">
-      <h1>Login page</h1>
-      <p>Login page content</p>
-      <div className="login-form-wrapper">
-        <div className="login-form">
-          <AuthForm
-            errorMessage={errorMessage}
-            email={email}
-            password={password}
-            handleEmailPassAuth={handleEmailPassAuth}
-            handleChange={handleChange}
-            />
-          <div><button>Sign In with Google</button></div>
+      <div className="container">
+        <h1>Login page</h1>
+        <p>Login page content</p>
+        <div className="login-form-wrapper">
+          <div className="login-form">
+            <AuthForm
+              errorMessage={errorMessage}
+              email={email}
+              password={password}
+              handleEmailPassAuth={handleEmailPassAuth}
+              handleChange={handleChange}
+              />
+            <div><button>Sign In with Google</button></div>
+          </div>
+          <LoadingSpinner isLoading={isLoading} />
         </div>
-        <LoadingSpinner isLoading={isLoading} />
       </div>
       <style jsx>{`
         .login-form-wrapper{
