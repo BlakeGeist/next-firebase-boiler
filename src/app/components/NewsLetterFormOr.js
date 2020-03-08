@@ -3,7 +3,6 @@ import NewsLetterForm from './NewsLetterForm'
 import { connect } from "react-redux";
 
 const NewsLetterOr = ({ children, user }) => {
-    console.log(children)
     if (user.isSubscribedToNewsletter){
         return children
     }

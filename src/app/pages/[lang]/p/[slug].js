@@ -1,10 +1,8 @@
 import React from 'react';
 import { connect } from "react-redux";
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";;
-import clientCredentials from "../../../credentials/client";
 import Layout from "../../../layouts/Layout";
+import axios from 'axios';
+import absoluteUrl from '../../api/helpers/getAbsoluteUrl'
 
 const Product = ({ product }) => {
     return (
@@ -16,16 +14,11 @@ const Product = ({ product }) => {
     )
 }
 
-Product.getInitialProps = async ({ query  }) => {
-    if (!firebase.apps.length) {
-        firebase.initializeApp(clientCredentials);
-    };
-    const db = firebase.app().firestore();
-    const productsCollection = db.collection("products").doc(query.slug)
-    const productsResponse = await productsCollection.get()
-    const product = productsResponse.data();
-
-    return { product }
+Product.getInitialProps = async ({ req, query  }) => {
+    const { apiURL } = absoluteUrl(req);
+    const productResp = await axios.post(`${apiURL}/api/getProductBySlug`, {slug: query.slug});
+    const product = productResp.data;
+    return { product };
 }
 
 export default connect(state => state)(Product);

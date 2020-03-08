@@ -42,12 +42,9 @@ const SignUpBase = ({ setState, state, lang }) => {
 
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .then(async (res) => {
-                console.log(res.user)
-
                 const userDataCollection = db.collection("userData");
                 await userDataCollection.doc(res.user.uid).set({})
                     .then(()=>{
-                        console.log('there is a user, and they have been subscribed')
                     })
                     .catch((e)=>{
                         res.json({ error: e });

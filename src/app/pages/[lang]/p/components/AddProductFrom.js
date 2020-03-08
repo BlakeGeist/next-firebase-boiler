@@ -30,7 +30,6 @@ const AddProductFrom = ({ strings, pageStrings, lang }) => {
             onSubmit={async (values, { setSubmitting }) => {
                 const contentState = values.editorState.getCurrentContent();
                 let html = stateToHTML(contentState);
-                console.log(html); // eslint-disable-line no-console
 
                 const productsCollection = db.collection("products");
                 const product = {
@@ -39,7 +38,6 @@ const AddProductFrom = ({ strings, pageStrings, lang }) => {
                 }
                 await productsCollection.doc(values.name).set(product)
                     .then(()=>{
-                        console.log(`product added: ${product}`)
                     })
                     .catch((e)=>{
                         res.json({ error: e });

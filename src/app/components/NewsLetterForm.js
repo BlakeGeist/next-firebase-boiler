@@ -24,7 +24,6 @@ const NewsLetterForm = ({ user, lang, strings }) => {
                     payload.uid = user.uid
                 } 
                 await axios.post("/api/addEmailToNewsLetter", payload)
-                    .catch(e => console.log(e)); // eslint-disable-line no-console
             }}
         >
             {({

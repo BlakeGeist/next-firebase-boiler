@@ -2,7 +2,7 @@ const AWS = require("aws-sdk");
 const admin = require("firebase-admin");
 if(!admin.apps.length){
     admin.initializeApp({
-        credential: admin.credential.cert(require("../credentials/server"))
+        credential: admin.credential.cert(require("../../../credentials/server"))
     });
 }
 const db = admin.firestore();
@@ -29,7 +29,6 @@ exports.handler = (req, res) => {
             }
         }
         catch (error){
-            console.log(error); // eslint-disable-line no-console
             res.status(500).send(error);
         }
     });
@@ -58,7 +57,6 @@ async function createStrings(stringText, slug, scope){
             return object;
         })
         .catch((e)=>{
-            console.log("error " + e); // eslint-disable-line no-console
         });
     return object;
 }

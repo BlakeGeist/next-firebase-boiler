@@ -1,10 +1,10 @@
 import React from "react";
 import withReduxStore from "../lib/reducers";
 import { Provider } from "react-redux";
-import setUserState from "../helpers/setUserState";
-import redirectIfNoLanguage from "../helpers/redirectIfNoLanguage";
-import getPageStrings from "../helpers/getPageStrings";
-import getGlobalStrings from "../helpers/getGlobalStrings";
+import setUserState from "./api/helpers/setUserState";
+import redirectIfNoLanguage from "./api/helpers/redirectIfNoLanguage";
+import getPageStrings from "./api/helpers/getPageStrings";
+import getGlobalStrings from "./api/helpers/getGlobalStrings";
 
 const MyApp = ({ Component, pageProps, reduxStore }) => {
     return (

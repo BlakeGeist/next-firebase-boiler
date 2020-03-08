@@ -76,7 +76,6 @@ server.get('/api/usersCardCollection/add', (req, res) => {
 
     usersCardCollections.collection('cards').doc(req.query.id).set(req.query)
       .then(function() {
-        console.log("Card successfully added!");
         res.json({ status: 200, data: req.query.id + ' card was added' })
       })
       .catch(function(error) {
@@ -98,7 +97,6 @@ server.get('/api/getEbaySearchData', (req, res) => {
     const data = json.data[Object.keys(json.data)[0]][0];
     res.json(data)
   }).catch(function(ex) {
-    console.log('parsing failed', ex)
   })
 });
 
@@ -107,9 +105,6 @@ server.get('/api/oauthEbay', async (req, res) => {
   if (!firebase2.apps.length) {
     firebase2.initializeApp(require('./credentials/client'))
   };
-
-  console.log(req.session.ebaySessionId)
-  console.log('blakeFind1')
 
   var str = `
   <?xml version="1.0" encoding="utf-8"?>
@@ -141,7 +136,6 @@ server.get('/api/oauthEbay', async (req, res) => {
 
     })
     .catch((err) => {
-      console.log(err)
       res.status(500).send(err)
     })
 
@@ -163,13 +157,11 @@ server.get('/api/importSets', (req, res) => {
         proms.push(
           cardsCollection.doc(set.code).set(set)
             .then(()=>{
-              console.log('successfully imported ', set.name)
             })
            .then((set)=>{
              return set
            })
            .catch((err)=>{
-             console.log('error: ', err)
            })
         )
       });
@@ -177,13 +169,11 @@ server.get('/api/importSets', (req, res) => {
       res.status(200).send(sets)
     })
     .catch((err)=>{
-      console.log('error: ', err)
     });
 })
 
 server.get('/api/importCardsFromSet', async (req, res) => {
 
-  console.log('starting importCardsFromSet')
 
   let set = req.query.set
 
@@ -212,21 +202,17 @@ server.get('/api/importCardsFromSet', async (req, res) => {
   const setDoc = db.collection('sets').doc(set);
 
   await setDoc.update({hasCards: true})
-    .catch((err) => console.log(err))
-
   cards.forEach((card, i) => {
     card.prices.usd = parseFloat(card.prices.usd) * 100 || 0
     card.prices.usd_foil = parseFloat(card.prices.usd_foil) * 100 || 0
     proms.push(
       cardsCollection.doc(card.id).set(card)
        .then(()=>{
-         console.log('successfully imported ', card.name)
        })
        .then((card)=>{
          return card
        })
        .catch((err)=>{
-         console.log('error: ', err)
        })
     )
   })
@@ -264,7 +250,6 @@ server.post('/api/linkEbayAccount', (req, res) => {
         res.status(200).send(sessionId)
       })
       .catch((err) => {
-        console.log(err)
         res.status(500).send(err)
       })
 
@@ -272,7 +257,6 @@ server.post('/api/linkEbayAccount', (req, res) => {
 
 server.post('/api/sellCard', (req, res) => {
 
-  console.log(req.session.eBayAuthToken)
 
   var str = `
   <?xml version="1.0" encoding="utf-8"?>
@@ -340,13 +324,9 @@ server.post('/api/sellCard', (req, res) => {
 
         const error = response.AddItemResponse.Errors;
 
-        console.log(response);
-        console.log(error);
-        console.log('blakeblake')
         res.status(200).send(response)
       })
       .catch((err) => {
-        console.log(err)
         res.status(500).send(err)
       })
 
