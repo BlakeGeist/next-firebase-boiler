@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { connect } from "react-redux";
 import LoadingSpinner from "../components/LoadingSpinner";
+import Modal from "../components/Modal";
 
 const Layout = ({ children, pageMod }) => {
     const containerClass = ((pageMod) ? "container " + pageMod + "-page" : "container");
@@ -17,6 +18,7 @@ const Layout = ({ children, pageMod }) => {
             </main>
             <Footer />
             <LoadingSpinner />
+            <Modal />
             <style global jsx>{`
           html, body, #__next {
             height: 100%;

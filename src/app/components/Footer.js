@@ -126,6 +126,7 @@ const Footer = ({ dispatch, lang, user, strings }) => {
       .footer {
         column-count: 4;
         background-color: #fff;
+        border-top: 3px solid #ccc;
       }
       footer {
         text-align: center;

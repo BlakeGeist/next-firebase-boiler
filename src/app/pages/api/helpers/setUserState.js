@@ -4,8 +4,7 @@ import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
 
 export default async (ctx) => {
-    const { protocol, host } = absoluteUrl(ctx.req)
-    const apiURL = `${protocol}//${host}`
+    const { apiURL } = absoluteUrl(ctx.req)
     const { token2 } = nextCookie(ctx)
     const getUserResponse = await axios.post(`${apiURL}/api/getUserFromToken`, {token: token2})
     const user = getUserResponse.data.user;

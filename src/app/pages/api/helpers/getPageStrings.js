@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import clientCredentials from "../credentials/client";
+import clientCredentials from "../../../credentials/client";
 
 export default async (ctx) => {
     if (!firebase.apps.length) {
@@ -24,7 +24,6 @@ export default async (ctx) => {
                         const objectizedStrings = Object.assign({}, ...pageStrings);
                         ctx.reduxStore.dispatch({ type: "SET_ITEM", name: "pageStrings", payload:  objectizedStrings});
                     })
-                    .catch(e => { console.log(e);}); // eslint-disable-line no-console
             } else {
             }
         });

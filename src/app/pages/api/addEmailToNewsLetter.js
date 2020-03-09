@@ -17,7 +17,6 @@ export default async (req, res) => {
             isSubscribedToNewsletter: true
         })
             .then(()=>{
-                console.log('there is a user, and they have been subscribed')
             })
             .catch((e)=>{
                 res.json({ error: e });
@@ -27,7 +26,6 @@ export default async (req, res) => {
     const stringsCollection = db.collection("newsLetterEmails");
     await stringsCollection.doc(email).set({ email })
         .then(()=>{
-            console.log(`You added ${email} to the newsletter list`)
             return res.status(200).json({ message: `You added ${email} to the newsletter list` });
         })
         .catch((e)=>{

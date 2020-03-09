@@ -14,6 +14,7 @@ const CarouselSlider = () => {
                 showThumbs={false}
                 showStatus={false}
                 infiniteLoop={true}
+                autoPlay={true}
             >
                 <div className="slide" style={{backgroundImage: `url(${canyionImg})`}} />
                 <div className="slide" style={{backgroundImage: `url(${canyionImg2})`}} />

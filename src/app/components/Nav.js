@@ -7,6 +7,7 @@ import Router from "next/router";
 import { translate } from "../helpers/quickHelpers";
 import cookie from "js-cookie";
 import clientCredentials from "../credentials/client";
+import LoginModal from './ModalLogin'
 
 const Nav = ({ user, dispatch, lang, strings }) => {
   
@@ -26,14 +27,6 @@ const Nav = ({ user, dispatch, lang, strings }) => {
         return link;
     });
 
-    const userNav = [
-        { href: `/${lang}/sign-up`, label: translate("SIGN-UP", strings, lang), target: "/sign-up" },
-        { href: `/${lang}/login`, label: translate("LOGIN", strings, lang), target: "/login" }
-    ].map(link => {
-        link.key = `nav-link-${link.href}-${link.label}`;
-        return link;
-    });
-
     const handleLogout = (e) => {
         e.preventDefault();
         firebase.auth().signOut()
@@ -44,7 +37,10 @@ const Nav = ({ user, dispatch, lang, strings }) => {
                 Router.push(`/${lang}/login`);
             });
     };
-
+    const handleOpenModal = (e) => {
+        e.preventDefault();
+        dispatch({ type: "SET_ITEM", name: "modalTarget", payload: <LoginModal /> });
+    }
     const LinkItem = ({ isExternal, href, label, target }) => {
         if(isExternal){
             return <a href={href} className="navItem" target="_blank">{label}</a>;
@@ -83,53 +79,54 @@ const Nav = ({ user, dispatch, lang, strings }) => {
                                 <Link href='/[lang]/sign-up' as={`/${lang}/sign-up`}><a className="navItem">{translate("SIGN-UP", strings, lang)}</a></Link>
                             </li>
                             <li>
-                                <Link href='/[lang]/login' as={`/${lang}/login`}><a className="navItem">{translate("LOGIN", strings, lang)}</a></Link>
+                                <a onClick={e => handleOpenModal(e)} className="navItem" href={"/[lang]/login"} as={`/${lang}/login`}>
+                                    Login
+                                </a>
                             </li>
                         </>
                     )}
                 </ul>
             </nav>
             <style global jsx>{`
-      .navItem {
-        color: #067df7;
-        text-decoration: none;
-        font-size: 13px;
-      }
-    `}</style>
-
+                .navItem {
+                    color: #067df7;
+                    text-decoration: none;
+                    font-size: 13px;
+                }
+            `}</style>
             <style jsx>{`
-      :global(body) {
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, Avenir Next, Avenir,
-          Helvetica, sans-serif;
-      }
-      ul {
-        display: flex;
-        padding: 0;
-        flex: 1 1 auto;
-      }
-      .user-nav{
-        flex: 0 1 auto;
-      }
-      li {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        text-align: center;
-        flex: 0 0 auto;
-      }
-      li:after {
-        content: " | ";
-        padding: 0 5px;
-      }
-      li:last-of-type:after{
-        content: "";
-      }
-      nav {
-        display: flex;
-        justify-content: space-between;
-      }
-    `}</style>
+                :global(body) {
+                    margin: 0;
+                    font-family: -apple-system, BlinkMacSystemFont, Avenir Next, Avenir,
+                    Helvetica, sans-serif;
+                }
+                ul {
+                    display: flex;
+                    padding: 0;
+                    flex: 1 1 auto;
+                }
+                .user-nav{
+                    flex: 0 1 auto;
+                }
+                li {
+                    display: flex;
+                    justify-content: flex-end;
+                    align-items: center;
+                    text-align: center;
+                    flex: 0 0 auto;
+                }
+                    li:after {
+                    content: " | ";
+                    padding: 0 5px;
+                }
+                    li:last-of-type:after{
+                    content: "";
+                }
+                nav {
+                    display: flex;
+                    justify-content: space-between;
+                }
+            `}</style>
         </>
     );
 
