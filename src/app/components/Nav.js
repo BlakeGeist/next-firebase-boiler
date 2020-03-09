@@ -7,7 +7,7 @@ import Router from "next/router";
 import { translate } from "../helpers/quickHelpers";
 import cookie from "js-cookie";
 import clientCredentials from "../credentials/client";
-import LoginModal from './Modals/Login'
+import LoginModal from './ModalLogin'
 
 const Nav = ({ user, dispatch, lang, strings }) => {
   

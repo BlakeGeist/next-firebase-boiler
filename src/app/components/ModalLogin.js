@@ -1,10 +1,10 @@
 import React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
-import clientCredentials from "../../credentials/client";
+import clientCredentials from "../credentials/client";
 import Router from "next/router";
 import { compose, withState } from "recompose";
-import AuthForm from "../../components/AuthForm";
+import AuthForm from "./AuthForm";
 import { connect } from "react-redux";
 import cookie from "js-cookie";
 
