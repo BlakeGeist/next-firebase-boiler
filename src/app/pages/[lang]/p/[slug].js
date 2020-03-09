@@ -9,6 +9,7 @@ const Product = ({ product }) => {
         <Layout>
             <div className="container">
                 <h1>{product.name}</h1>
+                <div className="products-product-description" dangerouslySetInnerHTML={{ __html: product.description }} />
             </div>
         </Layout>
     )
