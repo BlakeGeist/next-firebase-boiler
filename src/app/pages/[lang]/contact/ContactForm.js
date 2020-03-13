@@ -3,6 +3,8 @@ import { Formik, Field } from "formik";
 import { connect } from "react-redux";
 import { translate } from "../../../helpers/quickHelpers";
 
+import axios from "axios";
+
 const ContactForm = ({ strings, pageStrings, lang }) => {
     return (
         <Formik
@@ -19,6 +21,8 @@ const ContactForm = ({ strings, pageStrings, lang }) => {
                 return errors;
             }}
             onSubmit={async (values, { setSubmitting }) => {
+                const response = await axios.post("/api/sendContactMessage", values);
+                console.log(response)
                 setSubmitting(false);
             }}
         >
