@@ -19,7 +19,7 @@ const ProductsPage = ({ lang, products }) => {
                         product = product[Object.keys(product)[0]]
                         return (
                             <div className="products-product" key={i}>
-                                <div className="products-product-name">Name: <Link href={`/[login]/p/${product.name}`} as={`/${lang}/p/${product.name}`}>{product.name}</Link></div>
+                                <div className="products-product-name">Name: <Link href={`/[lang]/p/${product.name}`} as={`/${lang}/p/${product.name}`}>{product.name}</Link></div>
                                 <div className="products-product-description" dangerouslySetInnerHTML={{ __html: product.description }} />
                             </div>
                         )

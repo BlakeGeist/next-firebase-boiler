@@ -8,8 +8,9 @@ import { translate } from "../helpers/quickHelpers";
 import cookie from "js-cookie";
 import clientCredentials from "../credentials/client";
 import LoginModal from './ModalLogin'
+import { withRouter } from 'next/router';
 
-const Nav = ({ user, dispatch, lang, strings }) => {
+const Nav = ({ router, user, dispatch, lang, strings }) => {
   
     if (!firebase.apps.length) {
         firebase.initializeApp(clientCredentials);
@@ -34,7 +35,9 @@ const Nav = ({ user, dispatch, lang, strings }) => {
                 dispatch({ type: "SET_ITEM", name: "user", payload: {} });
                 dispatch({ type: "SET_ITEM", name: "isLoggedIn", payload: false });
                 cookie.remove("token2");
-                Router.push(`/${lang}/login`);
+                if(router) {
+                    Router.push(router.pathname);
+                }
             });
     };
     const handleOpenModal = (e) => {
