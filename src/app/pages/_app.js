@@ -5,12 +5,15 @@ import setUserState from "./api/helpers/setUserState";
 import redirectIfNoLanguage from "./api/helpers/redirectIfNoLanguage";
 import getPageStrings from "./api/helpers/getPageStrings";
 import getGlobalStrings from "./api/helpers/getGlobalStrings";
+import Head from 'next/head'
 
 const MyApp = ({ Component, pageProps, reduxStore }) => {
     return (
-        <Provider store={reduxStore}>
-            <Component {...pageProps} />
-        </Provider>
+        <>
+            <Provider store={reduxStore}>
+                <Component {...pageProps} />
+            </Provider>
+        </>
     );
 };
 
