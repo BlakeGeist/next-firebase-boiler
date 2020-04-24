@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";;
 import clientCredentials from "../../credentials/client";
-import dateTime from './helpers/getDateTime'
+import dateTime from '../helpers/getDateTime'
 export default async (req, res) => {
 
     const payload = await req.body;

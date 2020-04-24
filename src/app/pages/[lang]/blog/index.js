@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Layout from "../../../layouts/Layout";
 import TextEditor from  "../../../components/TextEditor";
 import { translate } from "../../../helpers/quickHelpers";
-import absoluteUrl from '../../api/helpers/getAbsoluteUrl'
+import absoluteUrl from '../../helpers/getAbsoluteUrl'
 import CategoriesList from "./components/CategoriesList";
 
 const Blog = ({ lang, pageStrings, strings, categories }) => {
