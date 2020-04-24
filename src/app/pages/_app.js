@@ -17,6 +17,7 @@ const MyApp = ({ Component, pageProps, reduxStore }) => {
     );
 };
 
+
 MyApp.getInitialProps = async ({ Component, ctx }) => {
     if (ctx.req){
         await redirectIfNoLanguage(ctx)
