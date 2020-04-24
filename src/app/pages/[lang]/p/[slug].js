@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from "react-redux";
 import Layout from "../../../layouts/Layout";
 import axios from 'axios';
-import absoluteUrl from '../../../helpers/getAbsoluteUrl'
+import absoluteUrl from '../../../helpers/_getAbsoluteUrl'
 
 const Product = ({ product }) => {
     return (

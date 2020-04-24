@@ -1,5 +1,5 @@
 import axios from 'axios'
-import absoluteUrl from './getAbsoluteUrl'
+import absoluteUrl from './_getAbsoluteUrl'
 import nextCookie from 'next-cookies'
 import cookie from 'js-cookie'
 

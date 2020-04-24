@@ -1,10 +1,10 @@
 import React from "react";
 import withReduxStore from "../lib/reducers";
 import { Provider } from "react-redux";
-import setUserState from "../helpers/setUserState";
+import setUserState from "../helpers/_setUserState";
 import redirectIfNoLanguage from "../helpers/redirectIfNoLanguage";
-import getPageStrings from "../helpers/getPageStrings";
-import getGlobalStrings from "../helpers/getGlobalStrings";
+import getPageStrings from "../helpers/_getPageStrings";
+import getGlobalStrings from "../helpers/_getGlobalStrings";
 import Head from 'next/head'
 
 const MyApp = ({ Component, pageProps, reduxStore }) => {
