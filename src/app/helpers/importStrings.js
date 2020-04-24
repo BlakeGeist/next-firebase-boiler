@@ -2,7 +2,7 @@ const AWS = require("aws-sdk");
 const admin = require("firebase-admin");
 if(!admin.apps.length){
     admin.initializeApp({
-        credential: admin.credential.cert(require("../../../credentials/server"))
+        credential: admin.credential.cert(require("../credentials/server"))
     });
 }
 const db = admin.firestore();
