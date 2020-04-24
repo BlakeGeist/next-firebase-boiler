@@ -5,8 +5,11 @@ import { connect } from "react-redux";
 import Layout from "../../../layouts/Layout";
 import TextEditor from  "../../../components/TextEditor";
 import { translate } from "../../../helpers/quickHelpers";
+import absoluteUrl from '../../api/helpers/getAbsoluteUrl'
+import CategoriesList from "./components/CategoriesList";
 
-const Blog = ({ lang, pageStrings, strings }) => {
+const Blog = ({ lang, pageStrings, strings, categories }) => {
+    console.log(categories)
     const [content, setContent] = useState({
         editorContent: '',
         name: ''
@@ -80,6 +83,9 @@ const Blog = ({ lang, pageStrings, strings }) => {
                             </form>
                         )}
                     </Formik>
+                    <CategoriesList 
+                        categories={categories}
+                        />
                 </aside>
             </div>
             <style jsx>{`
@@ -90,5 +96,12 @@ const Blog = ({ lang, pageStrings, strings }) => {
         </Layout>
     );
 };
+
+Blog.getInitialProps = async ({ req, query  }) => {
+    const { apiURL } = absoluteUrl(req);
+    const categoriesResponse = await axios.post(`${apiURL}/api/getBlogCategories`);
+    const categories = categoriesResponse.data;
+    return { categories };
+}
 
 export default connect(state => state)(Blog);
