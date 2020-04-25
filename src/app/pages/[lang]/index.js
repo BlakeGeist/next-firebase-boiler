@@ -1,32 +1,18 @@
-import React from "react";
-import { connect } from "react-redux";
-import Layout from "../../layouts/Layout";
-import Carousel from '../../components/Carousel';
-import Modal from '../../components/Modal';
+import React from 'react'
+import { connect } from 'react-redux'
+import Layout from '../../layouts/Layout';
 
-const Index = ({ dispatch, lang }) => {
-    const ModalContent = () => {
-        return (
-            <h1>This is the body of the modal</h1>
-        )
-    }
-    const handleOpenModal = () => {
-        dispatch({ type: "SET_ITEM", name: "modalTarget", payload: <ModalContent /> });
-    }
-    return (
-        <Layout pageMod='index'>
-            <Carousel />
-            <div className="container">
-                <h1>{lang} Home Page</h1>
-                <p>
-                    <button onClick={handleOpenModal}>
-                        Open Modal
-                    </button>
-                </p>
-            </div>
-            <Modal />
-        </Layout>
-    );
-};
+const Index = ({ lang }) => {
+  return (
+    <Layout pageMod='index'>
+       <h1>{lang} Home Page</h1>
+    </Layout>
+  )
+}
+
+Index.getInitialProps = async ({ reduxStore, req, query, res }) => {
+  //let card = await axios.get('https://api.scryfall.com/cards/random');
+  //reduxStore.dispatch({ type: 'SET_ITEM', name: 'card', payload: card.data });
+}
 
 export default connect(state => state)(Index);

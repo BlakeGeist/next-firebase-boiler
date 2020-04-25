@@ -1,15 +1,13 @@
-import React from "react";
-import Layout from "../../../layouts/Layout";
+import React from 'react'
+import Layout from '../../../layouts/Layout';
 
 const About = () => {
-    return (
-        <Layout pageMod="about">
-            <div className="container">
-                <h1>About page</h1>
-                <p>About page content</p>
-            </div>
-        </Layout>
-    );
-};
+  return (
+    <Layout pageMod="about">
+      <h1>About page</h1>
+      <p>About page content</p>
+    </Layout>
+  )
+}
 
-export default About;
+export default About
