@@ -1,16 +1,12 @@
-import React from "react";
-import Layout from "../../../layouts/Layout";
-import TextEditor from  "../../../components/TextEditor";
+import React from 'react'
+import Layout from '../../../layouts/Layout'
 
 const Blog = ({  }) => {
     return (
         <Layout>
-            <div className="container">
-                <h1>Blog Page</h1>
-                <TextEditor />
-            </div>
+            <h1>Blog Page</h1>
         </Layout>
-    );
-};
+    )
+}
 
-export default Blog;
+export default Blog
